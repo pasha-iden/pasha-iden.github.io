@@ -16,6 +16,8 @@
             font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
             background: radial-gradient(circle at 20% 18%, rgba(255, 255, 255, .95), transparent 30rem), radial-gradient(circle at 82% 88%, rgba(153, 203, 255, .32), transparent 31rem), #edf5ff;
         }
+        body:not(.ui-ready) .language-prompt span:not(.divider),
+        body:not(.ui-ready) .language-option { visibility: hidden; }
         button { font: inherit; }
         .screen { position: fixed; inset: 0; display: grid; place-items: center; padding: 24px; transition: opacity .55s ease, visibility .55s step-end; }
         .language-panel { display: grid; grid-template-columns: max-content max-content max-content; align-items: center; justify-content: center; column-gap: 18px; row-gap: 18px; text-align: center; }
@@ -42,26 +44,24 @@
         .menu { margin: 0; padding: 0; list-style: none; }
         .menu button { display: block; width: 100%; padding: 10px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; text-align: left; transition: color .35s ease; }
         .menu button:hover, .menu button:focus-visible, .menu button.is-selected { color: var(--ink); outline: none; }
-        .menu-layout { --column-gap: clamp(32px, 8vw, 112px); display: flex; gap: var(--column-gap); align-items: flex-start; }
-        .menu-layout > nav, .solution-list { flex: 1 1 0; min-width: 0; transition: flex-grow .5s ease, flex-basis .5s ease; }
-        .menu-layout > nav { transition: flex-grow .5s ease, flex-basis .5s ease, margin-right .5s ease, opacity .35s ease, transform .5s ease; }
-        .menu-panel.is-detail-open .menu-layout > nav { flex: 0 0 0; margin-right: calc(-1 * var(--column-gap)); opacity: 0; pointer-events: none; transform: translateX(-100vw); }
-        .menu-panel.is-detail-open .detail-panel { flex: 1 1 0; margin-left: 0; }
-        .solution-list { margin: 0; padding: 0; list-style: none; opacity: 0; transform: translateX(-10px); pointer-events: none; transition: opacity .35s ease, transform .35s ease; }
+        .menu-layout { --column-gap: clamp(32px, 8vw, 112px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--column-gap); align-items: start; }
+        .menu-layout > nav { grid-column: 1; grid-row: 1; min-width: 0; transition: opacity .35s ease, transform .5s ease; }
+        .solution-list { grid-column: 2; grid-row: 1; min-width: 0; margin: 0; padding: 0; list-style: none; opacity: 0; transform: translateX(-10px); pointer-events: none; transition: opacity .35s ease, transform .5s ease; }
         .solution-list.is-open { opacity: 1; transform: none; pointer-events: auto; }
+        .menu-panel.is-detail-open .solution-list { opacity: 0; pointer-events: none; transform: none; }
         .solution-list button { display: block; width: 100%; padding: 10px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font: inherit; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; text-align: left; transition: color .35s ease; }
         .solution-subtitle { display: block; margin-top: 2px; font-size: clamp(.62rem, 1vw, .76rem); font-weight: 400; line-height: 1.45; letter-spacing: -.025em; }
         .solution-list button:hover, .solution-list button:focus-visible { color: var(--ink); outline: none; }
         .solution-list button.is-selected { color: var(--ink); }
-        .detail-panel { flex: 0 0 0; min-width: 0; margin-left: calc(-1 * var(--column-gap)); overflow: hidden; opacity: 0; transform: translateX(-10px); pointer-events: none; transition: flex-grow .5s ease, flex-basis .5s ease, margin-left .5s ease, opacity .35s ease .12s, transform .35s ease .12s; }
+        .detail-panel { grid-column: 2; grid-row: 1; min-width: 0; overflow: hidden; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
         .detail-panel.is-open { opacity: 1; transform: none; pointer-events: auto; }
         .detail-kicker { margin: 0 0 8px; color: var(--blue); font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
         .detail-title { margin: 0 0 14px; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; }
         .detail-lead, .detail-block { margin: 0; color: var(--muted); font-size: clamp(.67rem, 1vw, .8rem); line-height: 1.55; letter-spacing: -.025em; }
         .detail-grid { display: grid; gap: 15px; margin-top: 22px; }
         .detail-block strong { display: block; margin-bottom: 3px; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
-        @media (max-width: 850px) { .menu-panel.is-detail-open .menu-layout { flex-wrap: wrap; } .detail-panel { flex-basis: 100%; margin-top: 8px; } }
-        @media (max-width: 600px) { .menu-layout, .menu-panel.is-detail-open .menu-layout { flex-direction: column; gap: 18px; } .menu-layout > nav, .solution-list, .detail-panel, .menu-panel.is-detail-open .detail-panel { width: 100%; flex: 0 0 auto; margin-left: 0; } }
+        .solution-title { display: block; }
+        @media (max-width: 600px) { .menu-layout { grid-template-columns: 1fr; gap: 18px; } .menu-layout > nav, .solution-list { grid-column: 1; grid-row: 1; } .detail-panel { grid-column: 1; grid-row: 2; } .menu-panel.is-detail-open .solution-list { transform: none; } }
         @media (max-width: 480px) { .language-panel { column-gap: 10px; row-gap: 14px; } }
     </style>
 </head>
@@ -141,6 +141,7 @@
         let currentLanguage = 'en';
         let selectedSection = null;
         let selectedSolution = null;
+        let animationJob = 0;
         function setHighlight(language) {
             panel.classList.toggle('is-hovering', Boolean(language));
             document.querySelectorAll('[data-language]').forEach((element) => element.classList.toggle('is-highlighted', element.dataset.language === language));
@@ -151,8 +152,10 @@
             document.getElementById('menu-eyebrow').textContent = content.eyebrow;
             document.getElementById('menu-title').textContent = content.title;
             menu.innerHTML = content.menu.map((item, index) => `<li><button type="button" data-section="section-${index}">${item}</button></li>`).join('');
-            solutionList.innerHTML = content.solutions.map((item, index) => `<li><button type="button" data-solution="${index}">${item.title}<span class="solution-subtitle">${item.subtitle}</span></button></li>`).join('');
-            selectSection(selectedSection);
+            solutionList.innerHTML = content.solutions.map((item, index) => `<li><button type="button" data-solution="${index}"><span class="solution-title">${item.title}</span><span class="solution-subtitle">${item.subtitle}</span></button></li>`).join('');
+            const job = ++animationJob;
+            selectSection(selectedSection, true, job);
+            revealMenu(job);
             document.documentElement.lang = language;
             topOptions.forEach((option) => {
                 const isActive = option.dataset.language === language;
@@ -164,26 +167,84 @@
             setMenuLanguage(language);
             languageScreen.classList.add('is-leaving'); menuScreen.classList.add('is-visible'); menuScreen.setAttribute('aria-hidden', 'false');
         }
-        function selectSection(section) {
+        function selectSection(section, preserveDetail = false, job = ++animationJob) {
+            if (!preserveDetail) selectedSolution = null;
             selectedSection = section;
-            if (section !== 'section-0') selectedSolution = null;
             menu.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', button.dataset.section === section));
             solutionList.classList.toggle('is-open', section === 'section-0');
-            updateDetail();
+            updateDetail(job);
+            if (section === 'section-0' && selectedSolution === null) revealSolutions(job);
         }
         function selectSolution(index) {
+            const job = ++animationJob;
             selectedSolution = index;
             solutionList.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.solution) === index));
-            updateDetail();
+            updateDetail(job);
         }
-        function updateDetail() {
+        function updateDetail(job) {
             const isLandingOpen = selectedSection === 'section-0' && selectedSolution === 0;
             solutionList.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.solution) === selectedSolution));
             menuPanel.classList.toggle('is-detail-open', isLandingOpen);
             detailPanel.classList.toggle('is-open', isLandingOpen);
             if (!isLandingOpen) { detailPanel.innerHTML = ''; return; }
             const landing = copy[currentLanguage].landing;
-            detailPanel.innerHTML = `<p class="detail-kicker">${landing.kicker}</p><h2 class="detail-title">${landing.title}</h2><p class="detail-lead">${landing.lead}</p><div class="detail-grid">${landing.blocks.map(block => `<p class="detail-block"><strong>${block.title}</strong>${block.text}</p>`).join('')}</div>`;
+            detailPanel.innerHTML = `<p class="detail-kicker"></p><h2 class="detail-title"></h2><p class="detail-lead"></p><div class="detail-grid">${landing.blocks.map(() => `<p class="detail-block"><strong></strong><span></span></p>`).join('')}</div>`;
+            revealLanding(landing, job);
+        }
+        const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+-<>/';
+        function scrambleText(element, text, job, duration = 520) {
+            const characters = Array.from(text);
+            const startedAt = performance.now();
+            let lastSubstitutionAt = 0;
+            element.textContent = '';
+            return new Promise((resolve) => {
+                function draw(now) {
+                    if (job !== animationJob) return resolve(false);
+                    const progress = Math.min((now - startedAt) / duration, 1);
+                    if (now - lastSubstitutionAt >= 32 || progress === 1) {
+                        const revealed = Math.floor(progress * characters.length);
+                        element.textContent = characters.map((character, index) => {
+                            if (/\s/.test(character) || index < revealed) return character;
+                            return glyphs[Math.floor(Math.random() * glyphs.length)];
+                        }).join('');
+                        lastSubstitutionAt = now;
+                    }
+                    if (progress < 1) requestAnimationFrame(draw);
+                    else resolve(true);
+                }
+                requestAnimationFrame(draw);
+            });
+        }
+        function revealSequence(items, job) {
+            items.forEach(([element]) => { element.textContent = ''; });
+            return Promise.all(items.map(([element, text]) => scrambleText(element, text, job))).then((results) => results.every(Boolean));
+        }
+        function revealMenu(job) {
+            return revealSequence([
+                [document.getElementById('menu-eyebrow'), copy[currentLanguage].eyebrow],
+                [document.getElementById('menu-title'), copy[currentLanguage].title],
+                ...Array.from(menu.querySelectorAll('button')).map((button, index) => [button, copy[currentLanguage].menu[index]])
+            ], job);
+        }
+        function revealSolutions(job) {
+            const items = [];
+            solutionList.querySelectorAll('button').forEach((button, index) => {
+                items.push([button.querySelector('.solution-title'), copy[currentLanguage].solutions[index].title]);
+                items.push([button.querySelector('.solution-subtitle'), copy[currentLanguage].solutions[index].subtitle]);
+            });
+            return revealSequence(items, job);
+        }
+        function revealLanding(landing, job) {
+            const titleElements = detailPanel.querySelectorAll('.detail-kicker, .detail-title, .detail-lead');
+            const blocks = detailPanel.querySelectorAll('.detail-block');
+            const items = [[titleElements[0], landing.kicker], [titleElements[1], landing.title], [titleElements[2], landing.lead]];
+            for (let index = 0; index < landing.blocks.length; index += 1) {
+                const block = landing.blocks[index];
+                const heading = blocks[index].querySelector('strong');
+                const text = blocks[index].querySelector('span');
+                items.push([heading, block.title], [text, block.text]);
+            }
+            return revealSequence(items, job);
         }
         options.forEach((option) => {
             option.addEventListener('mouseenter', () => setHighlight(option.dataset.language));
@@ -200,6 +261,14 @@
         solutionList.addEventListener('click', (event) => {
             const button = event.target.closest('button[data-solution]');
             if (button) selectSolution(Number(button.dataset.solution));
+        });
+        window.addEventListener('DOMContentLoaded', () => {
+            const job = ++animationJob;
+            document.body.classList.add('ui-ready');
+            revealSequence([
+                ...Array.from(document.querySelectorAll('.language-prompt span:not(.divider)')).map((element) => [element, element.textContent]),
+                ...Array.from(options).map((element) => [element, element.textContent])
+            ], job);
         });
     </script>
 </body>
