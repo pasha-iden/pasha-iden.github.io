@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Павел — Fullstack Product Engineer">
-    <title>Павел — Fullstack Product Engineer</title>
+    <title>Pavel — Fullstack Product Engineer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -34,6 +34,8 @@
         .language-screen.is-leaving { visibility: hidden; pointer-events: none; }
         .menu-screen { visibility: hidden; }
         .menu-screen.is-visible { visibility: visible; }
+        .menu-screen:not(.is-content-ready) #menu-eyebrow,
+        .menu-screen:not(.is-content-ready) #menu-title { visibility: hidden; }
         .top-language-switch { position: absolute; top: 28px; left: 50%; display: flex; align-items: center; gap: 9px; transform: translateX(-50%); }
         .top-language-option { padding: 4px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: .78rem; font-weight: 600; letter-spacing: .05em; transition: color .25s ease; }
         .top-language-option:hover, .top-language-option:focus-visible, .top-language-option.is-active { color: var(--ink); outline: none; }
@@ -59,14 +61,26 @@
         .solution-subtitle { display: block; margin-top: 2px; font-size: clamp(.62rem, 1vw, .76rem); font-weight: 400; line-height: 1.45; letter-spacing: -.025em; }
         .solution-list button:hover, .solution-list button:focus-visible { color: var(--ink); outline: none; }
         .solution-list button.is-selected { color: var(--ink); }
-        .detail-panel { grid-column: 2; grid-row: 1; min-width: 0; overflow: hidden; opacity: 0; pointer-events: none; }
+        .detail-panel { grid-column: 2; grid-row: 1; min-width: 0; max-height: calc(100vh - 116px); overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; opacity: 0; pointer-events: none; scrollbar-width: thin; scrollbar-color: var(--muted) transparent; }
+        .detail-panel::-webkit-scrollbar { width: 4px; }
+        .detail-panel::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 4px; }
         .detail-panel.is-open { opacity: 1; pointer-events: auto; }
         .detail-kicker { margin: 0 0 8px; color: var(--blue); font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
         .detail-title { margin: 0 0 14px; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; }
+        .detail-timeline { display: flex; gap: clamp(20px, 4vw, 52px); margin: -5px 0 15px; }
+        .timeline-value { display: block; color: var(--ink); font-size: .72rem; font-weight: 600; letter-spacing: -.03em; }
+        .timeline-caption { display: block; margin-top: 2px; color: var(--muted); font-size: .6rem; line-height: 1.35; letter-spacing: -.025em; }
         .detail-lead, .detail-block { margin: 0; color: var(--muted); font-size: clamp(.67rem, 1vw, .8rem); line-height: 1.55; letter-spacing: -.025em; }
         .detail-grid { display: grid; gap: 15px; margin-top: 22px; }
-        .detail-block strong { display: block; margin-bottom: 3px; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
-        .solution-title { display: block; }
+        .detail-block strong { color: var(--ink); font-size: inherit; font-weight: 600; letter-spacing: inherit; }
+        .detail-package-title { margin: 0; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
+        .detail-package { margin: 5px 0 0; padding: 0; color: var(--muted); font-size: .68rem; letter-spacing: -.02em; list-style: none; }
+        .detail-package li { position: relative; margin-top: 7px; padding-left: 1.15em; }
+        .detail-package li::before { content: '•'; position: absolute; top: -.08em; left: 0; color: var(--ink); font-size: 1.45em; line-height: 1; }
+        .detail-package strong { color: var(--ink); font-weight: 600; }
+        .detail-extras-title { margin: 16px 0 0; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
+        .solution-title, .menu-title { display: block; }
+        .menu-subtitle { display: block; margin-top: 2px; font-size: clamp(.62rem, 1vw, .76rem); font-weight: 400; line-height: 1.45; letter-spacing: -.025em; }
         @media (max-width: 600px) { .menu-layout { grid-template-columns: 1fr; gap: 18px; } .menu-layout > nav, .solution-list { grid-column: 1; grid-row: 1; } .detail-panel { grid-column: 1; grid-row: 2; } .menu-panel.is-detail-open .solution-list { transform: none; } }
         @media (max-width: 480px) { .language-panel { column-gap: 10px; row-gap: 14px; } }
     </style>
@@ -86,7 +100,7 @@
                 <button class="top-language-option" type="button" data-language="en">EN</button><span class="divider" aria-hidden="true">|</span><button class="top-language-option" type="button" data-language="ru">RU</button>
             </div>
             <button class="back-button" id="back-button" type="button" aria-label="Back"></button>
-            <div class="menu-panel" id="menu-panel"><p class="eyebrow" id="menu-eyebrow">Pavel / Fullstack Product Engineer</p><h1 id="menu-title">What are you looking for?</h1><div class="menu-layout"><nav><ul class="menu" id="menu"></ul></nav><ul class="solution-list" id="solution-list" aria-live="polite"></ul><aside class="detail-panel" id="detail-panel" aria-live="polite"></aside></div></div>
+            <div class="menu-panel" id="menu-panel"><p class="eyebrow" id="menu-eyebrow"></p><h1 id="menu-title"></h1><div class="menu-layout"><nav><ul class="menu" id="menu"></ul></nav><ul class="solution-list" id="solution-list" aria-live="polite"></ul><aside class="detail-panel" id="detail-panel" aria-live="polite"></aside></div></div>
         </section>
     </main>
     <script>
@@ -104,13 +118,25 @@
                 ],
                 landing: {
                     kicker: 'Landing pages & SEO sites',
-                    title: 'A page that makes the next step obvious',
-                    lead: 'I turn an offer into a clear, fast web experience - from the first structure and copy logic to a production-ready launch.',
-                    blocks: [
-                        { title: 'Focus', text: 'Value proposition, conversion path, technical SEO, responsive layout and loading speed.' },
-                        { title: 'Format', text: 'A focused landing page, a small company website or a scalable SEO content structure.' },
-                        { title: 'Result', text: 'A maintainable, measurable foundation that is ready for analytics, experiments and growth.' }
-                    ]
+                    title: 'Fast websites that solve a business problem',
+                    lead: 'Website design and development from structure and user flow to production - with a focus on conversion, search and future growth.',
+                    milestones: [{ value: '1 day', caption: 'to the first working layout' }, { value: '1 week', caption: 'to launch' }, { value: 'from $700', caption: 'USD' }],
+                    package: {
+                        baseTitle: 'Core delivery:',
+                        items: [
+                            { title: 'Structure & UX', text: 'User flows, page structure and navigation design.' },
+                            { title: 'UI & responsive design', text: 'An interface shaped around the product, audience and business goals.' },
+                            { title: 'Development', text: 'Fast implementation on a modern, high-performance codebase.' },
+                            { title: 'SEO foundation', text: 'Semantic markup, metadata, indexing, sitemap, robots.txt and technical optimization.' },
+                            { title: 'Domain & launch', text: 'Domain connection, deployment, HTTPS and baseline security setup.' }
+                        ],
+                        extrasTitle: 'Additional options:',
+                        extras: [
+                            { title: 'Analytics', text: 'Tracking for key events, conversion measurement and user behaviour.' },
+                            { title: 'Growth & support', text: 'Post-launch product support and functional expansion.' },
+                            { title: 'Documentation', text: 'Architecture, infrastructure, deployment and long-term support documentation.' }
+                        ]
+                    }
                 }
             },
             ru: {
@@ -126,13 +152,25 @@
                 ],
                 landing: {
                     kicker: 'Лендинги и SEO-сайты',
-                    title: 'Страница, на которой понятен следующий шаг',
-                    lead: 'Превращаю предложение в ясный и быстрый веб-опыт: от логики первого экрана и структуры до готового к запуску продукта.',
-                    blocks: [
-                        { title: 'Фокус', text: 'Ценность предложения, путь к конверсии, техническое SEO, адаптивность и скорость загрузки.' },
-                        { title: 'Формат', text: 'Точечный лендинг, сайт компании или масштабируемая контентная структура для SEO.' },
-                        { title: 'Результат', text: 'Поддерживаемая и измеримая основа, готовая к аналитике, экспериментам и росту.' }
-                    ]
+                    title: 'Быстрые сайты, которые решают задачу бизнеса',
+                    lead: 'Проектирование и разработка сайта от структуры и пользовательского сценария до production — с фокусом на конверсию, поиск и дальнейшее развитие.',
+                    milestones: [{ value: 'Сутки', caption: 'до первого рабочего макета' }, { value: 'Неделя', caption: 'до запуска' }, { value: 'от 60 000', caption: 'рублей' }],
+                    package: {
+                        baseTitle: 'Базовая разработка:',
+                        items: [
+                            { title: 'Структура и UX', text: 'Проектирование пользовательских сценариев, структуры страниц и навигации.' },
+                            { title: 'UI и адаптивный дизайн', text: 'Интерфейс под продукт, аудиторию и задачи бизнеса.' },
+                            { title: 'Разработка', text: 'Быстрая реализация современной и производительной кодовой базы.' },
+                            { title: 'SEO-основа', text: 'Семантическая разметка, метаданные, индексация, sitemap, robots.txt и техническая оптимизация.' },
+                            { title: 'Домен и запуск', text: 'Подключение домена, развертывание, HTTPS и базовая настройка безопасности.' }
+                        ],
+                        extrasTitle: 'Дополнительные предложения:',
+                        extras: [
+                            { title: 'Аналитика', text: 'Настройка сбора ключевых событий, измерения конверсии и пользовательского поведения.' },
+                            { title: 'Развитие и поддержка', text: 'Сопровождение после запуска продукта и расширение функционала.' },
+                            { title: 'Документация', text: 'Описание архитектуры, инфраструктуры, развертывания и дальнейшей поддержки проекта.' }
+                        ]
+                    }
                 }
             }
         };
@@ -151,6 +189,21 @@
         let selectedSection = null;
         let selectedSolution = null;
         let animationJob = 0;
+        const textAnimationJobs = new WeakMap();
+        function startTextAnimation(element) {
+            const job = ++animationJob;
+            textAnimationJobs.set(element, job);
+            return job;
+        }
+        function isCurrentTextAnimation(element, job) {
+            return textAnimationJobs.get(element) === job;
+        }
+        function trackAnimation(promise) {
+            return Promise.resolve(promise);
+        }
+        function runInteraction(interaction) {
+            interaction();
+        }
         function setHighlight(language) {
             panel.classList.toggle('is-hovering', Boolean(language));
             document.querySelectorAll('[data-language]').forEach((element) => element.classList.toggle('is-highlighted', element.dataset.language === language));
@@ -158,14 +211,20 @@
         function setMenuLanguage(language) {
             const content = copy[language];
             currentLanguage = language;
-            document.getElementById('menu-eyebrow').textContent = content.eyebrow;
-            document.getElementById('menu-title').textContent = content.title;
             const isDetailOpen = selectedSection === 'section-0' && selectedSolution === 0;
             renderMenu(isDetailOpen);
             solutionList.innerHTML = content.solutions.map((item, index) => `<li><button type="button" data-solution="${index}"><span class="solution-title">${item.title}</span><span class="solution-subtitle">${item.subtitle}</span></button></li>`).join('');
             const job = ++animationJob;
             selectSection(selectedSection, true, job);
-            revealMenu(job, !isDetailOpen);
+            trackAnimation(revealMenu(job, !isDetailOpen)).then((completed) => {
+                if (!completed) return;
+                const eyebrow = document.getElementById('menu-eyebrow');
+                const title = document.getElementById('menu-title');
+                eyebrow.textContent = content.eyebrow;
+                title.textContent = content.title;
+                eyebrow.dataset.glitchText = content.eyebrow;
+                title.dataset.glitchText = content.title;
+            });
             document.documentElement.lang = language;
             topOptions.forEach((option) => {
                 const isActive = option.dataset.language === language;
@@ -178,8 +237,8 @@
             languageScreen.dataset.closing = 'true';
             options.forEach((option) => { option.disabled = true; });
             const job = ++animationJob;
-            reverseSequence(languageItems, job).then((completed) => {
-                if (!completed || job !== animationJob) return;
+            trackAnimation(reverseSequence(languageItems, job)).then((completed) => {
+                if (!completed) return;
                 languageScreen.classList.add('is-leaving');
                 setMenuLanguage(language);
                 menuScreen.classList.add('is-visible');
@@ -188,29 +247,73 @@
         }
         function renderMenu(showSolutions = false) {
             const content = copy[currentLanguage];
-            if (showSolutions) {
-                menu.innerHTML = content.solutions.map((item, index) => `<li><button type="button" data-menu-solution="${index}"><span class="solution-title">${item.title}</span><span class="solution-subtitle">${item.subtitle}</span></button></li>`).join('');
-                return;
+            const targets = showSolutions
+                ? content.solutions.map((item, index) => ({ title: item.title, subtitle: item.subtitle, action: 'solution', index }))
+                : content.menu.map((title, index) => ({ title, subtitle: '', action: 'section', index }));
+            const rows = Array.from(menu.children);
+            const allRows = Math.max(rows.length, targets.length);
+            for (let index = 0; index < allRows; index += 1) {
+                let row = rows[index];
+                if (!row) {
+                    row = document.createElement('li');
+                    row.innerHTML = '<button type="button"><span class="menu-title"></span><span class="menu-subtitle"></span></button>';
+                    menu.append(row);
+                }
+                const button = row.querySelector('button');
+                let title = button.querySelector('.menu-title');
+                let subtitle = button.querySelector('.menu-subtitle');
+                if (!title) {
+                    const previousText = button.textContent;
+                    button.textContent = '';
+                    title = document.createElement('span');
+                    title.className = 'menu-title';
+                    title.textContent = previousText;
+                    subtitle = document.createElement('span');
+                    subtitle.className = 'menu-subtitle';
+                    button.append(title, subtitle);
+                }
+                const target = targets[index];
+                button.classList.remove('is-selected');
+                button.removeAttribute('data-section');
+                button.removeAttribute('data-menu-solution');
+                delete button.dataset.removeAfterMorph;
+                if (!target) {
+                    button.disabled = true;
+                    button.dataset.removeAfterMorph = 'true';
+                    title.dataset.targetText = '';
+                    subtitle.dataset.targetText = '';
+                    continue;
+                }
+                button.disabled = false;
+                if (target.action === 'section') button.dataset.section = `section-${target.index}`;
+                else button.dataset.menuSolution = String(target.index);
+                button.classList.toggle('is-selected',
+                    (target.action === 'section' && selectedSection === `section-${target.index}`) ||
+                    (target.action === 'solution' && selectedSolution === target.index)
+                );
+                title.dataset.targetText = target.title;
+                subtitle.dataset.targetText = target.subtitle;
             }
-            menu.innerHTML = content.menu.map((item, index) => `<li><button type="button" data-section="section-${index}">${item}</button></li>`).join('');
         }
         function selectSection(section, preserveDetail = false, job = ++animationJob) {
             if (!preserveDetail) selectedSolution = null;
             selectedSection = section;
             if (!preserveDetail) renderMenu(false);
             menu.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', button.dataset.section === section));
+            menu.querySelectorAll('button[data-menu-solution]').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.menuSolution) === selectedSolution));
             solutionList.classList.toggle('is-open', section === 'section-0');
             updateDetail(job);
-            if (section === 'section-0' && selectedSolution === null) revealSolutions(job);
+            if (section === 'section-0' && selectedSolution === null) trackAnimation(revealSolutions(job));
         }
         function selectSolution(index) {
             const job = ++animationJob;
             selectedSolution = index;
             const isDrilldownRendered = Boolean(menu.querySelector('[data-menu-solution]'));
             if (index === 0 && !isDrilldownRendered) renderMenu(true);
+            menu.querySelectorAll('button[data-menu-solution]').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.menuSolution) === index));
             solutionList.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.solution) === index));
             updateDetail(job);
-            if (index === 0 && !isDrilldownRendered) revealMenu(job, false);
+            if (index === 0 && !isDrilldownRendered) trackAnimation(revealMenu(job, false));
         }
         function updateDetail(job) {
             const isLandingOpen = selectedSection === 'section-0' && selectedSolution === 0;
@@ -220,12 +323,18 @@
             backButton.classList.toggle('is-visible', isLandingOpen);
             if (!isLandingOpen) { detailPanel.innerHTML = ''; return; }
             const landing = copy[currentLanguage].landing;
-            detailPanel.innerHTML = `<p class="detail-kicker"></p><h2 class="detail-title"></h2><p class="detail-lead"></p><div class="detail-grid">${landing.blocks.map(() => `<p class="detail-block"><strong></strong><span></span></p>`).join('')}</div>`;
-            revealLanding(landing, job);
+            const renderPackageItem = () => '<li><strong></strong> - <span></span></li>';
+            detailPanel.innerHTML = `<p class="detail-kicker"></p><h2 class="detail-title"></h2><div class="detail-timeline">${landing.milestones.map(() => '<div><span class="timeline-value"></span><span class="timeline-caption"></span></div>').join('')}</div><p class="detail-lead"></p><div class="detail-grid"><div class="detail-block"><p class="detail-package-title"></p><ul class="detail-package">${landing.package.items.map(renderPackageItem).join('')}</ul><p class="detail-extras-title"></p><ul class="detail-package detail-extras">${landing.package.extras.map(renderPackageItem).join('')}</ul></div></div>`;
+            trackAnimation(revealLanding(landing, job));
         }
         const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+-<>/';
         function scrambleText(element, text, job) {
             const characters = Array.from(text);
+            if (!characters.length) {
+                element.textContent = '';
+                element.dataset.glitchText = '';
+                return Promise.resolve(true);
+            }
             delete element.dataset.glitchText;
             element.textContent = '';
             const states = characters.map((character, index) => {
@@ -244,7 +353,7 @@
             let pass = 0;
             return new Promise((resolve) => {
                 const timer = setInterval(() => {
-                    if (job !== animationJob) {
+                    if (!isCurrentTextAnimation(element, job)) {
                         clearInterval(timer);
                         return resolve(false);
                     }
@@ -289,7 +398,7 @@
             let pass = 0;
             return new Promise((resolve) => {
                 const timer = setInterval(() => {
-                    if (job !== animationJob) {
+                    if (!isCurrentTextAnimation(element, job)) {
                         clearInterval(timer);
                         return resolve(false);
                     }
@@ -309,20 +418,80 @@
                 }, 90);
             });
         }
+        function morphText(element, fromText, toText, job) {
+            const from = Array.from(fromText);
+            const to = Array.from(toText);
+            const length = Math.max(from.length, to.length);
+            if (!length) {
+                element.textContent = '';
+                element.dataset.glitchText = '';
+                return Promise.resolve(true);
+            }
+            element.textContent = '';
+            const states = Array.from({ length }, (_, index) => {
+                const oldCharacter = from[index] || '';
+                const newCharacter = to[index] || '';
+                const span = document.createElement('span');
+                span.textContent = oldCharacter;
+                span.style.opacity = oldCharacter ? '1' : '0';
+                element.append(span);
+                return {
+                    oldCharacter, newCharacter, span,
+                    startDelay: 1 + Math.floor(Math.random() * 4),
+                    substitutions: 4 + Math.floor(Math.random() * 5)
+                };
+            });
+            const totalPasses = Math.max(...states.map((state) => state.startDelay + state.substitutions));
+            let pass = 0;
+            return new Promise((resolve) => {
+                const timer = setInterval(() => {
+                    if (!isCurrentTextAnimation(element, job)) {
+                        clearInterval(timer);
+                        return resolve(false);
+                    }
+                    states.forEach((state) => {
+                        if (pass < state.startDelay) return;
+                        if (pass < state.startDelay + state.substitutions) {
+                            state.span.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+                            state.span.style.opacity = '1';
+                            return;
+                        }
+                        state.span.textContent = state.newCharacter;
+                        state.span.style.opacity = state.newCharacter ? '1' : '0';
+                    });
+                    if (pass > totalPasses) {
+                        element.textContent = toText;
+                        element.dataset.glitchText = toText;
+                        clearInterval(timer);
+                        return resolve(true);
+                    }
+                    pass += 1;
+                }, 90);
+            });
+        }
         function revealSequence(items, job) {
-            items.forEach(([element]) => { element.textContent = ''; delete element.dataset.glitchText; });
-            return Promise.all(items.map(([element, text]) => scrambleText(element, text, job))).then((results) => results.every(Boolean));
+            return Promise.all(items.map(([element, text]) => {
+                const elementJob = startTextAnimation(element);
+                const previousText = element.textContent;
+                if (previousText && previousText !== text) return morphText(element, previousText, text, elementJob);
+                return scrambleText(element, text, elementJob);
+            })).then((results) => results.every(Boolean));
         }
         function reverseSequence(items, job) {
-            return Promise.all(items.map(([element, text]) => reverseScrambleText(element, text, job))).then((results) => results.every(Boolean));
+            return Promise.all(items.map(([element, text]) => reverseScrambleText(element, text, startTextAnimation(element)))).then((results) => results.every(Boolean));
         }
         function revealMenu(job, includeHeader = true) {
-            const solutionTitles = Array.from(menu.querySelectorAll('.solution-title'));
-            const items = solutionTitles.length
-                ? solutionTitles.flatMap((title, index) => [[title, copy[currentLanguage].solutions[index].title], [menu.querySelectorAll('.solution-subtitle')[index], copy[currentLanguage].solutions[index].subtitle]])
-                : Array.from(menu.querySelectorAll('button')).map((button, index) => [button, copy[currentLanguage].menu[index]]);
+            const items = Array.from(menu.querySelectorAll('button')).flatMap((button) => [
+                [button.querySelector('.menu-title'), button.querySelector('.menu-title').dataset.targetText],
+                [button.querySelector('.menu-subtitle'), button.querySelector('.menu-subtitle').dataset.targetText]
+            ]);
             if (includeHeader) items.unshift([document.getElementById('menu-title'), copy[currentLanguage].title], [document.getElementById('menu-eyebrow'), copy[currentLanguage].eyebrow]);
-            return revealSequence(items, job);
+            const animation = revealSequence(items, job);
+            menuScreen.classList.add('is-content-ready');
+            return animation.then((result) => {
+                menu.querySelectorAll('button[data-remove-after-morph="true"]').forEach((button) => button.closest('li').remove());
+                return result;
+            });
         }
         function revealSolutions(job) {
             const items = [];
@@ -334,14 +503,17 @@
         }
         function revealLanding(landing, job) {
             const titleElements = detailPanel.querySelectorAll('.detail-kicker, .detail-title, .detail-lead');
-            const blocks = detailPanel.querySelectorAll('.detail-block');
             const items = [[titleElements[0], landing.kicker], [titleElements[1], landing.title], [titleElements[2], landing.lead]];
-            for (let index = 0; index < landing.blocks.length; index += 1) {
-                const block = landing.blocks[index];
-                const heading = blocks[index].querySelector('strong');
-                const text = blocks[index].querySelector('span');
-                items.push([heading, block.title], [text, block.text]);
-            }
+            detailPanel.querySelectorAll('.detail-timeline > div').forEach((element, index) => {
+                items.push([element.querySelector('.timeline-value'), landing.milestones[index].value]);
+                items.push([element.querySelector('.timeline-caption'), landing.milestones[index].caption]);
+            });
+            items.push([detailPanel.querySelector('.detail-package-title'), landing.package.baseTitle]);
+            const packageItems = [...landing.package.items, ...landing.package.extras];
+            detailPanel.querySelectorAll('.detail-package li').forEach((element, index) => {
+                items.push([element.querySelector('strong'), packageItems[index].title], [element.querySelector('span'), packageItems[index].text]);
+            });
+            items.push([detailPanel.querySelector('.detail-extras-title'), landing.package.extrasTitle]);
             return revealSequence(items, job);
         }
         function randomGlitchSymbol(except) {
@@ -391,33 +563,33 @@
             option.addEventListener('focus', () => setHighlight(option.dataset.language));
             option.addEventListener('mouseleave', () => setHighlight(null));
             option.addEventListener('blur', () => setHighlight(null));
-            option.addEventListener('click', () => openMenu(option.dataset.language));
+            option.addEventListener('click', () => runInteraction(() => openMenu(option.dataset.language)));
         });
-        topOptions.forEach((option) => option.addEventListener('click', () => setMenuLanguage(option.dataset.language)));
+        topOptions.forEach((option) => option.addEventListener('click', () => runInteraction(() => setMenuLanguage(option.dataset.language))));
         menu.addEventListener('click', (event) => {
             const solutionButton = event.target.closest('button[data-menu-solution]');
-            if (solutionButton) selectSolution(Number(solutionButton.dataset.menuSolution));
+            if (solutionButton) runInteraction(() => selectSolution(Number(solutionButton.dataset.menuSolution)));
             const button = event.target.closest('button[data-section]');
-            if (button) selectSection(button.dataset.section);
+            if (button) runInteraction(() => selectSection(button.dataset.section));
         });
         solutionList.addEventListener('click', (event) => {
             const button = event.target.closest('button[data-solution]');
-            if (button) selectSolution(Number(button.dataset.solution));
+            if (button) runInteraction(() => selectSolution(Number(button.dataset.solution)));
         });
-        backButton.addEventListener('click', () => {
+        backButton.addEventListener('click', () => runInteraction(() => {
             const job = ++animationJob;
             selectedSolution = null;
             renderMenu(false);
             updateDetail(job);
-            revealMenu(job);
-            revealSolutions(job);
-        });
+            trackAnimation(revealMenu(job));
+            trackAnimation(revealSolutions(job));
+        }));
         window.addEventListener('DOMContentLoaded', () => {
             const job = ++animationJob;
             document.body.classList.add('ui-ready');
-            revealSequence([
+            trackAnimation(revealSequence([
                 ...languageItems
-            ], job);
+            ], job));
             startGlitchLoop();
         });
     </script>
