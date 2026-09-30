@@ -65,6 +65,16 @@
         .detail-panel::-webkit-scrollbar { width: 4px; }
         .detail-panel::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 4px; }
         .detail-panel.is-open { opacity: 1; pointer-events: auto; }
+        .menu-panel.is-detail-open { width: min(980px, 100%); }
+        .menu-panel.is-detail-open > .eyebrow,
+        .menu-panel.is-detail-open > h1,
+        .menu-panel.is-detail-open .menu-layout > nav,
+        .menu-panel.is-detail-open .solution-list { display: none; }
+        .menu-panel.is-detail-open .menu-layout { display: block; }
+        .menu-panel.is-detail-open .detail-panel { display: grid; width: 100%; max-width: none; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--column-gap); margin: 0; overflow: hidden; }
+        .detail-current, .detail-next { min-width: 0; max-height: calc(100vh - 116px); overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--muted) transparent; }
+        .detail-current::-webkit-scrollbar, .detail-next::-webkit-scrollbar { width: 4px; }
+        .detail-current::-webkit-scrollbar-thumb, .detail-next::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 4px; }
         .detail-kicker { margin: 0 0 8px; color: var(--blue); font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
         .detail-title { margin: 0 0 14px; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; }
         .detail-timeline { display: flex; gap: clamp(20px, 4vw, 52px); margin: -5px 0 15px; }
@@ -74,14 +84,23 @@
         .detail-grid { display: grid; gap: 15px; margin-top: 22px; }
         .detail-block strong { color: var(--ink); font-size: inherit; font-weight: 600; letter-spacing: inherit; }
         .detail-package-title { margin: 0; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
-        .detail-package { margin: 5px 0 0; padding: 0; color: var(--muted); font-size: .68rem; letter-spacing: -.02em; list-style: none; }
-        .detail-package li { position: relative; margin-top: 7px; padding-left: 1.15em; }
-        .detail-package li::before { content: '•'; position: absolute; top: -.08em; left: 0; color: var(--ink); font-size: 1.45em; line-height: 1; }
-        .detail-package strong { color: var(--ink); font-weight: 600; }
+        .detail-package, .detail-effects { margin: 5px 0 0; padding: 0; color: var(--muted); font-size: .68rem; letter-spacing: -.02em; list-style: none; }
+        .detail-package li, .detail-effects li { position: relative; margin-top: 7px; padding-left: 1.15em; }
+        .detail-package li::before, .detail-effects li::before { content: '•'; position: absolute; top: -.08em; left: 0; color: var(--ink); font-size: 1.45em; line-height: 1; }
+        .detail-package strong, .detail-effects strong { color: var(--ink); font-weight: 600; }
         .detail-extras-title { margin: 16px 0 0; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
+        .detail-result-title { margin: 0 0 3px; color: var(--ink); font-size: clamp(.67rem, 1vw, .8rem); font-weight: 600; line-height: 1.55; letter-spacing: -.025em; }
+        .detail-result-lead { margin: 0; color: var(--muted); font-size: clamp(.67rem, 1vw, .8rem); line-height: 1.55; letter-spacing: -.025em; }
+        .detail-effects-title { margin: 22px 0 0; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
+        .detail-contact { margin-top: 26px; padding-bottom: 4px; }
+        .detail-cta { margin: 0 0 9px; color: var(--ink); font-size: clamp(.67rem, 1vw, .8rem); font-weight: 600; line-height: 1.55; letter-spacing: -.025em; }
+        .loading-dots { display: inline-block; width: 1.7em; color: var(--ink); opacity: 0; }
+        .detail-contact.is-cta-ready .loading-dots { opacity: 1; }
+        .telegram-contact { display: inline-flex; align-items: center; min-height: 31px; padding: 6px 11px; border: 1px solid var(--muted); color: var(--muted); background: transparent; cursor: pointer; font-size: .68rem; letter-spacing: -.02em; text-decoration: none; white-space: pre-wrap; transition: color .35s ease, border-color .35s ease; }
+        .telegram-contact:hover, .telegram-contact:focus-visible { border-color: var(--ink); color: var(--ink); outline: none; }
         .solution-title, .menu-title { display: block; }
         .menu-subtitle { display: block; margin-top: 2px; font-size: clamp(.62rem, 1vw, .76rem); font-weight: 400; line-height: 1.45; letter-spacing: -.025em; }
-        @media (max-width: 600px) { .menu-layout { grid-template-columns: 1fr; gap: 18px; } .menu-layout > nav, .solution-list { grid-column: 1; grid-row: 1; } .detail-panel { grid-column: 1; grid-row: 2; } .menu-panel.is-detail-open .solution-list { transform: none; } }
+        @media (max-width: 600px) { .menu-layout { grid-template-columns: 1fr; gap: 18px; } .menu-layout > nav, .solution-list, .detail-panel { grid-column: 1; grid-row: 1; } .menu-panel.is-detail-open .solution-list { transform: none; } }
         @media (max-width: 480px) { .language-panel { column-gap: 10px; row-gap: 14px; } }
     </style>
 </head>
@@ -136,6 +155,22 @@
                             { title: 'Growth & support', text: 'Post-launch product support and functional expansion.' },
                             { title: 'Documentation', text: 'Architecture, infrastructure, deployment and long-term support documentation.' }
                         ]
+                    },
+                    outcome: {
+                        title: 'Result',
+                        lead: 'A complete digital presence for the business — an owned destination where people find you, understand the offer and take the intended action.',
+                        effectsTitle: 'Potential business impact:',
+                        effects: [
+                            { title: 'More inbound enquiries', text: 'An additional channel for attracting customers.' },
+                            { title: 'Higher conversion', text: 'A shorter path from interest to an enquiry or purchase.' },
+                            { title: 'Lower acquisition cost', text: 'Organic search and an owned channel instead of complete dependence on advertising.' },
+                            { title: 'Shorter sales cycle', text: 'Customers receive key information before getting in touch.' },
+                            { title: 'Stronger awareness and trust', text: 'A professional representation of the business online.' },
+                            { title: 'Lower operating costs', text: 'Automation of enquiries, bookings, calculations and routine communications.' },
+                            { title: 'Measurable marketing', text: 'Data on traffic sources, user behaviour and conversions.' }
+                        ],
+                        cta: 'One message away from launching your website',
+                        contact: 'Message on Telegram'
                     }
                 }
             },
@@ -170,6 +205,22 @@
                             { title: 'Развитие и поддержка', text: 'Сопровождение после запуска продукта и расширение функционала.' },
                             { title: 'Документация', text: 'Описание архитектуры, инфраструктуры, развертывания и дальнейшей поддержки проекта.' }
                         ]
+                    },
+                    outcome: {
+                        title: 'Результат',
+                        lead: 'Полноценное цифровое присутствие бизнеса — собственная площадка, через которую вас находят, понимают предложение и совершают целевое действие.',
+                        effectsTitle: 'Потенциальный эффект для бизнеса:',
+                        effects: [
+                            { title: 'Больше входящих обращений', text: 'Дополнительный канал привлечения клиентов.' },
+                            { title: 'Рост конверсии', text: 'Более короткий путь от интереса до заявки или покупки.' },
+                            { title: 'Снижение стоимости привлечения', text: 'Органический поиск и собственный канал вместо полной зависимости от рекламы.' },
+                            { title: 'Сокращение цикла сделки', text: 'Клиент получает ключевую информацию до обращения.' },
+                            { title: 'Рост узнаваемости и доверия', text: 'Профессиональное представление бизнеса в интернете.' },
+                            { title: 'Снижение операционных затрат', text: 'Автоматизация заявок, записи, расчётов и типовых коммуникаций.' },
+                            { title: 'Измеримость маркетинга', text: 'Данные об источниках трафика, поведении и конверсиях.' }
+                        ],
+                        cta: 'В одном сообщении от запуска вашего сайта',
+                        contact: 'Написать в Telegram'
                     }
                 }
             }
@@ -188,7 +239,9 @@
         let currentLanguage = 'en';
         let selectedSection = null;
         let selectedSolution = null;
+        let lastSolution = null;
         let animationJob = 0;
+        let screenTransition = 0;
         const textAnimationJobs = new WeakMap();
         function startTextAnimation(element) {
             const job = ++animationJob;
@@ -212,7 +265,7 @@
             const content = copy[language];
             currentLanguage = language;
             const isDetailOpen = selectedSection === 'section-0' && selectedSolution === 0;
-            renderMenu(isDetailOpen);
+            renderMenu(false);
             solutionList.innerHTML = content.solutions.map((item, index) => `<li><button type="button" data-solution="${index}"><span class="solution-title">${item.title}</span><span class="solution-subtitle">${item.subtitle}</span></button></li>`).join('');
             const job = ++animationJob;
             selectSection(selectedSection, true, job);
@@ -296,7 +349,7 @@
             }
         }
         function selectSection(section, preserveDetail = false, job = ++animationJob) {
-            if (!preserveDetail) selectedSolution = null;
+            if (!preserveDetail) { selectedSolution = null; lastSolution = null; }
             selectedSection = section;
             if (!preserveDetail) renderMenu(false);
             menu.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', button.dataset.section === section));
@@ -307,24 +360,31 @@
         }
         function selectSolution(index) {
             const job = ++animationJob;
-            selectedSolution = index;
-            const isDrilldownRendered = Boolean(menu.querySelector('[data-menu-solution]'));
-            if (index === 0 && !isDrilldownRendered) renderMenu(true);
-            menu.querySelectorAll('button[data-menu-solution]').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.menuSolution) === index));
             solutionList.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.solution) === index));
-            updateDetail(job);
-            if (index === 0 && !isDrilldownRendered) trackAnimation(revealMenu(job, false));
+            if (index !== 0) {
+                selectedSolution = index;
+                lastSolution = index;
+                updateDetail(job);
+                return;
+            }
+            const transition = ++screenTransition;
+            trackAnimation(reverseSequence(getOptionsScreenText(), job)).then((completed) => {
+                if (!completed || transition !== screenTransition) return;
+                selectedSolution = index;
+                lastSolution = index;
+                updateDetail(job);
+            });
         }
         function updateDetail(job) {
             const isLandingOpen = selectedSection === 'section-0' && selectedSolution === 0;
-            solutionList.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.solution) === selectedSolution));
+            solutionList.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.solution) === (selectedSolution ?? lastSolution)));
             menuPanel.classList.toggle('is-detail-open', isLandingOpen);
             detailPanel.classList.toggle('is-open', isLandingOpen);
             backButton.classList.toggle('is-visible', isLandingOpen);
             if (!isLandingOpen) { detailPanel.innerHTML = ''; return; }
             const landing = copy[currentLanguage].landing;
             const renderPackageItem = () => '<li><strong></strong> - <span></span></li>';
-            detailPanel.innerHTML = `<p class="detail-kicker"></p><h2 class="detail-title"></h2><div class="detail-timeline">${landing.milestones.map(() => '<div><span class="timeline-value"></span><span class="timeline-caption"></span></div>').join('')}</div><p class="detail-lead"></p><div class="detail-grid"><div class="detail-block"><p class="detail-package-title"></p><ul class="detail-package">${landing.package.items.map(renderPackageItem).join('')}</ul><p class="detail-extras-title"></p><ul class="detail-package detail-extras">${landing.package.extras.map(renderPackageItem).join('')}</ul></div></div>`;
+            detailPanel.innerHTML = `<div class="detail-current"><p class="detail-kicker"></p><h2 class="detail-title"></h2><div class="detail-timeline">${landing.milestones.map(() => '<div><span class="timeline-value"></span><span class="timeline-caption"></span></div>').join('')}</div><p class="detail-lead"></p><div class="detail-grid"><div class="detail-block"><p class="detail-package-title"></p><ul class="detail-package">${landing.package.items.map(renderPackageItem).join('')}</ul><p class="detail-extras-title"></p><ul class="detail-package detail-extras">${landing.package.extras.map(renderPackageItem).join('')}</ul></div></div></div><div class="detail-next" aria-live="polite"><h2 class="detail-title detail-result-title"></h2><p class="detail-result-lead"></p><p class="detail-effects-title"></p><ul class="detail-effects">${landing.outcome.effects.map(renderPackageItem).join('')}</ul><div class="detail-contact"><p class="detail-cta"><span class="detail-cta-text"></span><span class="loading-dots" aria-hidden="true"></span></p><a class="telegram-contact" href="https://t.me/pasha_iden" target="_blank" rel="noopener noreferrer"></a></div></div>`;
             trackAnimation(revealLanding(landing, job));
         }
         const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+-<>/';
@@ -480,6 +540,28 @@
         function reverseSequence(items, job) {
             return Promise.all(items.map(([element, text]) => reverseScrambleText(element, text, startTextAnimation(element)))).then((results) => results.every(Boolean));
         }
+        function getTextItems(selector, root = document) {
+            return Array.from(root.querySelectorAll(selector))
+                .filter((element) => (element.dataset.glitchText || element.textContent).length)
+                .map((element) => [element, element.dataset.glitchText || element.textContent]);
+        }
+        function getOptionsScreenText() {
+            return [
+                ...getTextItems('#menu-eyebrow, #menu-title'),
+                ...getTextItems('.menu-title, .menu-subtitle', menu),
+                ...getTextItems('.solution-title, .solution-subtitle', solutionList)
+            ];
+        }
+        function getDetailScreenText() {
+            return getTextItems('.detail-kicker, .detail-title, .detail-lead, .timeline-value, .timeline-caption, .detail-package-title, .detail-extras-title, .detail-package strong, .detail-package span, .detail-result-lead, .detail-effects-title, .detail-effects strong, .detail-effects span, .detail-cta-text, .telegram-contact', detailPanel);
+        }
+        function prepareTextForReveal(items) {
+            items.forEach(([element]) => {
+                startTextAnimation(element);
+                element.textContent = '';
+                element.style.opacity = '1';
+            });
+        }
         function revealMenu(job, includeHeader = true) {
             const items = Array.from(menu.querySelectorAll('button')).flatMap((button) => [
                 [button.querySelector('.menu-title'), button.querySelector('.menu-title').dataset.targetText],
@@ -510,11 +592,39 @@
             });
             items.push([detailPanel.querySelector('.detail-package-title'), landing.package.baseTitle]);
             const packageItems = [...landing.package.items, ...landing.package.extras];
-            detailPanel.querySelectorAll('.detail-package li').forEach((element, index) => {
+            detailPanel.querySelectorAll('.detail-current .detail-package li').forEach((element, index) => {
                 items.push([element.querySelector('strong'), packageItems[index].title], [element.querySelector('span'), packageItems[index].text]);
             });
             items.push([detailPanel.querySelector('.detail-extras-title'), landing.package.extrasTitle]);
-            return revealSequence(items, job);
+            items.push([detailPanel.querySelector('.detail-result-title'), landing.outcome.title]);
+            items.push([detailPanel.querySelector('.detail-result-lead'), landing.outcome.lead]);
+            items.push([detailPanel.querySelector('.detail-effects-title'), landing.outcome.effectsTitle]);
+            detailPanel.querySelectorAll('.detail-effects li').forEach((element, index) => {
+                items.push([element.querySelector('strong'), landing.outcome.effects[index].title], [element.querySelector('span'), landing.outcome.effects[index].text]);
+            });
+            const ctaText = detailPanel.querySelector('.detail-cta-text');
+            const contact = detailPanel.querySelector('.detail-contact');
+            const dots = detailPanel.querySelector('.loading-dots');
+            items.push([detailPanel.querySelector('.telegram-contact'), landing.outcome.contact]);
+            const ctaAnimation = scrambleText(ctaText, landing.outcome.cta, startTextAnimation(ctaText)).then((result) => {
+                if (result) {
+                    contact.classList.add('is-cta-ready');
+                    startLoadingDots(dots);
+                }
+                return result;
+            });
+            const animation = Promise.all([revealSequence(items, job), ctaAnimation]).then((results) => results.every(Boolean));
+            requestAnimationFrame(alignDetailColumns);
+            return animation;
+        }
+        function alignDetailColumns() {
+            const timelineValues = detailPanel.querySelectorAll('.detail-timeline .timeline-value');
+            const timelineValue = timelineValues[timelineValues.length - 1];
+            const detailNext = detailPanel.querySelector('.detail-next');
+            if (!timelineValue || !detailNext) return;
+            detailNext.style.paddingTop = '0';
+            const offset = timelineValue.getBoundingClientRect().top - detailNext.getBoundingClientRect().top;
+            detailNext.style.paddingTop = `${Math.max(0, offset)}px`;
         }
         function randomGlitchSymbol(except) {
             let symbol = except;
@@ -558,6 +668,18 @@
                 candidates.sort(() => Math.random() - .5).slice(0, count).forEach(glitchText);
             }, 700);
         }
+        function startLoadingDots(element) {
+            let step = 1;
+            element.textContent = '';
+            const timer = setInterval(() => {
+                if (!element.isConnected || !element.closest('.detail-contact.is-cta-ready')) {
+                    clearInterval(timer);
+                    return;
+                }
+                element.textContent = '.'.repeat(step);
+                step = (step + 1) % 4;
+            }, 800);
+        }
         options.forEach((option) => {
             option.addEventListener('mouseenter', () => setHighlight(option.dataset.language));
             option.addEventListener('focus', () => setHighlight(option.dataset.language));
@@ -578,12 +700,17 @@
         });
         backButton.addEventListener('click', () => runInteraction(() => {
             const job = ++animationJob;
-            selectedSolution = null;
-            renderMenu(false);
-            updateDetail(job);
-            trackAnimation(revealMenu(job));
-            trackAnimation(revealSolutions(job));
+            const transition = ++screenTransition;
+            trackAnimation(reverseSequence(getDetailScreenText(), job)).then((completed) => {
+                if (!completed || transition !== screenTransition) return;
+                selectedSolution = null;
+                prepareTextForReveal(getOptionsScreenText());
+                updateDetail(job);
+                trackAnimation(revealMenu(job));
+                trackAnimation(revealSolutions(job));
+            });
         }));
+        window.addEventListener('resize', () => requestAnimationFrame(alignDetailColumns));
         window.addEventListener('DOMContentLoaded', () => {
             const job = ++animationJob;
             document.body.classList.add('ui-ready');
