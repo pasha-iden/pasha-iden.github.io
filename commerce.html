@@ -80,6 +80,7 @@
         .detail-timeline { display: flex; gap: clamp(20px, 4vw, 52px); margin: -5px 0 15px; }
         .timeline-value { display: block; color: var(--ink); font-size: .72rem; font-weight: 600; letter-spacing: -.03em; }
         .timeline-caption { display: block; margin-top: 2px; color: var(--muted); font-size: .6rem; line-height: 1.35; letter-spacing: -.025em; }
+        .timeline-caption.is-unit { white-space: nowrap; }
         .detail-lead, .detail-block { margin: 0; color: var(--muted); font-size: clamp(.67rem, 1vw, .8rem); line-height: 1.55; letter-spacing: -.025em; }
         .detail-grid { display: grid; gap: 15px; margin-top: 22px; }
         .detail-block strong { color: var(--ink); font-size: inherit; font-weight: 600; letter-spacing: inherit; }
@@ -89,6 +90,7 @@
         .detail-package li::before, .detail-effects li::before { content: '•'; position: absolute; top: -.08em; left: 0; color: var(--ink); font-size: 1.45em; line-height: 1; }
         .detail-package strong, .detail-effects strong { color: var(--ink); font-weight: 600; }
         .detail-extras-title { margin: 16px 0 0; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
+        .detail-extras-title:empty, .detail-extras:empty { display: none; }
         .detail-result-title { margin: 0 0 3px; color: var(--ink); font-size: clamp(.67rem, 1vw, .8rem); font-weight: 600; line-height: 1.55; letter-spacing: -.025em; }
         .detail-result-lead { margin: 0; color: var(--muted); font-size: clamp(.67rem, 1vw, .8rem); line-height: 1.55; letter-spacing: -.025em; }
         .detail-effects-title { margin: 22px 0 0; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
@@ -132,7 +134,6 @@
                     { title: 'SaaS & custom platforms', subtitle: 'From an MVP to a production-ready product.' },
                     { title: 'Telegram bots & PWA apps', subtitle: 'Useful services where users already are.' },
                     { title: 'AI integration & automation', subtitle: 'Automated workflows and new product capabilities with AI.' },
-                    { title: 'Technical partnership', subtitle: 'From an idea and business goal to a working product.' },
                     { title: 'Team reinforcement', subtitle: 'I take full technical ownership of a direction or product area.' }
                 ],
                 landing: {
@@ -249,6 +250,76 @@
                         cta: 'One message away from your business behind an icon in the customer’s pocket',
                         contact: 'Message on Telegram'
                     }
+                },
+                ai: {
+                    kicker: 'AI integration & automation',
+                    title: 'The future under the hood of your business',
+                    lead: 'Design and implementation of AI-powered workflows — from mapping the process and data to a reliable tool that helps a team, customers or product make decisions and take action faster.',
+                    milestones: [{ value: 'Frontier', caption: 'models' }, { value: 'Individual', caption: 'implementation plan' }, { value: 'from $700', caption: 'USD / week' }],
+                    package: {
+                        baseTitle: 'Core implementation:',
+                        items: [
+                            { title: 'Process audit', text: 'Finding repeatable tasks, operations and bottlenecks where AI genuinely saves cost and time with a measurable impact.' },
+                            { title: 'Data work', text: 'Extraction, structuring, classification, verification and transformation of information.' },
+                            { title: 'Prompt engineering', text: 'Design and optimisation of system prompts, context and model interaction flows for stable, predictable output.' },
+                            { title: 'AI implementation', text: 'Connecting language, multimodal and specialised AI models through APIs.' },
+                            { title: 'Integrations & automation', text: 'Connecting user interfaces, messengers, APIs, documents and existing business systems.' },
+                            { title: 'Output control', text: 'Validation of AI responses, error handling, limitations and human-in-the-loop scenarios.' }
+                        ],
+                        extrasTitle: 'Additional options:',
+                        extras: [
+                            { title: 'Growth & support', text: 'Quality control, cost optimisation and expansion of automated flows.' },
+                            { title: 'Security & access', text: 'Role-based access, sensitive-data controls and audit trails for system actions.' }
+                        ]
+                    },
+                    outcome: {
+                        title: 'Result',
+                        lead: 'A working AI process where AI solves a specific task and keeps the business competitive in the context of modern technology.',
+                        effectsTitle: 'Potential business impact:',
+                        effects: [
+                            { title: 'New product frontiers', text: 'Features that were too expensive or complex without AI.' },
+                            { title: 'Modern work tools', text: 'Corporate software that simplifies work or expands your team’s capabilities.' },
+                            { title: 'Wow features', text: 'Options for your users that make them fall in love with your product.' },
+                            { title: 'Faster operations', text: 'Tasks that previously took hours or days are completed in minutes.' },
+                            { title: 'Higher productivity', text: 'A larger volume of operations without proportional expansion of the team.' },
+                            { title: 'Measurable impact', text: 'Metrics show where the workflow saves time, reduces errors and creates value.' }
+                        ],
+                        cta: 'One message away from turning processes into a cutting-edge modern industry',
+                        contact: 'Message on Telegram'
+                    }
+                },
+                team: {
+                    kicker: 'Team reinforcement',
+                    title: 'Technical ownership where the product needs momentum',
+                    lead: 'I join an existing team and take independent ownership of a direction, service or product area — from breaking down the task to production.',
+                    milestones: [{ value: '2 years of experience', caption: 'and proven solutions' }, { value: 'Full-time+', caption: 'with full involvement' }, { value: 'from $3,100', caption: 'USD / month' }],
+                    package: {
+                        baseTitle: 'What I take ownership of:',
+                        items: [
+                            { title: 'Technical focus', text: 'Audit of the current state, risks, priorities and the fastest path to a visible result.' },
+                            { title: 'Architecture and codebase', text: 'Reliable technical decisions, clear structure and development practices that support product growth.' },
+                            { title: 'Product delivery', text: 'Breaking goals into deliverable increments, building features and bringing them to production.' },
+                            { title: 'Integrations and infrastructure', text: 'APIs, third-party services, environments, deployment and operational reliability.' },
+                            { title: 'Team communication', text: 'Clear technical context for founders, product managers and other developers.' }
+                        ],
+                        extrasTitle: '',
+                        extras: []
+                    },
+                    outcome: {
+                        title: 'Result',
+                        lead: 'A technical area covered by a specialist who makes decisions, delivers outcomes and keeps development moving without constant oversight.',
+                        effectsTitle: 'Potential business impact:',
+                        effects: [
+                            { title: 'Faster delivery', text: 'Important product work moves forward without a prolonged search for a separate specialist for every task.' },
+                            { title: 'Lower technical risk', text: 'Architecture, integrations and production changes are handled with ownership and context.' },
+                            { title: 'Predictable development', text: 'Priorities, scope and technical trade-offs become clear to the whole team.' },
+                            { title: 'Stronger product quality', text: 'Features are built with attention to reliability, user experience and future development.' },
+                            { title: 'More focus for founders', text: 'The team receives technical leadership, freeing product and business leaders for their core work.' },
+                            { title: 'A foundation for growth', text: 'The product becomes easier to extend, hand over and scale with new people.' }
+                        ],
+                        cta: 'One message away from an engineer you can hand a task to end-to-end',
+                        contact: 'Message on Telegram'
+                    }
                 }
             },
             ru: {
@@ -259,7 +330,6 @@
                     { title: 'SaaS и пользовательские платформы', subtitle: 'От MVP до полноценного production-продукта.' },
                     { title: 'Telegram-боты и PWA-приложения', subtitle: 'Удобные сервисы там, где уже находится пользователь.' },
                     { title: 'Интеграция ИИ и автоматизация', subtitle: 'Автоматизация процессов и новые возможности продукта с помощью AI.' },
-                    { title: 'Техническое партнёрство', subtitle: 'От идеи и бизнес-задачи до работающего продукта.' },
                     { title: 'Усиление команды', subtitle: 'Беру направление или часть продукта под полную техническую ответственность.' }
                 ],
                 landing: {
@@ -374,6 +444,76 @@
                             { title: 'Прямой канал коммуникации', text: 'Возможность продолжать взаимодействие с пользователем после первого обращения.' }
                         ],
                         cta: 'В одном сообщении до вашего бизнеса за иконкой в кармане клиента',
+                        contact: 'Написать в Telegram'
+                    }
+                },
+                ai: {
+                    kicker: 'Интеграция ИИ и автоматизация',
+                    title: 'Будущее под капотом вашего бизнеса',
+                    lead: 'Проектирование и внедрение AI-сценариев — от разбора процесса и данных до надёжного инструмента, который помогает команде, клиентам или продукту быстрее принимать решения и совершать действия.',
+                    milestones: [{ value: 'Передовые', caption: 'модели' }, { value: 'Индивидуальный', caption: 'план внедрения' }, { value: 'от 60 000', caption: 'рублей / неделя' }],
+                    package: {
+                        baseTitle: 'Базовое внедрение:',
+                        items: [
+                            { title: 'Аудит процесса', text: 'Поиск повторяющихся задач, операций и узких мест, где ИИ действительно сокращает затраты и время, создавая измеримый эффект.' },
+                            { title: 'Работа с данными', text: 'Извлечение, структурирование, классификация, проверка и преобразование информации.' },
+                            { title: 'Промпт-инжиниринг', text: 'Проектирование и оптимизация системных промптов, контекста и сценариев взаимодействия с моделями для стабильного и предсказуемого результата.' },
+                            { title: 'Внедрение AI', text: 'Подключение языковых, мультимодальных и специализированных AI-моделей через API.' },
+                            { title: 'Интеграции и автоматизация', text: 'Связь с пользовательским интерфейсом, мессенджерами, API, документами и существующими системами бизнеса.' },
+                            { title: 'Контроль результата', text: 'Валидация ответов ИИ, обработка ошибок, ограничения и сценарии человеческого контроля.' }
+                        ],
+                        extrasTitle: 'Дополнительные предложения:',
+                        extras: [
+                            { title: 'Развитие и поддержка', text: 'Контроль качества, оптимизация стоимости и расширение автоматизированных сценариев.' },
+                            { title: 'Безопасность и доступы', text: 'Разграничение прав, контроль чувствительных данных и аудит действий системы.' }
+                        ]
+                    },
+                    outcome: {
+                        title: 'Результат',
+                        lead: 'Рабочий AI-процесс, в котором AI решает конкретную задачу и обеспечивает конкурентоспособность бизнеса в условиях современных технологий.',
+                        effectsTitle: 'Потенциальный эффект для бизнеса:',
+                        effects: [
+                            { title: 'Новые рубежи продукта', text: 'Функции, которые были слишком дорогими или сложными без AI.' },
+                            { title: 'Современные рабочие инструменты', text: 'Корпоративное ПО, упрощающее работу или расширяющее возможности вашей команды.' },
+                            { title: 'Вау-функционал', text: 'Опции для ваших пользователей, которые влюбляют в ваш продукт.' },
+                            { title: 'Ускорение операций', text: 'Задачи, которые занимали часы или дни, выполняются за минуты.' },
+                            { title: 'Рост производительности', text: 'Больший объём операций без пропорционального расширения команды.' },
+                            { title: 'Измеримый эффект', text: 'Метрики показывают, где процесс экономит время, снижает ошибки и создаёт ценность.' }
+                        ],
+                        cta: 'В одном сообщении от превращения процессов в передовую современную индустрию',
+                        contact: 'Написать в Telegram'
+                    }
+                },
+                team: {
+                    kicker: 'Усиление команды',
+                    title: 'Техническая ответственность там, где продукту нужен импульс',
+                    lead: 'Подключаюсь к существующей команде и беру самостоятельную ответственность за направление, сервис или часть продукта — от декомпозиции задачи до production.',
+                    milestones: [{ value: '2 года опыта', caption: 'и проверенных решений' }, { value: 'full-time+', caption: 'и полная вовлеченность' }, { value: 'от 260 000', caption: 'рублей / месяц' }],
+                    package: {
+                        baseTitle: 'За что беру ответственность:',
+                        items: [
+                            { title: 'Технический фокус', text: 'Аудит текущего состояния, рисков, приоритетов и самого короткого пути к заметному результату.' },
+                            { title: 'Архитектура и кодовая база', text: 'Надёжные технические решения, понятная структура и практики, которые поддерживают рост продукта.' },
+                            { title: 'Поставка продукта', text: 'Декомпозиция целей на поставляемые итерации, разработка фич и доведение их до production.' },
+                            { title: 'Интеграции и инфраструктура', text: 'API, внешние сервисы, окружения, развертывание и операционная надёжность.' },
+                            { title: 'Коммуникация в команде', text: 'Понятный технический контекст для фаундеров, продакт-менеджеров и других разработчиков.' }
+                        ],
+                        extrasTitle: '',
+                        extras: []
+                    },
+                    outcome: {
+                        title: 'Результат',
+                        lead: 'Техническая зона, закрытая специалистом, который принимает решения, обеспечивает результат и поддерживает движение разработки без постоянного контроля.',
+                        effectsTitle: 'Потенциальный эффект для бизнеса:',
+                        effects: [
+                            { title: 'Ускорение поставки', text: 'Важные продуктовые задачи движутся без долгого поиска отдельного специалиста под каждую из них.' },
+                            { title: 'Снижение технических рисков', text: 'Архитектура, интеграции и изменения в production ведутся с ответственностью и контекстом.' },
+                            { title: 'Предсказуемая разработка', text: 'Приоритеты, объём работ и технические компромиссы становятся понятны всей команде.' },
+                            { title: 'Сильнее качество продукта', text: 'Функции создаются с вниманием к надёжности, пользовательскому опыту и дальнейшему развитию.' },
+                            { title: 'Больше фокуса у фаундеров', text: 'Команда получает техническое лидерство, освобождая продуктовых и бизнес-лидеров для их ключевых задач.' },
+                            { title: 'Основа для роста', text: 'Продукт проще развивать, передавать и масштабировать новыми людьми.' }
+                        ],
+                        cta: 'В одном сообщении от инженера, которому можно передать задачу целиком',
                         contact: 'Написать в Telegram'
                     }
                 }
@@ -530,7 +670,7 @@
             });
         }
         function getSolutionDetail(index) {
-            return [copy[currentLanguage].landing, copy[currentLanguage].saas, copy[currentLanguage].messenger][index] || null;
+            return [copy[currentLanguage].landing, copy[currentLanguage].saas, copy[currentLanguage].messenger, copy[currentLanguage].ai, copy[currentLanguage].team][index] || null;
         }
         function updateDetail(job) {
             const detail = getSolutionDetail(selectedSolution);
@@ -542,7 +682,7 @@
             if (!isLandingOpen) { detailPanel.innerHTML = ''; return; }
             const landing = detail;
             const renderPackageItem = () => '<li><strong></strong> - <span></span></li>';
-            detailPanel.innerHTML = `<div class="detail-current"><p class="detail-kicker"></p><h2 class="detail-title"></h2><div class="detail-timeline">${landing.milestones.map(() => '<div><span class="timeline-value"></span><span class="timeline-caption"></span></div>').join('')}</div><p class="detail-lead"></p><div class="detail-grid"><div class="detail-block"><p class="detail-package-title"></p><ul class="detail-package">${landing.package.items.map(renderPackageItem).join('')}</ul><p class="detail-extras-title"></p><ul class="detail-package detail-extras">${landing.package.extras.map(renderPackageItem).join('')}</ul></div></div></div><div class="detail-next" aria-live="polite"><h2 class="detail-title detail-result-title"></h2><p class="detail-result-lead"></p><p class="detail-effects-title"></p><ul class="detail-effects">${landing.outcome.effects.map(renderPackageItem).join('')}</ul><div class="detail-contact"><p class="detail-cta"><span class="detail-cta-text"></span><span class="loading-dots" aria-hidden="true"></span></p><a class="telegram-contact" href="https://t.me/pasha_iden" target="_blank" rel="noopener noreferrer"></a></div></div>`;
+            detailPanel.innerHTML = `<div class="detail-current"><p class="detail-kicker"></p><h2 class="detail-title"></h2><div class="detail-timeline">${landing.milestones.map((milestone) => `<div><span class="timeline-value"></span><span class="timeline-caption${milestone.caption.includes('/') ? ' is-unit' : ''}"></span></div>`).join('')}</div><p class="detail-lead"></p><div class="detail-grid"><div class="detail-block"><p class="detail-package-title"></p><ul class="detail-package">${landing.package.items.map(renderPackageItem).join('')}</ul><p class="detail-extras-title"></p><ul class="detail-package detail-extras">${landing.package.extras.map(renderPackageItem).join('')}</ul></div></div></div><div class="detail-next" aria-live="polite"><h2 class="detail-title detail-result-title"></h2><p class="detail-result-lead"></p><p class="detail-effects-title"></p><ul class="detail-effects">${landing.outcome.effects.map(renderPackageItem).join('')}</ul><div class="detail-contact"><p class="detail-cta"><span class="detail-cta-text"></span><span class="loading-dots" aria-hidden="true"></span></p><a class="telegram-contact" href="https://t.me/pasha_iden" target="_blank" rel="noopener noreferrer"></a></div></div>`;
             trackAnimation(revealLanding(landing, job));
         }
         const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+-<>/';
