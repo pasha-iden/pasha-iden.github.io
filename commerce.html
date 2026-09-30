@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Павел — Fullstack Product Engineer">
+    <title>Павел — Fullstack Product Engineer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --ink: #10141d; --muted: #9ca4b2; --line: rgba(44, 62, 92, .14); --blue: #6d91ff; }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; min-width: 320px; min-height: 100vh; overflow: hidden; color: var(--ink);
+            font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+            background: radial-gradient(circle at 20% 18%, rgba(255, 255, 255, .95), transparent 30rem), radial-gradient(circle at 82% 88%, rgba(153, 203, 255, .32), transparent 31rem), #edf5ff;
+        }
+        button { font: inherit; }
+        .screen { position: fixed; inset: 0; display: grid; place-items: center; padding: 24px; transition: opacity .55s ease, visibility .55s step-end; }
+        .language-panel { display: grid; grid-template-columns: max-content max-content max-content; align-items: center; justify-content: center; column-gap: 18px; row-gap: 18px; text-align: center; }
+        .language-prompt, .language-options { display: contents; }
+        .language-prompt span:first-child, .language-option:first-child { justify-self: end; }
+        .language-prompt span:last-child, .language-option:last-child { justify-self: start; }
+        .language-prompt { color: var(--ink); font-size: clamp(.9rem, 2vw, 1.8rem); font-weight: 650; letter-spacing: -.055em; }
+        .divider { display: block; color: var(--ink); font-weight: 300; line-height: 1; transition: color .35s ease; }
+        .language-option { border: 0; padding: 8px 0; color: var(--ink); background: transparent; cursor: pointer; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; transition: color .35s ease, transform .2s ease; }
+        .language-prompt span:not(.divider) { transition: color .35s ease; }
+        .language-option:hover, .language-option:focus-visible { transform: translateY(-2px); outline: none; }
+        .language-panel.is-hovering .language-option { color: var(--muted); }
+        .language-panel.is-hovering .language-option.is-highlighted { color: var(--ink); }
+        .language-screen.is-leaving { opacity: 0; visibility: hidden; pointer-events: none; }
+        .menu-screen { opacity: 0; visibility: hidden; transform: translateY(16px); transition: opacity .55s ease .12s, transform .55s ease .12s, visibility .55s step-start; }
+        .menu-screen.is-visible { opacity: 1; visibility: visible; transform: none; }
+        .top-language-switch { position: absolute; top: 28px; left: 50%; display: flex; align-items: center; gap: 9px; transform: translateX(-50%); }
+        .top-language-option { padding: 4px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: .78rem; font-weight: 600; letter-spacing: .05em; transition: color .25s ease; }
+        .top-language-option:hover, .top-language-option:focus-visible, .top-language-option.is-active { color: var(--ink); outline: none; }
+        .top-language-switch .divider { font-size: .8rem; }
+        .menu-panel { width: min(980px, 100%); }
+        .eyebrow { margin: 0 0 12px; color: var(--blue); font-size: .72rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+        h1 { margin: 0 0 30px; font-size: clamp(.9rem, 2vw, 1.8rem); font-weight: 650; line-height: 1; letter-spacing: -.055em; }
+        .menu { margin: 0; padding: 0; list-style: none; }
+        .menu button { display: block; width: 100%; padding: 10px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; text-align: left; transition: color .35s ease; }
+        .menu button:hover, .menu button:focus-visible, .menu button.is-selected { color: var(--ink); outline: none; }
+        .menu-layout { --column-gap: clamp(32px, 8vw, 112px); display: flex; gap: var(--column-gap); align-items: flex-start; }
+        .menu-layout > nav, .solution-list { flex: 1 1 0; min-width: 0; transition: flex-grow .5s ease, flex-basis .5s ease; }
+        .menu-layout > nav { transition: flex-grow .5s ease, flex-basis .5s ease, margin-right .5s ease, opacity .35s ease, transform .5s ease; }
+        .menu-panel.is-detail-open .menu-layout > nav { flex: 0 0 0; margin-right: calc(-1 * var(--column-gap)); opacity: 0; pointer-events: none; transform: translateX(-100vw); }
+        .menu-panel.is-detail-open .detail-panel { flex: 1 1 0; margin-left: 0; }
+        .solution-list { margin: 0; padding: 0; list-style: none; opacity: 0; transform: translateX(-10px); pointer-events: none; transition: opacity .35s ease, transform .35s ease; }
+        .solution-list.is-open { opacity: 1; transform: none; pointer-events: auto; }
+        .solution-list button { display: block; width: 100%; padding: 10px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font: inherit; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; text-align: left; transition: color .35s ease; }
+        .solution-subtitle { display: block; margin-top: 2px; font-size: clamp(.62rem, 1vw, .76rem); font-weight: 400; line-height: 1.45; letter-spacing: -.025em; }
+        .solution-list button:hover, .solution-list button:focus-visible { color: var(--ink); outline: none; }
+        .solution-list button.is-selected { color: var(--ink); }
+        .detail-panel { flex: 0 0 0; min-width: 0; margin-left: calc(-1 * var(--column-gap)); overflow: hidden; opacity: 0; transform: translateX(-10px); pointer-events: none; transition: flex-grow .5s ease, flex-basis .5s ease, margin-left .5s ease, opacity .35s ease .12s, transform .35s ease .12s; }
+        .detail-panel.is-open { opacity: 1; transform: none; pointer-events: auto; }
+        .detail-kicker { margin: 0 0 8px; color: var(--blue); font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+        .detail-title { margin: 0 0 14px; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; }
+        .detail-lead, .detail-block { margin: 0; color: var(--muted); font-size: clamp(.67rem, 1vw, .8rem); line-height: 1.55; letter-spacing: -.025em; }
+        .detail-grid { display: grid; gap: 15px; margin-top: 22px; }
+        .detail-block strong { display: block; margin-bottom: 3px; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
+        @media (max-width: 850px) { .menu-panel.is-detail-open .menu-layout { flex-wrap: wrap; } .detail-panel { flex-basis: 100%; margin-top: 8px; } }
+        @media (max-width: 600px) { .menu-layout, .menu-panel.is-detail-open .menu-layout { flex-direction: column; gap: 18px; } .menu-layout > nav, .solution-list, .detail-panel, .menu-panel.is-detail-open .detail-panel { width: 100%; flex: 0 0 auto; margin-left: 0; } }
+        @media (max-width: 480px) { .language-panel { column-gap: 10px; row-gap: 14px; } }
+    </style>
+</head>
+<body>
+    <main>
+        <section class="screen language-screen" id="language-screen" aria-label="Language selection">
+            <div class="language-panel" id="language-panel">
+                <div class="language-prompt" aria-hidden="true"><span data-language="en">Choose language</span><span class="divider">|</span><span data-language="ru">Выберите язык</span></div>
+                <div class="language-options">
+                    <button class="language-option" type="button" data-language="en">English</button><span class="divider" aria-hidden="true">|</span><button class="language-option" type="button" data-language="ru">Русский</button>
+                </div>
+            </div>
+        </section>
+        <section class="screen menu-screen" id="menu-screen" aria-label="Main menu" aria-hidden="true">
+            <div class="top-language-switch" aria-label="Language switcher">
+                <button class="top-language-option" type="button" data-language="en">EN</button><span class="divider" aria-hidden="true">|</span><button class="top-language-option" type="button" data-language="ru">RU</button>
+            </div>
+            <div class="menu-panel" id="menu-panel"><p class="eyebrow" id="menu-eyebrow">Pavel / Fullstack Product Engineer</p><h1 id="menu-title">What are you looking for?</h1><div class="menu-layout"><nav><ul class="menu" id="menu"></ul></nav><ul class="solution-list" id="solution-list" aria-live="polite"></ul><aside class="detail-panel" id="detail-panel" aria-live="polite"></aside></div></div>
+        </section>
+    </main>
+    <script>
+        const copy = {
+            en: {
+                eyebrow: 'Pavel / Fullstack Product Engineer', title: 'What are you looking for?',
+                menu: ['Solutions', 'Cases', 'Skills', 'About me', 'Get in touch'],
+                solutions: [
+                    { title: 'Landing pages & SEO sites', subtitle: 'Fast, discoverable, and built for conversion.' },
+                    { title: 'SaaS & custom platforms', subtitle: 'From an MVP to a production-ready product.' },
+                    { title: 'Telegram bots & PWA apps', subtitle: 'Useful services where users already are.' },
+                    { title: 'AI integration & automation', subtitle: 'Automated workflows and new product capabilities with AI.' },
+                    { title: 'Technical partnership', subtitle: 'From an idea and business goal to a working product.' },
+                    { title: 'Team reinforcement', subtitle: 'I take full technical ownership of a direction or product area.' }
+                ],
+                landing: {
+                    kicker: 'Landing pages & SEO sites',
+                    title: 'A page that makes the next step obvious',
+                    lead: 'I turn an offer into a clear, fast web experience - from the first structure and copy logic to a production-ready launch.',
+                    blocks: [
+                        { title: 'Focus', text: 'Value proposition, conversion path, technical SEO, responsive layout and loading speed.' },
+                        { title: 'Format', text: 'A focused landing page, a small company website or a scalable SEO content structure.' },
+                        { title: 'Result', text: 'A maintainable, measurable foundation that is ready for analytics, experiments and growth.' }
+                    ]
+                }
+            },
+            ru: {
+                eyebrow: 'Павел / Fullstack Product Engineer', title: 'Что вас интересует?',
+                menu: ['Решения', 'Кейсы', 'Компетенции', 'Обо мне', 'Связаться'],
+                solutions: [
+                    { title: 'Лендинги и SEO-сайты', subtitle: 'Быстрые, заметные в поиске и ориентированные на конверсию.' },
+                    { title: 'SaaS и пользовательские платформы', subtitle: 'От MVP до полноценного production-продукта.' },
+                    { title: 'Telegram-боты и PWA-приложения', subtitle: 'Удобные сервисы там, где уже находится пользователь.' },
+                    { title: 'Интеграция ИИ и автоматизация', subtitle: 'Автоматизация процессов и новые возможности продукта с помощью AI.' },
+                    { title: 'Техническое партнёрство', subtitle: 'От идеи и бизнес-задачи до работающего продукта.' },
+                    { title: 'Усиление команды', subtitle: 'Беру направление или часть продукта под полную техническую ответственность.' }
+                ],
+                landing: {
+                    kicker: 'Лендинги и SEO-сайты',
+                    title: 'Страница, на которой понятен следующий шаг',
+                    lead: 'Превращаю предложение в ясный и быстрый веб-опыт: от логики первого экрана и структуры до готового к запуску продукта.',
+                    blocks: [
+                        { title: 'Фокус', text: 'Ценность предложения, путь к конверсии, техническое SEO, адаптивность и скорость загрузки.' },
+                        { title: 'Формат', text: 'Точечный лендинг, сайт компании или масштабируемая контентная структура для SEO.' },
+                        { title: 'Результат', text: 'Поддерживаемая и измеримая основа, готовая к аналитике, экспериментам и росту.' }
+                    ]
+                }
+            }
+        };
+        const panel = document.getElementById('language-panel');
+        const languageScreen = document.getElementById('language-screen');
+        const menuScreen = document.getElementById('menu-screen');
+        const options = document.querySelectorAll('.language-option');
+        const topOptions = document.querySelectorAll('.top-language-option');
+        const menu = document.getElementById('menu');
+        const solutionList = document.getElementById('solution-list');
+        const menuPanel = document.getElementById('menu-panel');
+        const detailPanel = document.getElementById('detail-panel');
+        let currentLanguage = 'en';
+        let selectedSection = null;
+        let selectedSolution = null;
+        function setHighlight(language) {
+            panel.classList.toggle('is-hovering', Boolean(language));
+            document.querySelectorAll('[data-language]').forEach((element) => element.classList.toggle('is-highlighted', element.dataset.language === language));
+        }
+        function setMenuLanguage(language) {
+            const content = copy[language];
+            currentLanguage = language;
+            document.getElementById('menu-eyebrow').textContent = content.eyebrow;
+            document.getElementById('menu-title').textContent = content.title;
+            menu.innerHTML = content.menu.map((item, index) => `<li><button type="button" data-section="section-${index}">${item}</button></li>`).join('');
+            solutionList.innerHTML = content.solutions.map((item, index) => `<li><button type="button" data-solution="${index}">${item.title}<span class="solution-subtitle">${item.subtitle}</span></button></li>`).join('');
+            selectSection(selectedSection);
+            document.documentElement.lang = language;
+            topOptions.forEach((option) => {
+                const isActive = option.dataset.language === language;
+                option.classList.toggle('is-active', isActive);
+                option.setAttribute('aria-pressed', String(isActive));
+            });
+        }
+        function openMenu(language) {
+            setMenuLanguage(language);
+            languageScreen.classList.add('is-leaving'); menuScreen.classList.add('is-visible'); menuScreen.setAttribute('aria-hidden', 'false');
+        }
+        function selectSection(section) {
+            selectedSection = section;
+            if (section !== 'section-0') selectedSolution = null;
+            menu.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', button.dataset.section === section));
+            solutionList.classList.toggle('is-open', section === 'section-0');
+            updateDetail();
+        }
+        function selectSolution(index) {
+            selectedSolution = index;
+            solutionList.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.solution) === index));
+            updateDetail();
+        }
+        function updateDetail() {
+            const isLandingOpen = selectedSection === 'section-0' && selectedSolution === 0;
+            solutionList.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.solution) === selectedSolution));
+            menuPanel.classList.toggle('is-detail-open', isLandingOpen);
+            detailPanel.classList.toggle('is-open', isLandingOpen);
+            if (!isLandingOpen) { detailPanel.innerHTML = ''; return; }
+            const landing = copy[currentLanguage].landing;
+            detailPanel.innerHTML = `<p class="detail-kicker">${landing.kicker}</p><h2 class="detail-title">${landing.title}</h2><p class="detail-lead">${landing.lead}</p><div class="detail-grid">${landing.blocks.map(block => `<p class="detail-block"><strong>${block.title}</strong>${block.text}</p>`).join('')}</div>`;
+        }
+        options.forEach((option) => {
+            option.addEventListener('mouseenter', () => setHighlight(option.dataset.language));
+            option.addEventListener('focus', () => setHighlight(option.dataset.language));
+            option.addEventListener('mouseleave', () => setHighlight(null));
+            option.addEventListener('blur', () => setHighlight(null));
+            option.addEventListener('click', () => openMenu(option.dataset.language));
+        });
+        topOptions.forEach((option) => option.addEventListener('click', () => setMenuLanguage(option.dataset.language)));
+        menu.addEventListener('click', (event) => {
+            const button = event.target.closest('button[data-section]');
+            if (button) selectSection(button.dataset.section);
+        });
+        solutionList.addEventListener('click', (event) => {
+            const button = event.target.closest('button[data-solution]');
+            if (button) selectSolution(Number(button.dataset.solution));
+        });
+    </script>
+</body>
+</html>
