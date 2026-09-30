@@ -16,28 +16,34 @@
             font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
             background: radial-gradient(circle at 20% 18%, rgba(255, 255, 255, .95), transparent 30rem), radial-gradient(circle at 82% 88%, rgba(153, 203, 255, .32), transparent 31rem), #edf5ff;
         }
-        body:not(.ui-ready) .language-prompt span:not(.divider),
-        body:not(.ui-ready) .language-option { visibility: hidden; }
+        body:not(.ui-ready) .language-panel span,
+        body:not(.ui-ready) .language-panel button { visibility: hidden; }
         button { font: inherit; }
-        .screen { position: fixed; inset: 0; display: grid; place-items: center; padding: 24px; transition: opacity .55s ease, visibility .55s step-end; }
+        .screen { position: fixed; inset: 0; display: grid; place-items: center; padding: 24px; }
         .language-panel { display: grid; grid-template-columns: max-content max-content max-content; align-items: center; justify-content: center; column-gap: 18px; row-gap: 18px; text-align: center; }
         .language-prompt, .language-options { display: contents; }
         .language-prompt span:first-child, .language-option:first-child { justify-self: end; }
         .language-prompt span:last-child, .language-option:last-child { justify-self: start; }
         .language-prompt { color: var(--ink); font-size: clamp(.9rem, 2vw, 1.8rem); font-weight: 650; letter-spacing: -.055em; }
         .divider { display: block; color: var(--ink); font-weight: 300; line-height: 1; transition: color .35s ease; }
-        .language-option { border: 0; padding: 8px 0; color: var(--ink); background: transparent; cursor: pointer; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; transition: color .35s ease, transform .2s ease; }
+        .language-option { border: 0; padding: 8px 0; color: var(--ink); background: transparent; cursor: pointer; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; transition: color .35s ease; }
         .language-prompt span:not(.divider) { transition: color .35s ease; }
-        .language-option:hover, .language-option:focus-visible { transform: translateY(-2px); outline: none; }
+        .language-option:hover, .language-option:focus-visible { outline: none; }
         .language-panel.is-hovering .language-option { color: var(--muted); }
         .language-panel.is-hovering .language-option.is-highlighted { color: var(--ink); }
-        .language-screen.is-leaving { opacity: 0; visibility: hidden; pointer-events: none; }
-        .menu-screen { opacity: 0; visibility: hidden; transform: translateY(16px); transition: opacity .55s ease .12s, transform .55s ease .12s, visibility .55s step-start; }
-        .menu-screen.is-visible { opacity: 1; visibility: visible; transform: none; }
+        .language-screen.is-leaving { visibility: hidden; pointer-events: none; }
+        .menu-screen { visibility: hidden; }
+        .menu-screen.is-visible { visibility: visible; }
         .top-language-switch { position: absolute; top: 28px; left: 50%; display: flex; align-items: center; gap: 9px; transform: translateX(-50%); }
         .top-language-option { padding: 4px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: .78rem; font-weight: 600; letter-spacing: .05em; transition: color .25s ease; }
         .top-language-option:hover, .top-language-option:focus-visible, .top-language-option.is-active { color: var(--ink); outline: none; }
         .top-language-switch .divider { font-size: .8rem; }
+        .back-button { position: fixed; top: 50%; left: 20px; width: 22px; height: 28px; padding: 0; border: 0; opacity: 0; background: transparent; cursor: pointer; pointer-events: none; transform: translateY(-50%); }
+        .back-button::before, .back-button::after { content: ''; position: absolute; left: 2px; width: 17px; height: 1.5px; background: var(--muted); transform-origin: left center; }
+        .back-button::before { top: 13px; transform: rotate(45deg); }
+        .back-button::after { top: 13px; transform: rotate(-45deg); }
+        .back-button.is-visible { opacity: 1; pointer-events: auto; }
+        .back-button:hover::before, .back-button:hover::after { background: var(--ink); }
         .menu-panel { width: min(980px, 100%); }
         .eyebrow { margin: 0 0 12px; color: var(--blue); font-size: .72rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
         h1 { margin: 0 0 30px; font-size: clamp(.9rem, 2vw, 1.8rem); font-weight: 650; line-height: 1; letter-spacing: -.055em; }
@@ -46,15 +52,15 @@
         .menu button:hover, .menu button:focus-visible, .menu button.is-selected { color: var(--ink); outline: none; }
         .menu-layout { --column-gap: clamp(32px, 8vw, 112px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--column-gap); align-items: start; }
         .menu-layout > nav { grid-column: 1; grid-row: 1; min-width: 0; transition: opacity .35s ease, transform .5s ease; }
-        .solution-list { grid-column: 2; grid-row: 1; min-width: 0; margin: 0; padding: 0; list-style: none; opacity: 0; transform: translateX(-10px); pointer-events: none; transition: opacity .35s ease, transform .5s ease; }
-        .solution-list.is-open { opacity: 1; transform: none; pointer-events: auto; }
-        .menu-panel.is-detail-open .solution-list { opacity: 0; pointer-events: none; transform: none; }
+        .solution-list { grid-column: 2; grid-row: 1; min-width: 0; margin: 0; padding: 0; list-style: none; opacity: 0; pointer-events: none; }
+        .solution-list.is-open { opacity: 1; pointer-events: auto; }
+        .menu-panel.is-detail-open .solution-list { opacity: 0; pointer-events: none; }
         .solution-list button { display: block; width: 100%; padding: 10px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font: inherit; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; text-align: left; transition: color .35s ease; }
         .solution-subtitle { display: block; margin-top: 2px; font-size: clamp(.62rem, 1vw, .76rem); font-weight: 400; line-height: 1.45; letter-spacing: -.025em; }
         .solution-list button:hover, .solution-list button:focus-visible { color: var(--ink); outline: none; }
         .solution-list button.is-selected { color: var(--ink); }
-        .detail-panel { grid-column: 2; grid-row: 1; min-width: 0; overflow: hidden; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
-        .detail-panel.is-open { opacity: 1; transform: none; pointer-events: auto; }
+        .detail-panel { grid-column: 2; grid-row: 1; min-width: 0; overflow: hidden; opacity: 0; pointer-events: none; }
+        .detail-panel.is-open { opacity: 1; pointer-events: auto; }
         .detail-kicker { margin: 0 0 8px; color: var(--blue); font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
         .detail-title { margin: 0 0 14px; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; }
         .detail-lead, .detail-block { margin: 0; color: var(--muted); font-size: clamp(.67rem, 1vw, .8rem); line-height: 1.55; letter-spacing: -.025em; }
@@ -79,6 +85,7 @@
             <div class="top-language-switch" aria-label="Language switcher">
                 <button class="top-language-option" type="button" data-language="en">EN</button><span class="divider" aria-hidden="true">|</span><button class="top-language-option" type="button" data-language="ru">RU</button>
             </div>
+            <button class="back-button" id="back-button" type="button" aria-label="Back"></button>
             <div class="menu-panel" id="menu-panel"><p class="eyebrow" id="menu-eyebrow">Pavel / Fullstack Product Engineer</p><h1 id="menu-title">What are you looking for?</h1><div class="menu-layout"><nav><ul class="menu" id="menu"></ul></nav><ul class="solution-list" id="solution-list" aria-live="polite"></ul><aside class="detail-panel" id="detail-panel" aria-live="polite"></aside></div></div>
         </section>
     </main>
@@ -133,11 +140,13 @@
         const languageScreen = document.getElementById('language-screen');
         const menuScreen = document.getElementById('menu-screen');
         const options = document.querySelectorAll('.language-option');
+        const languageItems = Array.from(document.querySelectorAll('.language-panel span, .language-panel button')).map((element) => [element, element.textContent]);
         const topOptions = document.querySelectorAll('.top-language-option');
         const menu = document.getElementById('menu');
         const solutionList = document.getElementById('solution-list');
         const menuPanel = document.getElementById('menu-panel');
         const detailPanel = document.getElementById('detail-panel');
+        const backButton = document.getElementById('back-button');
         let currentLanguage = 'en';
         let selectedSection = null;
         let selectedSolution = null;
@@ -151,11 +160,12 @@
             currentLanguage = language;
             document.getElementById('menu-eyebrow').textContent = content.eyebrow;
             document.getElementById('menu-title').textContent = content.title;
-            menu.innerHTML = content.menu.map((item, index) => `<li><button type="button" data-section="section-${index}">${item}</button></li>`).join('');
+            const isDetailOpen = selectedSection === 'section-0' && selectedSolution === 0;
+            renderMenu(isDetailOpen);
             solutionList.innerHTML = content.solutions.map((item, index) => `<li><button type="button" data-solution="${index}"><span class="solution-title">${item.title}</span><span class="solution-subtitle">${item.subtitle}</span></button></li>`).join('');
             const job = ++animationJob;
             selectSection(selectedSection, true, job);
-            revealMenu(job);
+            revealMenu(job, !isDetailOpen);
             document.documentElement.lang = language;
             topOptions.forEach((option) => {
                 const isActive = option.dataset.language === language;
@@ -164,12 +174,30 @@
             });
         }
         function openMenu(language) {
-            setMenuLanguage(language);
-            languageScreen.classList.add('is-leaving'); menuScreen.classList.add('is-visible'); menuScreen.setAttribute('aria-hidden', 'false');
+            if (languageScreen.dataset.closing === 'true') return;
+            languageScreen.dataset.closing = 'true';
+            options.forEach((option) => { option.disabled = true; });
+            const job = ++animationJob;
+            reverseSequence(languageItems, job).then((completed) => {
+                if (!completed || job !== animationJob) return;
+                languageScreen.classList.add('is-leaving');
+                setMenuLanguage(language);
+                menuScreen.classList.add('is-visible');
+                menuScreen.setAttribute('aria-hidden', 'false');
+            });
+        }
+        function renderMenu(showSolutions = false) {
+            const content = copy[currentLanguage];
+            if (showSolutions) {
+                menu.innerHTML = content.solutions.map((item, index) => `<li><button type="button" data-menu-solution="${index}"><span class="solution-title">${item.title}</span><span class="solution-subtitle">${item.subtitle}</span></button></li>`).join('');
+                return;
+            }
+            menu.innerHTML = content.menu.map((item, index) => `<li><button type="button" data-section="section-${index}">${item}</button></li>`).join('');
         }
         function selectSection(section, preserveDetail = false, job = ++animationJob) {
             if (!preserveDetail) selectedSolution = null;
             selectedSection = section;
+            if (!preserveDetail) renderMenu(false);
             menu.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', button.dataset.section === section));
             solutionList.classList.toggle('is-open', section === 'section-0');
             updateDetail(job);
@@ -178,53 +206,123 @@
         function selectSolution(index) {
             const job = ++animationJob;
             selectedSolution = index;
+            const isDrilldownRendered = Boolean(menu.querySelector('[data-menu-solution]'));
+            if (index === 0 && !isDrilldownRendered) renderMenu(true);
             solutionList.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.solution) === index));
             updateDetail(job);
+            if (index === 0 && !isDrilldownRendered) revealMenu(job, false);
         }
         function updateDetail(job) {
             const isLandingOpen = selectedSection === 'section-0' && selectedSolution === 0;
             solutionList.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.solution) === selectedSolution));
             menuPanel.classList.toggle('is-detail-open', isLandingOpen);
             detailPanel.classList.toggle('is-open', isLandingOpen);
+            backButton.classList.toggle('is-visible', isLandingOpen);
             if (!isLandingOpen) { detailPanel.innerHTML = ''; return; }
             const landing = copy[currentLanguage].landing;
             detailPanel.innerHTML = `<p class="detail-kicker"></p><h2 class="detail-title"></h2><p class="detail-lead"></p><div class="detail-grid">${landing.blocks.map(() => `<p class="detail-block"><strong></strong><span></span></p>`).join('')}</div>`;
             revealLanding(landing, job);
         }
         const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+-<>/';
-        function scrambleText(element, text, job, duration = 520) {
+        function scrambleText(element, text, job) {
             const characters = Array.from(text);
-            const startedAt = performance.now();
-            let lastSubstitutionAt = 0;
+            delete element.dataset.glitchText;
             element.textContent = '';
+            const states = characters.map((character, index) => {
+                const span = document.createElement('span');
+                span.textContent = character;
+                span.style.opacity = '0';
+                element.append(span);
+                return {
+                    character,
+                    span,
+                    startDelay: /\s/.test(character) ? 0 : Math.floor((index * 28) / 90) + 1 + Math.floor(Math.random() * 4),
+                    substitutions: /\s/.test(character) ? 0 : 4 + Math.floor(Math.random() * 5)
+                };
+            });
+            const totalPasses = Math.max(...states.map((state) => state.startDelay + state.substitutions));
+            let pass = 0;
             return new Promise((resolve) => {
-                function draw(now) {
-                    if (job !== animationJob) return resolve(false);
-                    const progress = Math.min((now - startedAt) / duration, 1);
-                    if (now - lastSubstitutionAt >= 32 || progress === 1) {
-                        const revealed = Math.floor(progress * characters.length);
-                        element.textContent = characters.map((character, index) => {
-                            if (/\s/.test(character) || index < revealed) return character;
-                            return glyphs[Math.floor(Math.random() * glyphs.length)];
-                        }).join('');
-                        lastSubstitutionAt = now;
+                const timer = setInterval(() => {
+                    if (job !== animationJob) {
+                        clearInterval(timer);
+                        return resolve(false);
                     }
-                    if (progress < 1) requestAnimationFrame(draw);
-                    else resolve(true);
-                }
-                requestAnimationFrame(draw);
+                    states.forEach((state) => {
+                        if (/\s/.test(state.character)) {
+                            state.span.style.opacity = '1';
+                            return;
+                        }
+                        if (pass < state.startDelay) return;
+                        state.span.style.opacity = '1';
+                        if (pass < state.startDelay + state.substitutions) {
+                            state.span.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+                            return;
+                        }
+                        state.span.textContent = state.character;
+                    });
+                    if (pass > totalPasses) {
+                        element.dataset.glitchText = text;
+                        clearInterval(timer);
+                        return resolve(true);
+                    }
+                    pass += 1;
+                }, 90);
+            });
+        }
+        function reverseScrambleText(element, text, job) {
+            const characters = Array.from(text);
+            element.textContent = '';
+            element.style.opacity = '1';
+            const states = characters.map((character) => {
+                const span = document.createElement('span');
+                span.textContent = character;
+                element.append(span);
+                return {
+                    character,
+                    span,
+                    startDelay: /\s/.test(character) ? 0 : 1 + Math.floor(Math.random() * 4),
+                    substitutions: /\s/.test(character) ? 0 : 4 + Math.floor(Math.random() * 5)
+                };
+            });
+            const totalPasses = Math.max(...states.map((state) => state.startDelay + state.substitutions));
+            let pass = 0;
+            return new Promise((resolve) => {
+                const timer = setInterval(() => {
+                    if (job !== animationJob) {
+                        clearInterval(timer);
+                        return resolve(false);
+                    }
+                    if (pass > totalPasses) {
+                        clearInterval(timer);
+                        return resolve(true);
+                    }
+                    states.forEach((state) => {
+                        if (/\s/.test(state.character) || pass < state.startDelay) return;
+                        if (pass < state.startDelay + state.substitutions) {
+                            state.span.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+                            return;
+                        }
+                        state.span.style.opacity = '0';
+                    });
+                    pass += 1;
+                }, 90);
             });
         }
         function revealSequence(items, job) {
-            items.forEach(([element]) => { element.textContent = ''; });
+            items.forEach(([element]) => { element.textContent = ''; delete element.dataset.glitchText; });
             return Promise.all(items.map(([element, text]) => scrambleText(element, text, job))).then((results) => results.every(Boolean));
         }
-        function revealMenu(job) {
-            return revealSequence([
-                [document.getElementById('menu-eyebrow'), copy[currentLanguage].eyebrow],
-                [document.getElementById('menu-title'), copy[currentLanguage].title],
-                ...Array.from(menu.querySelectorAll('button')).map((button, index) => [button, copy[currentLanguage].menu[index]])
-            ], job);
+        function reverseSequence(items, job) {
+            return Promise.all(items.map(([element, text]) => reverseScrambleText(element, text, job))).then((results) => results.every(Boolean));
+        }
+        function revealMenu(job, includeHeader = true) {
+            const solutionTitles = Array.from(menu.querySelectorAll('.solution-title'));
+            const items = solutionTitles.length
+                ? solutionTitles.flatMap((title, index) => [[title, copy[currentLanguage].solutions[index].title], [menu.querySelectorAll('.solution-subtitle')[index], copy[currentLanguage].solutions[index].subtitle]])
+                : Array.from(menu.querySelectorAll('button')).map((button, index) => [button, copy[currentLanguage].menu[index]]);
+            if (includeHeader) items.unshift([document.getElementById('menu-title'), copy[currentLanguage].title], [document.getElementById('menu-eyebrow'), copy[currentLanguage].eyebrow]);
+            return revealSequence(items, job);
         }
         function revealSolutions(job) {
             const items = [];
@@ -246,6 +344,48 @@
             }
             return revealSequence(items, job);
         }
+        function randomGlitchSymbol(except) {
+            let symbol = except;
+            while (symbol === except) symbol = glyphs[Math.floor(Math.random() * glyphs.length)];
+            return symbol;
+        }
+        function glitchText(element) {
+            const original = element.dataset.glitchText;
+            if (!original || element.dataset.glitching === 'true') return;
+            const characters = Array.from(original);
+            const availableIndexes = characters.map((character, index) => (/\s/.test(character) ? -1 : index)).filter(index => index >= 0);
+            if (!availableIndexes.length) return;
+            const index = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
+            const swaps = 3 + Math.floor(Math.random() * 2);
+            let step = 0;
+            element.dataset.glitching = 'true';
+            const timer = setInterval(() => {
+                if (!element.isConnected || element.dataset.glitchText !== original) {
+                    delete element.dataset.glitching;
+                    clearInterval(timer);
+                    return;
+                }
+                if (step >= swaps) {
+                    element.textContent = original;
+                    delete element.dataset.glitching;
+                    clearInterval(timer);
+                    return;
+                }
+                const glitched = [...characters];
+                glitched[index] = randomGlitchSymbol(characters[index]);
+                element.textContent = glitched.join('');
+                step += 1;
+            }, 85);
+        }
+        function startGlitchLoop() {
+            setInterval(() => {
+                if (Math.random() > .7) return;
+                const candidates = Array.from(document.querySelectorAll('[data-glitch-text]')).filter((element) => element.textContent === element.dataset.glitchText);
+                if (!candidates.length) return;
+                const count = candidates.length > 1 && Math.random() < .25 ? 2 : 1;
+                candidates.sort(() => Math.random() - .5).slice(0, count).forEach(glitchText);
+            }, 700);
+        }
         options.forEach((option) => {
             option.addEventListener('mouseenter', () => setHighlight(option.dataset.language));
             option.addEventListener('focus', () => setHighlight(option.dataset.language));
@@ -255,6 +395,8 @@
         });
         topOptions.forEach((option) => option.addEventListener('click', () => setMenuLanguage(option.dataset.language)));
         menu.addEventListener('click', (event) => {
+            const solutionButton = event.target.closest('button[data-menu-solution]');
+            if (solutionButton) selectSolution(Number(solutionButton.dataset.menuSolution));
             const button = event.target.closest('button[data-section]');
             if (button) selectSection(button.dataset.section);
         });
@@ -262,13 +404,21 @@
             const button = event.target.closest('button[data-solution]');
             if (button) selectSolution(Number(button.dataset.solution));
         });
+        backButton.addEventListener('click', () => {
+            const job = ++animationJob;
+            selectedSolution = null;
+            renderMenu(false);
+            updateDetail(job);
+            revealMenu(job);
+            revealSolutions(job);
+        });
         window.addEventListener('DOMContentLoaded', () => {
             const job = ++animationJob;
             document.body.classList.add('ui-ready');
             revealSequence([
-                ...Array.from(document.querySelectorAll('.language-prompt span:not(.divider)')).map((element) => [element, element.textContent]),
-                ...Array.from(options).map((element) => [element, element.textContent])
+                ...languageItems
             ], job);
+            startGlitchLoop();
         });
     </script>
 </body>
