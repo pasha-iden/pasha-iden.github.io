@@ -871,11 +871,11 @@
                 thumb.classList.remove('is-visible');
                 return;
             }
-            const height = rect.height * .25;
-            const top = rect.top + (rect.height - height) * element.scrollTop / maxScroll;
+            const height = window.innerHeight * .25;
+            const top = rect.top + Math.max(0, rect.height - height) * element.scrollTop / maxScroll;
             thumb.style.height = `${height}px`;
             thumb.style.top = `${top}px`;
-            thumb.style.left = `${Math.round(rect.right + 1)}px`;
+            thumb.style.left = `${Math.round(rect.right + 9)}px`;
             thumb.classList.add('is-visible');
         }
         function refreshCustomScrollbars() {
