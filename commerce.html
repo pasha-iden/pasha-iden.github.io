@@ -209,8 +209,8 @@
                 booker: {
                     kicker: 'Booker Library',
                     title: 'Library service in a Telegram bot',
-                    lead: 'An end-to-end library-management service for a local coffee shop: it turns an in-house reading room into a book-lending experience accessible from Telegram and the web.',
-                    milestones: [{ value: 'Solo Fullstack', caption: 'Engineer' }, { value: 'Production-ready', caption: 'Launch did not happen' }, { value: 'Telegram Bot', caption: '5,300 LOC' }],
+                    lead: 'A modern local library in an interface users already know.',
+                    milestones: [{ value: 'Solo Fullstack', caption: 'Engineer' }, { value: 'Production-ready', caption: 'Project closed' }, { value: 'Telegram Bot', caption: '5,300 LOC' }],
                     package: {
                         baseTitle: 'Engineering solutions:',
                         items: [
@@ -220,21 +220,22 @@
                             { title: 'Telegram product', text: 'A Telegram bot and MiniApp user catalogue for registration, book discovery, reservations, personal library status and notifications.' },
                             { title: 'Web interfaces', text: 'A public catalogue with reviews and a separate administration panel for the collection, orders, moderation and schedule.' },
                             { title: 'Notifications & automation', text: 'Scheduled messages for bookings, due dates, returns and queue changes, coordinated through Redis.' },
-                            { title: 'Security & resilience', text: 'Telegram-based user authentication, CSRF protection for web forms, input validation and cross-channel rate limiting.' },
-                            { title: 'Deployment design', text: 'A container-ready setup with Docker, Nginx and SSL/TLS configuration.' }
+                            { title: 'Deployment design', text: 'Deployment configuration through Docker and Nginx with SSL/TLS setup.' }
                         ],
                         extrasTitle: '',
                         extras: []
                     },
                     outcome: {
                         title: 'Result',
-                        lead: 'A functional technical prototype of a library service with complete user and administrator workflows. The project was not released into production.',
+                        lead: 'A brand-building product that expands a local brand’s interaction with its audience and creates an additional channel for building loyalty.',
                         effectsTitle: 'Potential business impact:',
                         effects: [
-                            { title: 'Digital catalogue', text: 'A searchable book catalogue and review flow, available in the web interface.' },
-                            { title: 'Home lending workflow', text: 'A user flow from Telegram registration to reservation, collection and return.' },
-                            { title: 'Operational control', text: 'An administration interface for managing books, copies, orders, schedules and moderation.' },
-                            { title: 'Reliable reservations', text: 'Transactional booking and queue handling designed to prevent availability conflicts.' }
+                            { title: 'Stronger loyalty', text: 'Additional value for the customer beyond the brand’s core product.' },
+                            { title: 'More touchpoints', text: 'Regular interaction with the audience through a useful service, not only at the moment of purchase.' },
+                            { title: 'Community building', text: 'The library becomes a reason for repeat interaction and brings the audience together around the brand.' },
+                            { title: 'Stronger positioning', text: 'The product supports the image of a modern local brand with its own culture and values.' },
+                            { title: 'Organic promotion', text: 'An unusual service creates an additional story for communication and potential for recommendations.' },
+                            { title: 'Audience return', text: 'Reservations, queues and notifications create natural scenarios for repeated contact with the brand.' }
                         ],
                         stackTitle: 'Stack:',
                         stack: ['Python', 'asyncio', 'aiohttp', 'aiogram', 'Telegram Bot API', 'asyncpg', 'PostgreSQL', 'Redis', 'JavaScript', 'HTML/CSS', 'Telegram Web Apps', 'Docker', 'Nginx', 'Linux', 'aiocron'],
@@ -248,8 +249,8 @@
                 bookerRu: {
                     kicker: 'Booker Библиотека',
                     title: 'Библиотечный сервис в Telegram-боте',
-                    lead: 'Полноценный сервис управления библиотекой для локальной кофейни: переводит библиотеку из читального зала в сервис выдачи книг на дом, доступный через Telegram и web.',
-                    milestones: [{ value: 'Solo Fullstack', caption: 'Engineer' }, { value: 'Production-ready', caption: 'Запуск не состоялся' }, { value: 'Telegram-Bot', caption: '5300 LOC' }],
+                    lead: 'Современная локальная библиотека в привычном для пользователя интерфейсе.',
+                    milestones: [{ value: 'Solo Fullstack', caption: 'Engineer' }, { value: 'Production-ready', caption: 'Проект свёрнут' }, { value: 'Telegram-Bot', caption: '5300 LOC' }],
                     package: {
                         baseTitle: 'Инженерные решения:',
                         items: [
@@ -259,21 +260,22 @@
                             { title: 'Telegram-продукт', text: 'Telegram-бот и MiniApp пользовательского каталога для регистрации, поиска книг, бронирований, просмотра статуса и уведомлений.' },
                             { title: 'Web-интерфейсы', text: 'Пользовательский каталог с отзывами и отдельная admin-панель для управления фондом, заказами, модерацией и расписанием.' },
                             { title: 'Уведомления и автоматизация', text: 'Запланированные сообщения о бронировании, сроках, возвратах и изменениях очереди с координацией через Redis.' },
-                            { title: 'Безопасность и устойчивость', text: 'Аутентификация пользователя через Telegram, CSRF-защита web-форм, валидация ввода и общий rate limiting между каналами.' },
-                            { title: 'Подготовка к развёртыванию', text: 'Контейнеризируемая конфигурация с Docker, Nginx и настройкой SSL/TLS.' }
+                            { title: 'Подготовка к развёртыванию', text: 'Конфигурация для развёртывания через Docker и Nginx с настройкой SSL/TLS.' }
                         ],
                         extrasTitle: '',
                         extras: []
                     },
                     outcome: {
                         title: 'Результат',
-                        lead: 'Функциональный технический прототип библиотечного сервиса с полным пользовательским и административным контуром. Проект не вышел в production.',
+                        lead: 'Имиджевый продукт, который расширяет взаимодействие локального бренда с аудиторией и создаёт дополнительный канал формирования лояльности.',
                         effectsTitle: 'Потенциальный эффект для бизнеса:',
                         effects: [
-                            { title: 'Цифровой каталог', text: 'Каталог книг с поиском и сценарием отзывов в web-интерфейсе.' },
-                            { title: 'Выдача книг на дом', text: 'Пользовательский путь от регистрации в Telegram до бронирования, выдачи и возврата.' },
-                            { title: 'Операционный контроль', text: 'Admin-интерфейс для управления книгами, экземплярами, заказами, расписанием и модерацией.' },
-                            { title: 'Надёжное бронирование', text: 'Транзакционная обработка бронирований и очередей, рассчитанная на предотвращение конфликтов доступности.' }
+                            { title: 'Укрепление лояльности', text: 'Дополнительная ценность для клиента за пределами основного продукта бренда.' },
+                            { title: 'Больше точек контакта', text: 'Регулярное взаимодействие с аудиторией через полезный сервис, а не только в момент покупки.' },
+                            { title: 'Формирование сообщества', text: 'Библиотека становится поводом для повторного взаимодействия и объединяет аудиторию вокруг бренда.' },
+                            { title: 'Усиление позиционирования', text: 'Продукт поддерживает образ современного локального бренда с собственной культурой и ценностями.' },
+                            { title: 'Органическое продвижение', text: 'Необычный сервис создаёт дополнительный информационный повод и потенциал для рекомендаций.' },
+                            { title: 'Возврат аудитории', text: 'Бронирования, очереди и уведомления создают естественные сценарии повторного контакта с брендом.' }
                         ],
                         stackTitle: 'Стек:',
                         stack: ['Python', 'asyncio', 'aiohttp', 'aiogram', 'Telegram Bot API', 'asyncpg', 'PostgreSQL', 'Redis', 'JavaScript', 'HTML/CSS', 'Telegram Web Apps', 'Docker', 'Nginx', 'Linux', 'aiocron'],
