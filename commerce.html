@@ -536,6 +536,8 @@
         let screenTransition = 0;
         const textAnimationJobs = new WeakMap();
         const glitchAnimationJobs = new WeakMap();
+        const sectionKeys = ['solutions', 'cases', 'skills', 'about', 'contact'];
+        const solutionKeys = ['landing', 'saas', 'messenger', 'ai', 'team'];
         function startTextAnimation(element) {
             const job = ++animationJob;
             textAnimationJobs.set(element, job);
@@ -587,6 +589,39 @@
                 option.classList.toggle('is-active', isActive);
                 option.setAttribute('aria-pressed', String(isActive));
             });
+            syncRoute();
+        }
+        function getRouteFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const language = ['ru', 'en'].includes(params.get('lang')) ? params.get('lang') : 'en';
+            const screen = params.get('screen');
+            const sectionIndex = sectionKeys.indexOf(params.get('section'));
+            const solutionIndex = solutionKeys.indexOf(params.get('solution'));
+            if (screen === 'solution' && solutionIndex >= 0) return { language, screen, section: 0, solution: solutionIndex };
+            if (screen === 'menu') return { language, screen, section: sectionIndex, solution: null };
+            return null;
+        }
+        function syncRoute() {
+            const params = new URLSearchParams(window.location.search);
+            const hasDetail = selectedSection === 'section-0' && Boolean(getSolutionDetail(selectedSolution));
+            params.set('lang', currentLanguage);
+            params.set('screen', hasDetail ? 'solution' : 'menu');
+            if (selectedSection !== null) params.set('section', sectionKeys[Number(selectedSection.split('-')[1])]);
+            else params.delete('section');
+            if (hasDetail) params.set('solution', solutionKeys[selectedSolution]);
+            else params.delete('solution');
+            const query = params.toString();
+            window.history.replaceState(null, '', `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`);
+        }
+        function openRoute(route) {
+            currentLanguage = route.language;
+            selectedSection = route.section === null ? null : `section-${route.section}`;
+            selectedSolution = route.solution;
+            lastSolution = route.solution;
+            languageScreen.classList.add('is-leaving');
+            setMenuLanguage(route.language);
+            menuScreen.classList.add('is-visible');
+            menuScreen.setAttribute('aria-hidden', 'false');
         }
         function openMenu(language) {
             if (languageScreen.dataset.closing === 'true') return;
@@ -679,6 +714,7 @@
             solutionList.classList.toggle('is-open', section === 'section-0');
             updateDetail(job, preserveDetailContent);
             if (section === 'section-0' && selectedSolution === null) trackAnimation(revealSolutions(job));
+            syncRoute();
         }
         function selectSolution(index) {
             const job = ++animationJob;
@@ -687,6 +723,7 @@
                 selectedSolution = index;
                 lastSolution = index;
                 updateDetail(job);
+                syncRoute();
                 return;
             }
             const transition = ++screenTransition;
@@ -695,6 +732,7 @@
                 selectedSolution = index;
                 lastSolution = index;
                 updateDetail(job);
+                syncRoute();
             });
         }
         function getSolutionDetail(index) {
@@ -939,7 +977,14 @@
             const contact = detailPanel.querySelector('.detail-contact');
             const dots = detailPanel.querySelector('.loading-dots');
             items.push([detailPanel.querySelector('.telegram-contact'), landing.outcome.contact]);
-            const ctaAnimation = scrambleText(ctaText, landing.outcome.cta, startTextAnimation(ctaText)).then((result) => {
+            const previousCta = ctaText.textContent;
+            contact.classList.remove('is-cta-ready');
+            dots.textContent = '';
+            const ctaJob = startTextAnimation(ctaText);
+            const ctaAnimation = (previousCta && previousCta !== landing.outcome.cta
+                ? morphText(ctaText, previousCta, landing.outcome.cta, ctaJob)
+                : scrambleText(ctaText, landing.outcome.cta, ctaJob)
+            ).then((result) => {
                 if (result) {
                     contact.classList.add('is-cta-ready');
                     startLoadingDots(dots);
@@ -1040,17 +1085,23 @@
                 selectedSolution = null;
                 prepareTextForReveal(getOptionsScreenText());
                 updateDetail(job);
+                syncRoute();
                 trackAnimation(revealMenu(job));
                 trackAnimation(revealSolutions(job));
             });
         }));
         window.addEventListener('resize', () => requestAnimationFrame(alignDetailColumns));
         window.addEventListener('DOMContentLoaded', () => {
-            const job = ++animationJob;
             document.body.classList.add('ui-ready');
-            trackAnimation(revealSequence([
-                ...languageItems
-            ], job));
+            const route = getRouteFromUrl();
+            if (route) {
+                openRoute(route);
+            } else {
+                const job = ++animationJob;
+                trackAnimation(revealSequence([
+                    ...languageItems
+                ], job));
+            }
             startGlitchLoop();
         });
     </script>
