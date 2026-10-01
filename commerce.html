@@ -931,14 +931,15 @@
                 return {
                     character,
                     span,
-                    startDelay: /\s/.test(character) ? 0 : Math.floor((index * 28) / 90) + 1 + Math.floor(Math.random() * 4),
+                    startDelay: /\s/.test(character) ? 0 : (index === 0 ? 0 : Math.floor((index * 28) / 90) + Math.floor(Math.random() * 4)),
                     substitutions: /\s/.test(character) ? 0 : 4 + Math.floor(Math.random() * 5)
                 };
             });
             const totalPasses = Math.max(...states.map((state) => state.startDelay + state.substitutions));
             let pass = 0;
             return new Promise((resolve) => {
-                const timer = setInterval(() => {
+                let timer;
+                const step = () => {
                     if (!isCurrentTextAnimation(element, job)) {
                         clearInterval(timer);
                         return resolve(false);
@@ -962,7 +963,9 @@
                         return resolve(true);
                     }
                     pass += 1;
-                }, 90);
+                };
+                timer = setInterval(step, 90);
+                step();
             });
         }
         function reverseScrambleText(element, text, job) {
@@ -1025,14 +1028,15 @@
                 element.append(span);
                 return {
                     oldCharacter, newCharacter, span,
-                    startDelay: 1 + Math.floor(Math.random() * 4),
+                    startDelay: index === 0 ? 0 : Math.floor(Math.random() * 4),
                     substitutions: 4 + Math.floor(Math.random() * 5)
                 };
             });
             const totalPasses = Math.max(...states.map((state) => state.startDelay + state.substitutions));
             let pass = 0;
             return new Promise((resolve) => {
-                const timer = setInterval(() => {
+                let timer;
+                const step = () => {
                     if (!isCurrentTextAnimation(element, job)) {
                         clearInterval(timer);
                         return resolve(false);
@@ -1054,7 +1058,9 @@
                         return resolve(true);
                     }
                     pass += 1;
-                }, 90);
+                };
+                timer = setInterval(step, 90);
+                step();
             });
         }
         function revealSequence(items, job) {
