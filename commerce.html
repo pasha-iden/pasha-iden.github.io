@@ -46,7 +46,7 @@
         .back-button::after { top: 13px; transform: rotate(-45deg); }
         .back-button.is-visible { opacity: 1; pointer-events: auto; }
         .back-button:hover::before, .back-button:hover::after { background: var(--ink); }
-        .menu-panel { width: min(980px, 100%); }
+        .menu-panel { position: relative; width: min(980px, 100%); }
         .eyebrow { margin: 0 0 12px; color: var(--blue); font-size: .72rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
         h1 { margin: 0 0 30px; font-size: clamp(.9rem, 2vw, 1.8rem); font-weight: 650; line-height: 1; letter-spacing: -.055em; }
         .menu { margin: 0; padding: 0; list-style: none; }
@@ -54,16 +54,28 @@
         .menu button:hover, .menu button:focus-visible, .menu button.is-selected { color: var(--ink); outline: none; }
         .menu-layout { --column-gap: clamp(32px, 8vw, 112px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--column-gap); align-items: start; }
         .menu-layout > nav { grid-column: 1; grid-row: 1; min-width: 0; transition: opacity .35s ease, transform .5s ease; }
-        .solution-list { grid-column: 2; grid-row: 1; min-width: 0; margin: 0; padding: 0; list-style: none; opacity: 0; pointer-events: none; }
+        .solution-list { position: fixed; top: var(--solution-list-top, 96px); left: calc(50% + var(--column-gap) / 2); width: calc((min(980px, 100vw - 48px) - var(--column-gap)) / 2); height: var(--solution-list-height, auto); max-height: calc(100vh - 192px); min-width: 0; margin: 0; padding: 0; overflow: visible; overscroll-behavior: contain; list-style: none; opacity: 0; pointer-events: none; scrollbar-width: thin; scrollbar-color: var(--muted) transparent; transition: top .45s ease, height .45s ease; }
+        .solution-list.is-scrollable { overflow-x: hidden; overflow-y: auto; }
+        .solution-list, .detail-panel, .detail-current, .detail-next { scrollbar-width: none !important; }
+        .solution-list::-webkit-scrollbar, .detail-panel::-webkit-scrollbar, .detail-current::-webkit-scrollbar, .detail-next::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+        .custom-scrollbar { position: fixed; z-index: 20; width: 12px; opacity: 0; pointer-events: none; }
+        .custom-scrollbar.is-visible { opacity: 1; pointer-events: auto; }
+        .custom-scrollbar::before { content: ''; position: absolute; top: 0; left: 5px; width: 2px; height: 100%; background: var(--muted); transition: background-color .35s ease; }
+        .custom-scrollbar:hover::before { background: rgba(78, 93, 120, .55); }
+        .solution-list::-webkit-scrollbar, .detail-panel::-webkit-scrollbar, .detail-current::-webkit-scrollbar, .detail-next::-webkit-scrollbar { width: 4px; }
+        .solution-list::-webkit-scrollbar-track, .detail-panel::-webkit-scrollbar-track, .detail-current::-webkit-scrollbar-track, .detail-next::-webkit-scrollbar-track { background: transparent; }
+        .solution-list::-webkit-scrollbar-thumb, .detail-panel::-webkit-scrollbar-thumb, .detail-current::-webkit-scrollbar-thumb, .detail-next::-webkit-scrollbar-thumb { background: var(--muted); }
+        .solution-list::-webkit-scrollbar-thumb:hover, .detail-panel::-webkit-scrollbar-thumb:hover, .detail-current::-webkit-scrollbar-thumb:hover, .detail-next::-webkit-scrollbar-thumb:hover { background: var(--ink); }
         .solution-list.is-open { opacity: 1; pointer-events: auto; }
         .menu-panel.is-detail-open .solution-list { opacity: 0; pointer-events: none; }
         .solution-list button { display: block; width: 100%; padding: 10px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font: inherit; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; text-align: left; transition: color .35s ease; }
         .solution-subtitle { display: block; margin-top: 2px; font-size: clamp(.62rem, 1vw, .76rem); font-weight: 400; line-height: 1.45; letter-spacing: -.025em; }
         .solution-list button:hover, .solution-list button:focus-visible { color: var(--ink); outline: none; }
         .solution-list button.is-selected { color: var(--ink); }
+        .competency-stack { max-height: 0; margin: 0; padding: 0 0 0 1px; overflow: hidden; transition: max-height .45s ease, margin .45s ease; }
+        .competency-stack.is-open { max-height: 180px; margin: -2px 0 7px; }
+        .competency-stack-line { display: block; margin-top: 4px; color: var(--muted); font-size: .62rem; line-height: 1.45; letter-spacing: -.025em; }
         .detail-panel { grid-column: 2; grid-row: 1; min-width: 0; max-height: calc(100vh - 116px); overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; opacity: 0; pointer-events: none; scrollbar-width: thin; scrollbar-color: var(--muted) transparent; }
-        .detail-panel::-webkit-scrollbar { width: 4px; }
-        .detail-panel::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 4px; }
         .detail-panel.is-open { opacity: 1; pointer-events: auto; }
         .menu-panel.is-detail-open { width: min(980px, 100%); }
         .menu-panel.is-detail-open > .eyebrow,
@@ -73,8 +85,6 @@
         .menu-panel.is-detail-open .menu-layout { display: block; }
         .menu-panel.is-detail-open .detail-panel { display: grid; width: 100%; max-width: none; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--column-gap); margin: 0; overflow: hidden; }
         .detail-current, .detail-next { min-width: 0; max-height: calc(100vh - 116px); overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--muted) transparent; }
-        .detail-current::-webkit-scrollbar, .detail-next::-webkit-scrollbar { width: 4px; }
-        .detail-current::-webkit-scrollbar-thumb, .detail-next::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 4px; }
         .detail-kicker { margin: 0 0 8px; color: var(--blue); font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
         .detail-title { margin: 0 0 14px; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; }
         .detail-timeline { display: flex; gap: clamp(20px, 4vw, 52px); margin: -5px 0 15px; }
@@ -102,7 +112,7 @@
         .telegram-contact:hover, .telegram-contact:focus-visible { border-color: var(--ink); color: var(--ink); outline: none; }
         .solution-title, .menu-title { display: block; }
         .menu-subtitle { display: block; margin-top: 2px; font-size: clamp(.62rem, 1vw, .76rem); font-weight: 400; line-height: 1.45; letter-spacing: -.025em; }
-        @media (max-width: 600px) { .menu-layout { grid-template-columns: 1fr; gap: 18px; } .menu-layout > nav, .solution-list, .detail-panel { grid-column: 1; grid-row: 1; } .menu-panel.is-detail-open .solution-list { transform: none; } }
+        @media (max-width: 600px) { .menu-layout { grid-template-columns: 1fr; gap: 18px; } .menu-layout > nav, .solution-list, .detail-panel { grid-column: 1; grid-row: 1; } .solution-list { position: static; width: auto; max-height: calc(100vh - 150px); overflow-y: auto; transform: none; } .menu-panel.is-detail-open .solution-list { transform: none; } }
         @media (max-width: 480px) { .language-panel { column-gap: 10px; row-gap: 14px; } }
     </style>
 </head>
@@ -135,6 +145,14 @@
                     { title: 'Telegram bots & PWA apps', subtitle: 'Useful services where users already are.' },
                     { title: 'AI integration & automation', subtitle: 'Automated workflows and new product capabilities with AI.' },
                     { title: 'Team reinforcement', subtitle: 'I take full technical ownership of a direction or product area.' }
+                ],
+                competencies: [
+                    { title: 'Architecture & System Design', subtitle: 'Architecture, decomposition, integrations and scaling.', stack: ['Microservices · asynchronous systems · API design · data modeling'] },
+                    { title: 'Backend Engineering', subtitle: 'Business logic, APIs, integrations and data.', stack: ['Python · asyncio · aiohttp · FastAPI · Flask', 'Celery · asyncpg · Pydantic · PostgreSQL · Redis', 'Telegram Bot API · aiogram'] },
+                    { title: 'Frontend & Product UI', subtitle: 'Web interfaces, SPAs, responsive design and UX.', stack: ['JavaScript · HTML · CSS', 'aiohttp · Jinja2 · React UI · PWA'] },
+                    { title: 'Infrastructure & DevOps', subtitle: 'Docker, CI/CD, Linux, deployment and operations.', stack: ['Docker · Docker Compose · GitHub Actions · GHCR · Linux · Nginx', 'Blue-green deployment · DB migrations · pytest · Faker · Black · Git', 'MinIO / S3 · aiobotocore · Web Push / VAPID'] },
+                    { title: 'Security & performance', subtitle: 'Security controls, efficient workloads and predictable recovery.', stack: ['bcrypt · JWT · HMAC · Fernet · CORS · XSS protection · encrypted environments'] },
+                    { title: 'AI Engineering', subtitle: 'LLMs and APIs, prompt engineering, data pipelines and automation.', stack: ['LLM APIs · prompt engineering · data pipelines', 'AI-assisted development'] }
                 ],
                 landing: {
                     kicker: 'Landing pages & SEO sites',
@@ -330,6 +348,14 @@
                     { title: 'Telegram-боты и PWA-приложения', subtitle: 'Удобные сервисы там, где уже находится пользователь.' },
                     { title: 'Интеграция ИИ и автоматизация', subtitle: 'Автоматизация процессов и новые возможности продукта с помощью AI.' },
                     { title: 'Усиление команды', subtitle: 'Беру направление или часть продукта под полную техническую ответственность.' }
+                ],
+                competencies: [
+                    { title: 'Архитектура и проектирование систем', subtitle: 'Микросервисная архитектура, асинхронные системы и масштабирование.', stack: ['Microservices · asynchronous systems · API design · data modeling'] },
+                    { title: 'Backend-разработка', subtitle: 'Бизнес-логика, API, интеграции и данные.', stack: ['Python · asyncio · aiohttp · FastAPI · Flask', 'Celery · asyncpg · Pydantic · PostgreSQL · Redis', 'Telegram Bot API · aiogram'] },
+                    { title: 'Frontend и продуктовый UI', subtitle: 'Web-интерфейсы, PWA, адаптивность и UX.', stack: ['JavaScript · HTML · CSS', 'aiohttp · Jinja2 · React UI · PWA'] },
+                    { title: 'Инфраструктура и DevOps', subtitle: 'CI/CD, Linux-администрирование, deployment и эксплуатация.', stack: ['Docker · Docker Compose · GitHub Actions · GHCR · Linux · Nginx', 'Blue-green deployment · DB migrations · pytest · Faker · Black · Git', 'MinIO / S3 · aiobotocore · Web Push / VAPID'] },
+                    { title: 'Безопасность и производительность', subtitle: 'Контроль безопасности, эффективная обработка нагрузки и предсказуемое восстановление.', stack: ['bcrypt · JWT · HMAC · Fernet · CORS · XSS protection · encrypted environments'] },
+                    { title: 'Интеграция ИИ', subtitle: 'LLM API, промпт-инжиниринг, конвейеры данных и автоматизация.', stack: ['LLM APIs · prompt engineering · data pipelines', 'AI-assisted development'] }
                 ],
                 landing: {
                     kicker: 'Лендинги и SEO-сайты',
@@ -528,12 +554,16 @@
         const menuPanel = document.getElementById('menu-panel');
         const detailPanel = document.getElementById('detail-panel');
         const backButton = document.getElementById('back-button');
+        const scrollbarStates = new Map();
         let currentLanguage = 'en';
         let selectedSection = null;
         let selectedSolution = null;
         let lastSolution = null;
+        let selectedCompetency = null;
         let animationJob = 0;
         let screenTransition = 0;
+        let competencyTransition = 0;
+        let backTransitionActive = false;
         const textAnimationJobs = new WeakMap();
         const glitchAnimationJobs = new WeakMap();
         const sectionKeys = ['solutions', 'cases', 'skills', 'about', 'contact'];
@@ -571,7 +601,7 @@
             currentLanguage = language;
             const isDetailOpen = selectedSection === 'section-0' && Boolean(getSolutionDetail(selectedSolution));
             renderMenu(false);
-            renderSolutionsList();
+            renderSolutionsList(selectedSection);
             const job = ++animationJob;
             selectSection(selectedSection, true, job, isDetailOpen);
             trackAnimation(revealMenu(job, !isDetailOpen)).then((completed) => {
@@ -686,34 +716,153 @@
                 subtitle.dataset.targetText = target.subtitle;
             }
         }
-        function renderSolutionsList() {
-            const solutions = copy[currentLanguage].solutions;
+        function getSubOptions(section = selectedSection) {
+            if (section === 'section-0') return { items: copy[currentLanguage].solutions, type: 'solution' };
+            if (section === 'section-2') return { items: copy[currentLanguage].competencies, type: 'competency' };
+            return { items: [], type: null };
+        }
+        function renderSolutionsList(section = selectedSection, preserveTop = false) {
+            const { items, type } = getSubOptions(section);
             const rows = Array.from(solutionList.children);
-            solutions.forEach((item, index) => {
+            items.forEach((item, index) => {
                 let row = rows[index];
                 if (!row) {
                     row = document.createElement('li');
-                    row.innerHTML = '<button type="button"><span class="solution-title"></span><span class="solution-subtitle"></span></button>';
+                    row.innerHTML = '<button type="button"><span class="solution-title"></span><span class="solution-subtitle"></span></button><div class="competency-stack"></div>';
                     solutionList.append(row);
                 }
+                delete row.dataset.removeAfterReveal;
                 const button = row.querySelector('button');
-                button.dataset.solution = String(index);
+                delete button.dataset.solution;
+                delete button.dataset.competency;
+                button.dataset[type] = String(index);
                 button.disabled = false;
-                button.classList.toggle('is-selected', index === (selectedSolution ?? lastSolution));
+                button.classList.toggle('is-selected', type === 'solution'
+                    ? index === (selectedSolution ?? lastSolution)
+                    : index === selectedCompetency);
                 button.querySelector('.solution-title').dataset.targetText = item.title;
                 button.querySelector('.solution-subtitle').dataset.targetText = item.subtitle;
+                const stack = row.querySelector('.competency-stack');
+                if (type !== 'competency') {
+                    stack.replaceChildren();
+                    stack.classList.remove('is-open');
+                    return;
+                }
+                const lines = Array.from(stack.querySelectorAll('.competency-stack-line'));
+                item.stack.forEach((text, lineIndex) => {
+                    let line = lines[lineIndex];
+                    if (!line) {
+                        line = document.createElement('span');
+                        line.className = 'competency-stack-line';
+                        stack.append(line);
+                    }
+                    line.dataset.targetText = text;
+                });
+                lines.slice(item.stack.length).forEach((line) => line.remove());
+                stack.classList.toggle('is-open', index === selectedCompetency);
             });
-            rows.slice(solutions.length).forEach((row) => row.remove());
+            rows.slice(items.length).forEach((row) => {
+                const button = row.querySelector('button');
+                button.disabled = true;
+                delete button.dataset.solution;
+                delete button.dataset.competency;
+                button.querySelector('.solution-title').dataset.targetText = '';
+                button.querySelector('.solution-subtitle').dataset.targetText = '';
+                row.dataset.removeAfterReveal = 'true';
+            });
+            positionSolutionsList(preserveTop);
+        }
+        function positionSolutionsList(preserveTop = false) {
+            if (window.matchMedia('(max-width: 600px)').matches) {
+                solutionList.style.removeProperty('--solution-list-top');
+                solutionList.style.removeProperty('--solution-list-height');
+                return;
+            }
+            const measure = solutionList.cloneNode(true);
+            measure.removeAttribute('id');
+            measure.setAttribute('aria-hidden', 'true');
+            measure.querySelectorAll('[data-target-text]').forEach((element) => {
+                element.textContent = element.dataset.targetText;
+            });
+            measure.style.cssText = 'position:fixed !important; top:0 !important; height:auto !important; max-height:none !important; visibility:hidden !important; pointer-events:none !important; opacity:0 !important;';
+            document.body.append(measure);
+            const availableHeight = Math.max(1, window.innerHeight - 192);
+            const contentHeight = measure.scrollHeight;
+            const height = Math.min(contentHeight, availableHeight);
+            measure.remove();
+            solutionList.style.setProperty('--solution-list-height', `${height}px`);
+            if (!preserveTop) solutionList.style.setProperty('--solution-list-top', `${Math.max(96, Math.round((window.innerHeight - height) / 2))}px`);
+            solutionList.classList.toggle('is-scrollable', contentHeight > availableHeight);
+            requestAnimationFrame(refreshCustomScrollbars);
+        }
+        function getScrollbarState(element) {
+            let state = scrollbarStates.get(element);
+            if (state) return state;
+            const thumb = document.createElement('div');
+            thumb.className = 'custom-scrollbar';
+            thumb.setAttribute('aria-hidden', 'true');
+            document.body.append(thumb);
+            state = { thumb };
+            scrollbarStates.set(element, state);
+            element.addEventListener('scroll', () => syncCustomScrollbar(element), { passive: true });
+            thumb.addEventListener('pointerdown', (event) => {
+                event.preventDefault();
+                const maxScroll = element.scrollHeight - element.clientHeight;
+                if (maxScroll <= 0) return;
+                const rect = element.getBoundingClientRect();
+                const thumbHeight = thumb.getBoundingClientRect().height;
+                const startY = event.clientY;
+                const startScroll = element.scrollTop;
+                const move = (moveEvent) => {
+                    const trackHeight = Math.max(1, rect.height - thumbHeight);
+                    element.scrollTop = startScroll + (moveEvent.clientY - startY) * maxScroll / trackHeight;
+                };
+                const stop = () => {
+                    window.removeEventListener('pointermove', move);
+                    window.removeEventListener('pointerup', stop);
+                };
+                window.addEventListener('pointermove', move);
+                window.addEventListener('pointerup', stop, { once: true });
+            });
+            return state;
+        }
+        function syncCustomScrollbar(element) {
+            const { thumb } = getScrollbarState(element);
+            const rect = element.getBoundingClientRect();
+            const isSolutionList = element === solutionList;
+            const isVisible = document.body.contains(element) && rect.width > 0 && rect.height > 0 &&
+                (!isSolutionList || (element.classList.contains('is-open') && element.classList.contains('is-scrollable')));
+            const maxScroll = element.scrollHeight - element.clientHeight;
+            if (!isVisible || maxScroll <= 1) {
+                thumb.classList.remove('is-visible');
+                return;
+            }
+            const height = rect.height * .25;
+            const top = rect.top + (rect.height - height) * element.scrollTop / maxScroll;
+            thumb.style.height = `${height}px`;
+            thumb.style.top = `${top}px`;
+            thumb.style.left = `${Math.round(rect.right + 1)}px`;
+            thumb.classList.add('is-visible');
+        }
+        function refreshCustomScrollbars() {
+            const targets = new Set(document.querySelectorAll('.solution-list, .detail-panel, .detail-current, .detail-next'));
+            scrollbarStates.forEach(({ thumb }, target) => {
+                if (!targets.has(target)) thumb.classList.remove('is-visible');
+            });
+            targets.forEach(syncCustomScrollbar);
         }
         function selectSection(section, preserveDetail = false, job = ++animationJob, preserveDetailContent = false) {
-            if (!preserveDetail) { selectedSolution = null; lastSolution = null; }
+            if (!preserveDetail) { selectedSolution = null; lastSolution = null; selectedCompetency = null; }
             selectedSection = section;
             if (!preserveDetail) renderMenu(false);
+            renderSolutionsList(section);
             menu.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', button.dataset.section === section));
             menu.querySelectorAll('button[data-menu-solution]').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.menuSolution) === selectedSolution));
-            solutionList.classList.toggle('is-open', section === 'section-0');
+            solutionList.classList.toggle('is-open', getSubOptions(section).items.length > 0);
+            requestAnimationFrame(refreshCustomScrollbars);
             updateDetail(job, preserveDetailContent);
-            if (section === 'section-0' && selectedSolution === null) trackAnimation(revealSolutions(job));
+            if (getSubOptions(section).items.length && selectedSolution === null) trackAnimation(revealSolutions(job));
+            if (selectedCompetency !== null) trackAnimation(revealCompetencyStack(selectedCompetency, job));
             syncRoute();
         }
         function selectSolution(index) {
@@ -745,15 +894,23 @@
             menuPanel.classList.toggle('is-detail-open', isLandingOpen);
             detailPanel.classList.toggle('is-open', isLandingOpen);
             backButton.classList.toggle('is-visible', isLandingOpen);
-            if (!isLandingOpen) { detailPanel.innerHTML = ''; return; }
+            if (!isLandingOpen) { detailPanel.innerHTML = ''; requestAnimationFrame(refreshCustomScrollbars); return; }
             const landing = detail;
             if (preserveDetailContent && detailPanel.querySelector('.detail-current')) {
-                trackAnimation(revealLanding(landing, job));
+                requestAnimationFrame(refreshCustomScrollbars);
+                trackAnimation(revealLanding(landing, job).then((result) => {
+                    requestAnimationFrame(refreshCustomScrollbars);
+                    return result;
+                }));
                 return;
             }
             const renderPackageItem = () => '<li><strong></strong> - <span></span></li>';
             detailPanel.innerHTML = `<div class="detail-current"><p class="detail-kicker"></p><h2 class="detail-title"></h2><div class="detail-timeline">${landing.milestones.map((milestone) => `<div><span class="timeline-value"></span><span class="timeline-caption${milestone.caption.includes('/') ? ' is-unit' : ''}"></span></div>`).join('')}</div><p class="detail-lead"></p><div class="detail-grid"><div class="detail-block"><p class="detail-package-title"></p><ul class="detail-package">${landing.package.items.map(renderPackageItem).join('')}</ul><p class="detail-extras-title"></p><ul class="detail-package detail-extras">${landing.package.extras.map(renderPackageItem).join('')}</ul></div></div></div><div class="detail-next" aria-live="polite"><h2 class="detail-title detail-result-title"></h2><p class="detail-result-lead"></p><p class="detail-effects-title"></p><ul class="detail-effects">${landing.outcome.effects.map(renderPackageItem).join('')}</ul><div class="detail-contact"><p class="detail-cta"><span class="detail-cta-text"></span><span class="loading-dots" aria-hidden="true"></span></p><a class="telegram-contact" href="https://t.me/pasha_iden" target="_blank" rel="noopener noreferrer"></a></div></div>`;
-            trackAnimation(revealLanding(landing, job));
+            requestAnimationFrame(refreshCustomScrollbars);
+            trackAnimation(revealLanding(landing, job).then((result) => {
+                requestAnimationFrame(refreshCustomScrollbars);
+                return result;
+            }));
         }
         const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+-<>/';
         function scrambleText(element, text, job) {
@@ -920,7 +1077,7 @@
             return [
                 ...getTextItems('#menu-eyebrow, #menu-title'),
                 ...getTextItems('.menu-title, .menu-subtitle', menu),
-                ...getTextItems('.solution-title, .solution-subtitle', solutionList)
+                ...getTextItems('.solution-title, .solution-subtitle, .competency-stack-line', solutionList)
             ];
         }
         function getDetailScreenText() {
@@ -948,11 +1105,48 @@
         }
         function revealSolutions(job) {
             const items = [];
-            solutionList.querySelectorAll('button').forEach((button, index) => {
-                items.push([button.querySelector('.solution-title'), copy[currentLanguage].solutions[index].title]);
-                items.push([button.querySelector('.solution-subtitle'), copy[currentLanguage].solutions[index].subtitle]);
+            solutionList.querySelectorAll('button').forEach((button) => {
+                const title = button.querySelector('.solution-title');
+                const subtitle = button.querySelector('.solution-subtitle');
+                items.push([title, title.dataset.targetText || '']);
+                items.push([subtitle, subtitle.dataset.targetText || '']);
             });
-            return revealSequence(items, job);
+            return revealSequence(items, job).then((result) => {
+                if (result) solutionList.querySelectorAll('li[data-remove-after-reveal="true"]').forEach((row) => row.remove());
+                requestAnimationFrame(refreshCustomScrollbars);
+                return result;
+            });
+        }
+        function revealCompetencyStack(index, job) {
+            const button = solutionList.querySelector(`button[data-competency="${index}"]`);
+            if (!button) return Promise.resolve(true);
+            const item = copy[currentLanguage].competencies[index];
+            const lines = button.closest('li').querySelectorAll('.competency-stack-line');
+            return revealSequence(Array.from(lines, (line, lineIndex) => [line, item.stack[lineIndex]])).then((result) => {
+                requestAnimationFrame(refreshCustomScrollbars);
+                return result;
+            });
+        }
+        function selectCompetency(index) {
+            if (selectedCompetency === index) return;
+            const job = ++animationJob;
+            const transition = ++competencyTransition;
+            const activeStack = solutionList.querySelector('.competency-stack.is-open');
+            const openSelected = () => {
+                selectedCompetency = index;
+                renderSolutionsList(selectedSection, true);
+                solutionList.querySelectorAll('button[data-competency]').forEach((item) => item.classList.toggle('is-selected', Number(item.dataset.competency) === index));
+                trackAnimation(revealCompetencyStack(index, job));
+            };
+            if (!activeStack) {
+                openSelected();
+                return;
+            }
+            const leaving = getTextItems('.competency-stack-line', activeStack);
+            trackAnimation(reverseSequence(leaving, job)).then((completed) => {
+                if (!completed || transition !== competencyTransition) return;
+                openSelected();
+            });
         }
         function revealLanding(landing, job) {
             const titleElements = detailPanel.querySelectorAll('.detail-kicker, .detail-title, .detail-lead');
@@ -1076,21 +1270,33 @@
         solutionList.addEventListener('click', (event) => {
             const button = event.target.closest('button[data-solution]');
             if (button) runInteraction(() => selectSolution(Number(button.dataset.solution)));
+            const competencyButton = event.target.closest('button[data-competency]');
+            if (competencyButton) runInteraction(() => selectCompetency(Number(competencyButton.dataset.competency)));
         });
         backButton.addEventListener('click', () => runInteraction(() => {
+            if (backTransitionActive) return;
+            backTransitionActive = true;
             const job = ++animationJob;
             const transition = ++screenTransition;
             trackAnimation(reverseSequence(getDetailScreenText(), job)).then((completed) => {
-                if (!completed || transition !== screenTransition) return;
+                if (!completed || transition !== screenTransition) {
+                    backTransitionActive = false;
+                    return;
+                }
                 selectedSolution = null;
                 prepareTextForReveal(getOptionsScreenText());
                 updateDetail(job);
                 syncRoute();
                 trackAnimation(revealMenu(job));
                 trackAnimation(revealSolutions(job));
+                backTransitionActive = false;
             });
         }));
-        window.addEventListener('resize', () => requestAnimationFrame(alignDetailColumns));
+        window.addEventListener('resize', () => requestAnimationFrame(() => {
+            alignDetailColumns();
+            positionSolutionsList();
+            refreshCustomScrollbars();
+        }));
         window.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('ui-ready');
             const route = getRouteFromUrl();
@@ -1102,6 +1308,7 @@
                     ...languageItems
                 ], job));
             }
+            document.fonts?.ready.then(positionSolutionsList);
             startGlitchLoop();
         });
     </script>
