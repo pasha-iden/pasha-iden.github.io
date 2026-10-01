@@ -146,6 +146,12 @@
                     { title: 'AI integration & automation', subtitle: 'Automated workflows and new product capabilities with AI.' },
                     { title: 'Team reinforcement', subtitle: 'I take full technical ownership of a direction or product area.' }
                 ],
+                cases: [
+                    { title: 'DreamCar', subtitle: 'A Cyprus car marketplace.' },
+                    { title: 'Booker Library', subtitle: 'A library service in a Telegram bot.' },
+                    { title: '8-bit Adventure', subtitle: 'A video game demo about a local coffee shop.' },
+                    { title: 'Personal projects', subtitle: 'Small tools, experiments and technical prototypes.' }
+                ],
                 competencies: [
                     { title: 'Architecture & System Design', subtitle: 'Architecture, decomposition, integrations and scaling.', stack: ['Microservices · asynchronous systems · API design · data modeling'] },
                     { title: 'Backend Engineering', subtitle: 'Business logic, APIs, integrations and data.', stack: ['Python · asyncio · aiohttp · FastAPI · Flask', 'Celery · asyncpg · Pydantic · PostgreSQL · Redis', 'Telegram Bot API · aiogram'] },
@@ -348,6 +354,12 @@
                     { title: 'Telegram-боты и PWA-приложения', subtitle: 'Удобные сервисы там, где уже находится пользователь.' },
                     { title: 'Интеграция ИИ и автоматизация', subtitle: 'Автоматизация процессов и новые возможности продукта с помощью AI.' },
                     { title: 'Усиление команды', subtitle: 'Беру направление или часть продукта под полную техническую ответственность.' }
+                ],
+                cases: [
+                    { title: 'DreamCar', subtitle: 'Автомобильный маркетплейс Кипра.' },
+                    { title: 'Booker Библиотека', subtitle: 'Библиотечный сервис в Telegram-боте.' },
+                    { title: '«8-битное приключение»', subtitle: 'Демоверсия видеоигры про локальную кофейню.' },
+                    { title: 'Личные проекты', subtitle: 'Небольшие инструменты, эксперименты и технические прототипы.' }
                 ],
                 competencies: [
                     { title: 'Архитектура и проектирование систем', subtitle: 'Микросервисная архитектура, асинхронные системы и масштабирование.', stack: ['Microservices · asynchronous systems · API design · data modeling'] },
@@ -718,6 +730,7 @@
         }
         function getSubOptions(section = selectedSection) {
             if (section === 'section-0') return { items: copy[currentLanguage].solutions, type: 'solution' };
+            if (section === 'section-1') return { items: copy[currentLanguage].cases, type: 'case' };
             if (section === 'section-2') return { items: copy[currentLanguage].competencies, type: 'competency' };
             return { items: [], type: null };
         }
@@ -739,7 +752,7 @@
                 button.disabled = false;
                 button.classList.toggle('is-selected', type === 'solution'
                     ? index === (selectedSolution ?? lastSolution)
-                    : index === selectedCompetency);
+                    : type === 'competency' && index === selectedCompetency);
                 button.querySelector('.solution-title').dataset.targetText = item.title;
                 button.querySelector('.solution-subtitle').dataset.targetText = item.subtitle;
                 const stack = row.querySelector('.competency-stack');
