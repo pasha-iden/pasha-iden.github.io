@@ -104,9 +104,13 @@
         .detail-extras-title:empty, .detail-extras:empty { display: none; }
         .detail-result-title { margin: 0 0 3px; color: var(--ink); font-size: clamp(.67rem, 1vw, .8rem); font-weight: 600; line-height: 1.55; letter-spacing: -.025em; }
         .detail-result-lead { margin: 0; color: var(--muted); font-size: clamp(.67rem, 1vw, .8rem); line-height: 1.55; letter-spacing: -.025em; }
-        .detail-effects-title { margin: 22px 0 0; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
+        .detail-effects-title, .detail-stack-title { margin: 22px 0 0; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
+        .detail-stack { margin: 5px 0 0; color: var(--muted); font-size: .68rem; line-height: 1.55; letter-spacing: -.02em; white-space: nowrap; }
+        .detail-stack + .detail-stack { margin-top: 2px; }
         .detail-contact { margin-top: 26px; padding-bottom: 4px; }
+        .detail-project-contact { margin-top: 14px; }
         .detail-cta { margin: 0 0 9px; color: var(--ink); font-size: clamp(.67rem, 1vw, .8rem); font-weight: 600; line-height: 1.55; letter-spacing: -.025em; }
+        .detail-contact-secondary { margin-top: 20px; }
         .loading-dots { display: inline-block; width: 1.7em; color: var(--ink); opacity: 0; }
         .detail-contact.is-cta-ready .loading-dots { opacity: 1; }
         .telegram-contact { display: inline-flex; align-items: center; min-height: 31px; padding: 6px 11px; border: 1px solid var(--muted); color: var(--muted); background: transparent; cursor: pointer; font-size: .68rem; letter-spacing: -.02em; text-decoration: none; white-space: pre-wrap; transition: color .35s ease, border-color .35s ease; }
@@ -161,6 +165,47 @@
                     { title: 'Security & performance', subtitle: 'Security controls, efficient workloads and predictable recovery.', stack: ['bcrypt · JWT · HMAC · Fernet · CORS · XSS protection · encrypted environments', 'caching · concurrency · load testing'] },
                     { title: 'AI Engineering', subtitle: 'LLMs and APIs, prompt engineering, data pipelines and automation.', stack: ['LLM APIs · prompt engineering · data pipelines', 'AI-assisted development'] }
                 ],
+                dreamcar: {
+                    kicker: 'DreamCar',
+                    title: 'Automotive marketplace for Cyprus',
+                    lead: 'A production marketplace for the regional automotive market in Cyprus. End-to-end product delivery from the initial idea to a functional MVP stage.',
+                    milestones: [{ value: 'Solo Fullstack', caption: 'Engineer' }, { value: 'Production', caption: 'Pre-seed MVP' }, { value: 'SaaS', caption: '52 000 LOC' }],
+                    package: {
+                        baseTitle: 'Engineering solutions:',
+                        items: [
+                            { title: 'Architecture', text: 'An asynchronous microservice system with clear separation of responsibility between components.' },
+                            { title: 'Data layer', text: 'Data-model and transactional-flow design, protection from concurrent-access conflicts, and secure storage of sensitive files with controlled address delivery.' },
+                            { title: 'Backend', text: 'The complete server-side product layer: APIs, business processes, background tasks, data work and coordination of external services.' },
+                            { title: 'User product', text: 'Client interface in web, PWA and Telegram WebApp formats, plus a separate React administration panel.' },
+                            { title: 'Integrations', text: 'External services and product APIs connected into the platform operating flow.' },
+                            { title: 'AI data processing', text: 'Extraction, generation and validation of information using AI APIs.' },
+                            { title: 'Security', text: 'API access control, protection of user data, encryption of sensitive information and rate limiting.' },
+                            { title: 'Production', text: 'Containerisation and automated delivery through Docker and CI/CD, including blue-green deployment.' },
+                            { title: 'GDPR & data', text: 'Personal-data processing requirements, with deletion via anonymisation while retaining the necessary audit layer.' },
+                            { title: 'SEO', text: 'Semantic markup, metadata, sitemap, robots.txt and indexing management.' }
+                        ],
+                        extrasTitle: '',
+                        extras: []
+                    },
+                    outcome: {
+                        title: 'Result',
+                        lead: 'Taking the owner’s core business online, expanding it and automating its key operations.',
+                        effectsTitle: 'Business impact:',
+                        effects: [
+                            { title: 'Audience expansion', text: 'New acquisition channels and faster scenarios for interacting with customers.' },
+                            { title: 'Automation & new capabilities', text: 'A multiple increase in the speed of routine operations and new user scenarios through AI.' },
+                            { title: 'New directions', text: 'Expansion of the core business and diversification of revenue sources.' },
+                            { title: 'Market-data aggregation', text: 'An owned source of data on user scenarios and market demand for business decision-making.' }
+                        ],
+                        stackTitle: 'Stack:',
+                        stack: ['Python', 'asyncio', 'aiohttp', 'FastAPI', 'Jinja2', 'REST API', 'JavaScript', 'React', 'HTML/CSS', 'PWA', 'Web Push / VAPID', 'PostgreSQL', 'asyncpg', 'Redis', 'Celery', 'Docker', 'Docker Compose', 'Nginx', 'Linux', 'MinIO / S3', 'aiobotocore', 'CI/CD', 'Git', 'Telegram Bot API', 'aiogram', 'OpenRouter API', 'OCR', 'bcrypt', 'JWT', 'HMAC', 'Fernet', 'CORS', 'XSS protection', 'rate limiting'],
+                        cta: 'Explore DreamCar in production.',
+                        productName: 'DreamCar',
+                        productUrl: 'https://dreamcarcy.com',
+                        contactCta: 'One message away from aligning your product',
+                        contact: 'Message on Telegram'
+                    }
+                },
                 landing: {
                     kicker: 'Landing pages & SEO sites',
                     title: 'Fast websites that solve a business problem',
@@ -370,6 +415,47 @@
                     { title: 'Безопасность и производительность', subtitle: 'Контроль безопасности, эффективная обработка нагрузки и предсказуемое восстановление.', stack: ['bcrypt · JWT · HMAC · Fernet · CORS · XSS protection · encrypted environments', 'caching · concurrency · load testing'] },
                     { title: 'Интеграция ИИ', subtitle: 'LLM API, промпт-инжиниринг, конвейеры данных и автоматизация.', stack: ['LLM APIs · prompt engineering · data pipelines', 'AI-assisted development'] }
                 ],
+                dreamcar: {
+                    kicker: 'DreamCar',
+                    title: 'Автомобильный маркетплейс Кипра',
+                    lead: 'Production-маркетплейс регионального автомобильного рынка Кипра. Полная реализация продукта под ключ от идеи до стадии функционального MVP.',
+                    milestones: [{ value: 'Solo Fullstack', caption: 'Engineer' }, { value: 'Production', caption: 'Pre-seed MVP' }, { value: 'SaaS', caption: '52 000 LOC' }],
+                    package: {
+                        baseTitle: 'Инженерные решения:',
+                        items: [
+                            { title: 'Архитектура', text: 'Асинхронная микросервисная система с разделением ответственности между компонентами.' },
+                            { title: 'Слой данных', text: 'Проектирование модели данных и транзакционных сценариев, защита от конфликтов конкурентного доступа, защищённое хранение чувствительных файлов с контролируемой адресной выдачей.' },
+                            { title: 'Backend', text: 'Полный контур серверной логики продукта: API, бизнес-процессы, фоновые задачи, работа с данными и координация внешних сервисов.' },
+                            { title: 'Пользовательский продукт', text: 'Клиентский интерфейс в web, PWA и Telegram WebApp форматах, отдельная React-панель администрирования.' },
+                            { title: 'Интеграции', text: 'Подключение внешних сервисов и продуктовых API в рабочий контур платформы.' },
+                            { title: 'AI-обработка данных', text: 'Извлечение, формирование и валидация информации с использованием AI API.' },
+                            { title: 'Безопасность', text: 'Контроль доступа к API, защита пользовательских данных, шифрование чувствительной информации и rate limiting.' },
+                            { title: 'Production', text: 'Контейнеризация и автоматизированная поставка изменений через Docker и CI/CD, включая blue-green deployment.' },
+                            { title: 'GDPR и данные', text: 'Соблюдение требований к обработке персональных данных; удаление через анонимизацию с сохранением необходимого аудиторского слоя.' },
+                            { title: 'SEO', text: 'Семантическая разметка, метаданные, sitemap, robots.txt и управление индексацией.' }
+                        ],
+                        extrasTitle: '',
+                        extras: []
+                    },
+                    outcome: {
+                        title: 'Результат',
+                        lead: 'Перевод в онлайн, расширение и автоматизация основной деятельности владельца.',
+                        effectsTitle: 'Эффект для бизнеса:',
+                        effects: [
+                            { title: 'Расширение аудитории', text: 'Новые каналы привлечения и более быстрые сценарии взаимодействия с клиентами.' },
+                            { title: 'Автоматизация и новые возможности', text: 'Кратное ускорение рутинных операций и новые пользовательские сценарии за счёт AI.' },
+                            { title: 'Развитие новых направлений', text: 'Расширение основной деятельности и диверсификация источников выручки.' },
+                            { title: 'Агрегирование рыночных данных', text: 'Собственный источник среза данных о пользовательских сценариях и рыночном спросе для принятия бизнес-решений.' }
+                        ],
+                        stackTitle: 'Стек:',
+                        stack: ['Python', 'asyncio', 'aiohttp', 'FastAPI', 'Jinja2', 'REST API', 'JavaScript', 'React', 'HTML/CSS', 'PWA', 'Web Push / VAPID', 'PostgreSQL', 'asyncpg', 'Redis', 'Celery', 'Docker', 'Docker Compose', 'Nginx', 'Linux', 'MinIO / S3', 'aiobotocore', 'CI/CD', 'Git', 'Telegram Bot API', 'aiogram', 'OpenRouter API', 'OCR', 'bcrypt', 'JWT', 'HMAC', 'Fernet', 'CORS', 'XSS protection', 'rate limiting'],
+                        cta: 'Изучить DreamCar в production.',
+                        productName: 'DreamCar',
+                        productUrl: 'https://dreamcarcy.com',
+                        contactCta: 'В одном сообщении до согласования вашего продукта',
+                        contact: 'Написать в Telegram'
+                    }
+                },
                 landing: {
                     kicker: 'Лендинги и SEO-сайты',
                     title: 'Быстрые сайты, которые решают задачу бизнеса',
@@ -572,6 +658,8 @@
         let selectedSection = null;
         let selectedSolution = null;
         let lastSolution = null;
+        let selectedCase = null;
+        let lastCase = null;
         let selectedCompetency = null;
         let animationJob = 0;
         let screenTransition = 0;
@@ -581,6 +669,7 @@
         const glitchAnimationJobs = new WeakMap();
         const sectionKeys = ['solutions', 'cases', 'skills', 'about', 'contact'];
         const solutionKeys = ['landing', 'saas', 'messenger', 'ai', 'team'];
+        const caseKeys = ['dreamcar', 'booker', 'adventure', 'personal'];
         function startTextAnimation(element) {
             const job = ++animationJob;
             textAnimationJobs.set(element, job);
@@ -612,7 +701,7 @@
         function setMenuLanguage(language) {
             const content = copy[language];
             currentLanguage = language;
-            const isDetailOpen = selectedSection === 'section-0' && Boolean(getSolutionDetail(selectedSolution));
+            const isDetailOpen = Boolean(getActiveDetail());
             renderMenu(false);
             renderSolutionsList(selectedSection);
             const job = ++animationJob;
@@ -640,19 +729,24 @@
             const screen = params.get('screen');
             const sectionIndex = sectionKeys.indexOf(params.get('section'));
             const solutionIndex = solutionKeys.indexOf(params.get('solution'));
+            const caseIndex = caseKeys.indexOf(params.get('case'));
             if (screen === 'solution' && solutionIndex >= 0) return { language, screen, section: 0, solution: solutionIndex };
-            if (screen === 'menu') return { language, screen, section: sectionIndex, solution: null };
+            if (screen === 'case' && caseIndex >= 0) return { language, screen, section: 1, solution: null, case: caseIndex };
+            if (screen === 'menu') return { language, screen, section: sectionIndex, solution: null, case: null };
             return null;
         }
         function syncRoute() {
             const params = new URLSearchParams(window.location.search);
-            const hasDetail = selectedSection === 'section-0' && Boolean(getSolutionDetail(selectedSolution));
+            const hasSolutionDetail = selectedSection === 'section-0' && Boolean(getSolutionDetail(selectedSolution));
+            const hasCaseDetail = selectedSection === 'section-1' && Boolean(getCaseDetail(selectedCase));
             params.set('lang', currentLanguage);
-            params.set('screen', hasDetail ? 'solution' : 'menu');
+            params.set('screen', hasSolutionDetail ? 'solution' : hasCaseDetail ? 'case' : 'menu');
             if (selectedSection !== null) params.set('section', sectionKeys[Number(selectedSection.split('-')[1])]);
             else params.delete('section');
-            if (hasDetail) params.set('solution', solutionKeys[selectedSolution]);
+            if (hasSolutionDetail) params.set('solution', solutionKeys[selectedSolution]);
             else params.delete('solution');
+            if (hasCaseDetail) params.set('case', caseKeys[selectedCase]);
+            else params.delete('case');
             const query = params.toString();
             window.history.replaceState(null, '', `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`);
         }
@@ -661,6 +755,8 @@
             selectedSection = route.section === null ? null : `section-${route.section}`;
             selectedSolution = route.solution;
             lastSolution = route.solution;
+            selectedCase = route.case ?? null;
+            lastCase = route.case ?? null;
             languageScreen.classList.add('is-leaving');
             setMenuLanguage(route.language);
             menuScreen.classList.add('is-visible');
@@ -748,11 +844,14 @@
                 delete row.dataset.removeAfterReveal;
                 const button = row.querySelector('button');
                 delete button.dataset.solution;
+                delete button.dataset.case;
                 delete button.dataset.competency;
                 button.dataset[type] = String(index);
                 button.disabled = false;
                 button.classList.toggle('is-selected', type === 'solution'
                     ? index === (selectedSolution ?? lastSolution)
+                    : type === 'case'
+                        ? index === (selectedCase ?? lastCase)
                     : type === 'competency' && index === selectedCompetency);
                 button.querySelector('.solution-title').dataset.targetText = item.title;
                 button.querySelector('.solution-subtitle').dataset.targetText = item.subtitle;
@@ -779,6 +878,7 @@
                 const button = row.querySelector('button');
                 button.disabled = true;
                 delete button.dataset.solution;
+                delete button.dataset.case;
                 delete button.dataset.competency;
                 button.querySelector('.solution-title').dataset.targetText = '';
                 button.querySelector('.solution-subtitle').dataset.targetText = '';
@@ -946,7 +1046,13 @@
             requestAnimationFrame(refreshCustomScrollbars);
         }
         function selectSection(section, preserveDetail = false, job = ++animationJob, preserveDetailContent = false) {
-            if (!preserveDetail) { selectedSolution = null; lastSolution = null; selectedCompetency = null; }
+            if (!preserveDetail) {
+                selectedSolution = null;
+                lastSolution = null;
+                selectedCase = null;
+                lastCase = null;
+                selectedCompetency = null;
+            }
             selectedSection = section;
             if (!preserveDetail) renderMenu(false);
             renderSolutionsList(section);
@@ -955,7 +1061,7 @@
             solutionList.classList.toggle('is-open', getSubOptions(section).items.length > 0);
             requestAnimationFrame(refreshCustomScrollbars);
             updateDetail(job, preserveDetailContent);
-            if (getSubOptions(section).items.length && selectedSolution === null) trackAnimation(revealSolutions(job));
+            if (getSubOptions(section).items.length && selectedSolution === null && selectedCase === null) trackAnimation(revealSolutions(job));
             if (selectedCompetency !== null) trackAnimation(revealCompetencyStack(selectedCompetency, job));
             syncRoute();
         }
@@ -981,10 +1087,38 @@
         function getSolutionDetail(index) {
             return [copy[currentLanguage].landing, copy[currentLanguage].saas, copy[currentLanguage].messenger, copy[currentLanguage].ai, copy[currentLanguage].team][index] || null;
         }
+        function getCaseDetail(index) {
+            return [copy[currentLanguage].dreamcar][index] || null;
+        }
+        function getActiveDetail() {
+            if (selectedSection === 'section-0') return getSolutionDetail(selectedSolution);
+            if (selectedSection === 'section-1') return getCaseDetail(selectedCase);
+            return null;
+        }
+        function selectCase(index) {
+            const job = ++animationJob;
+            solutionList.querySelectorAll('button[data-case]').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.case) === index));
+            if (!getCaseDetail(index)) {
+                selectedCase = index;
+                lastCase = index;
+                updateDetail(job);
+                syncRoute();
+                return;
+            }
+            const transition = ++screenTransition;
+            trackAnimation(reverseSequence(getOptionsScreenText(), job)).then((completed) => {
+                if (!completed || transition !== screenTransition) return;
+                selectedCase = index;
+                lastCase = index;
+                updateDetail(job);
+                syncRoute();
+            });
+        }
         function updateDetail(job, preserveDetailContent = false) {
-            const detail = getSolutionDetail(selectedSolution);
-            const isLandingOpen = selectedSection === 'section-0' && Boolean(detail);
-            solutionList.querySelectorAll('button').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.solution) === (selectedSolution ?? lastSolution)));
+            const detail = getActiveDetail();
+            const isLandingOpen = Boolean(detail);
+            solutionList.querySelectorAll('button[data-solution]').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.solution) === (selectedSolution ?? lastSolution)));
+            solutionList.querySelectorAll('button[data-case]').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.case) === (selectedCase ?? lastCase)));
             menuPanel.classList.toggle('is-detail-open', isLandingOpen);
             detailPanel.classList.toggle('is-open', isLandingOpen);
             backButton.classList.toggle('is-visible', isLandingOpen);
@@ -999,7 +1133,14 @@
                 return;
             }
             const renderPackageItem = () => '<li><strong></strong> - <span></span></li>';
-            detailPanel.innerHTML = `<div class="detail-current"><p class="detail-kicker"></p><h2 class="detail-title"></h2><div class="detail-timeline">${landing.milestones.map((milestone) => `<div><span class="timeline-value"></span><span class="timeline-caption${milestone.caption.includes('/') ? ' is-unit' : ''}"></span></div>`).join('')}</div><p class="detail-lead"></p><div class="detail-grid"><div class="detail-block"><p class="detail-package-title"></p><ul class="detail-package">${landing.package.items.map(renderPackageItem).join('')}</ul><p class="detail-extras-title"></p><ul class="detail-package detail-extras">${landing.package.extras.map(renderPackageItem).join('')}</ul></div></div></div><div class="detail-next" aria-live="polite"><h2 class="detail-title detail-result-title"></h2><p class="detail-result-lead"></p><p class="detail-effects-title"></p><ul class="detail-effects">${landing.outcome.effects.map(renderPackageItem).join('')}</ul><div class="detail-contact"><p class="detail-cta"><span class="detail-cta-text"></span><span class="loading-dots" aria-hidden="true"></span></p><a class="telegram-contact" href="https://t.me/pasha_iden" target="_blank" rel="noopener noreferrer"></a></div></div>`;
+            const stackMarkup = landing.outcome.stack ? '<p class="detail-stack-title"></p><div class="detail-stack-list"></div>' : '';
+            const hasSecondaryCta = Boolean(landing.outcome.productUrl && landing.outcome.contactCta);
+            const projectCtaMarkup = hasSecondaryCta ? `<div class="detail-project-contact"><p class="detail-cta"><span class="detail-cta-text"></span></p><a class="telegram-contact detail-project-link" href="${landing.outcome.productUrl}" target="_blank" rel="noopener noreferrer"></a></div>` : '';
+            const contactCtaMarkup = hasSecondaryCta
+                ? '<p class="detail-cta detail-contact-secondary"><span class="detail-contact-cta-text"></span><span class="loading-dots" aria-hidden="true"></span></p>'
+                : '<p class="detail-cta"><span class="detail-cta-text"></span><span class="loading-dots" aria-hidden="true"></span></p>';
+            detailPanel.innerHTML = `<div class="detail-current"><p class="detail-kicker"></p><h2 class="detail-title"></h2><div class="detail-timeline">${landing.milestones.map((milestone) => `<div><span class="timeline-value"></span><span class="timeline-caption${milestone.caption.includes('/') ? ' is-unit' : ''}"></span></div>`).join('')}</div><p class="detail-lead"></p><div class="detail-grid"><div class="detail-block"><p class="detail-package-title"></p><ul class="detail-package">${landing.package.items.map(renderPackageItem).join('')}</ul><p class="detail-extras-title"></p><ul class="detail-package detail-extras">${landing.package.extras.map(renderPackageItem).join('')}</ul></div></div></div><div class="detail-next" aria-live="polite"><h2 class="detail-title detail-result-title"></h2><p class="detail-result-lead"></p><p class="detail-effects-title"></p><ul class="detail-effects">${landing.outcome.effects.map(renderPackageItem).join('')}</ul>${projectCtaMarkup}${stackMarkup}<div class="detail-contact">${contactCtaMarkup}<a class="telegram-contact" href="https://t.me/pasha_iden" target="_blank" rel="noopener noreferrer"></a></div></div>`;
+            renderDetailStack(landing.outcome.stack);
             requestAnimationFrame(refreshCustomScrollbars);
             trackAnimation(revealLanding(landing, job).then((result) => {
                 requestAnimationFrame(refreshCustomScrollbars);
@@ -1159,10 +1300,14 @@
             });
         }
         function revealSequence(items, job) {
-            return Promise.all(items.map(([element, text]) => {
+            return Promise.all(items.map(([element, text, forceMorph = false]) => {
                 const elementJob = startTextAnimation(element);
                 const previousText = element.textContent;
-                if (previousText && previousText !== text) return morphText(element, previousText, text, elementJob);
+                if (previousText === text && !forceMorph) {
+                    element.dataset.glitchText = text;
+                    return Promise.resolve(true);
+                }
+                if (previousText) return morphText(element, previousText, text, elementJob);
                 return scrambleText(element, text, elementJob);
             })).then((results) => results.every(Boolean));
         }
@@ -1174,6 +1319,35 @@
                 .filter((element) => (element.dataset.glitchText || element.textContent).length)
                 .map((element) => [element, element.dataset.glitchText || element.textContent]);
         }
+        function renderDetailStack(stack) {
+            const list = detailPanel.querySelector('.detail-stack-list');
+            if (!list || !stack) return;
+            const technologies = Array.isArray(stack) ? stack : stack.split(' · ');
+            const probe = document.createElement('span');
+            probe.className = 'detail-stack';
+            probe.style.cssText = 'position:absolute; visibility:hidden; display:inline-block; width:auto; margin:0; white-space:nowrap;';
+            list.append(probe);
+            const availableWidth = list.getBoundingClientRect().width;
+            const lines = [];
+            let line = '';
+            technologies.forEach((technology) => {
+                const candidate = line ? `${line} · ${technology}` : technology;
+                probe.textContent = candidate;
+                if (line && probe.getBoundingClientRect().width > availableWidth) {
+                    lines.push(line);
+                    line = technology;
+                } else {
+                    line = candidate;
+                }
+            });
+            if (line) lines.push(line);
+            list.replaceChildren(...lines.map((text) => {
+                const element = document.createElement('p');
+                element.className = 'detail-stack';
+                element.dataset.targetText = text;
+                return element;
+            }));
+        }
         function getOptionsScreenText() {
             return [
                 ...getTextItems('#menu-eyebrow, #menu-title'),
@@ -1182,7 +1356,7 @@
             ];
         }
         function getDetailScreenText() {
-            return getTextItems('.detail-kicker, .detail-title, .detail-lead, .timeline-value, .timeline-caption, .detail-package-title, .detail-extras-title, .detail-package strong, .detail-package span, .detail-result-lead, .detail-effects-title, .detail-effects strong, .detail-effects span, .detail-cta-text, .telegram-contact', detailPanel);
+            return getTextItems('.detail-kicker, .detail-title, .detail-lead, .timeline-value, .timeline-caption, .detail-package-title, .detail-extras-title, .detail-package strong, .detail-package span, .detail-result-lead, .detail-effects-title, .detail-effects strong, .detail-effects span, .detail-stack-title, .detail-stack, .detail-cta-text, .detail-contact-cta-text, .telegram-contact', detailPanel);
         }
         function prepareTextForReveal(items) {
             items.forEach(([element]) => {
@@ -1273,17 +1447,26 @@
             detailPanel.querySelectorAll('.detail-effects li').forEach((element, index) => {
                 items.push([element.querySelector('strong'), landing.outcome.effects[index].title], [element.querySelector('span'), landing.outcome.effects[index].text]);
             });
-            const ctaText = detailPanel.querySelector('.detail-cta-text');
+            if (landing.outcome.stack) {
+                items.push([detailPanel.querySelector('.detail-stack-title'), landing.outcome.stackTitle]);
+                detailPanel.querySelectorAll('.detail-stack').forEach((element) => items.push([element, element.dataset.targetText, true]));
+            }
+            if (landing.outcome.productUrl && landing.outcome.contactCta) {
+                items.push([detailPanel.querySelector('.detail-cta-text'), landing.outcome.cta]);
+                items.push([detailPanel.querySelector('.detail-project-link'), landing.outcome.productName]);
+            }
+            const ctaText = detailPanel.querySelector(landing.outcome.contactCta ? '.detail-contact-cta-text' : '.detail-cta-text');
             const contact = detailPanel.querySelector('.detail-contact');
             const dots = detailPanel.querySelector('.loading-dots');
-            items.push([detailPanel.querySelector('.telegram-contact'), landing.outcome.contact]);
+            items.push([detailPanel.querySelector('.telegram-contact:not(.detail-project-link)'), landing.outcome.contact]);
             const previousCta = ctaText.textContent;
             contact.classList.remove('is-cta-ready');
             dots.textContent = '';
             const ctaJob = startTextAnimation(ctaText);
-            const ctaAnimation = (previousCta && previousCta !== landing.outcome.cta
-                ? morphText(ctaText, previousCta, landing.outcome.cta, ctaJob)
-                : scrambleText(ctaText, landing.outcome.cta, ctaJob)
+            const ctaContent = landing.outcome.contactCta || landing.outcome.cta;
+            const ctaAnimation = (previousCta && previousCta !== ctaContent
+                ? morphText(ctaText, previousCta, ctaContent, ctaJob)
+                : scrambleText(ctaText, ctaContent, ctaJob)
             ).then((result) => {
                 if (result) {
                     contact.classList.add('is-cta-ready');
@@ -1380,7 +1563,15 @@
         });
         solutionList.addEventListener('click', (event) => {
             const button = event.target.closest('button[data-solution]');
-            if (button) runInteraction(() => selectSolution(Number(button.dataset.solution)));
+            if (button) {
+                runInteraction(() => selectSolution(Number(button.dataset.solution)));
+                return;
+            }
+            const caseButton = event.target.closest('button[data-case]');
+            if (caseButton) {
+                runInteraction(() => selectCase(Number(caseButton.dataset.case)));
+                return;
+            }
             const competencyButton = event.target.closest('button[data-competency]');
             if (competencyButton) runInteraction(() => selectCompetency(Number(competencyButton.dataset.competency)));
         });
@@ -1395,6 +1586,7 @@
                     return;
                 }
                 selectedSolution = null;
+                selectedCase = null;
                 prepareTextForReveal(getOptionsScreenText());
                 updateDetail(job);
                 syncRoute();
