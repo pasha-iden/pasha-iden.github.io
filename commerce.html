@@ -54,7 +54,7 @@
         .menu button:hover, .menu button:focus-visible, .menu button.is-selected { color: var(--ink); outline: none; }
         .menu-layout { --column-gap: clamp(32px, 8vw, 112px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--column-gap); align-items: start; }
         .menu-layout > nav { grid-column: 1; grid-row: 1; min-width: 0; transition: opacity .35s ease, transform .5s ease; }
-        .solution-list { position: fixed; top: var(--solution-list-top, 96px); left: calc(50% + var(--column-gap) / 2); width: calc((min(980px, 100vw - 48px) - var(--column-gap)) / 2); height: var(--solution-list-height, auto); max-height: calc(100vh - 192px); min-width: 0; margin: 0; padding: 0; overflow: visible; overscroll-behavior: contain; list-style: none; opacity: 0; pointer-events: none; scrollbar-width: thin; scrollbar-color: var(--muted) transparent; transition: top .45s ease, height .45s ease; }
+        .solution-list { position: fixed; top: 50%; left: calc(50% + var(--column-gap) / 2); width: calc((min(980px, 100vw - 48px) - var(--column-gap)) / 2); height: var(--solution-list-height, auto); max-height: calc(100vh - 192px); min-width: 0; margin: 0; padding: 0; overflow: visible; overscroll-behavior: contain; list-style: none; opacity: 0; pointer-events: none; transform: translateY(-50%); scrollbar-width: thin; scrollbar-color: var(--muted) transparent; transition: height .45s ease; }
         .solution-list.is-scrollable { overflow-x: hidden; overflow-y: auto; }
         .solution-list, .detail-panel, .detail-current, .detail-next { scrollbar-width: none !important; }
         .solution-list::-webkit-scrollbar, .detail-panel::-webkit-scrollbar, .detail-current::-webkit-scrollbar, .detail-next::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
@@ -772,28 +772,65 @@
             });
             positionSolutionsList(preserveTop);
         }
-        function positionSolutionsList(preserveTop = false) {
+        function positionSolutionsList(preserveTop = false, useRenderedContent = false) {
             if (window.matchMedia('(max-width: 600px)').matches) {
-                solutionList.style.removeProperty('--solution-list-top');
                 solutionList.style.removeProperty('--solution-list-height');
                 return;
             }
-            const measure = solutionList.cloneNode(true);
-            measure.removeAttribute('id');
-            measure.setAttribute('aria-hidden', 'true');
-            measure.querySelectorAll('[data-target-text]').forEach((element) => {
-                element.textContent = element.dataset.targetText;
-            });
-            measure.style.cssText = 'position:fixed !important; top:0 !important; height:auto !important; max-height:none !important; visibility:hidden !important; pointer-events:none !important; opacity:0 !important;';
-            document.body.append(measure);
+            const beforeRect = solutionList.getBoundingClientRect();
+            const beforeStyle = getComputedStyle(solutionList);
             const availableHeight = Math.max(1, window.innerHeight - 192);
-            const contentHeight = measure.scrollHeight;
+            let contentHeight;
+            let cloneInfo = null;
+            if (useRenderedContent) {
+                contentHeight = Math.ceil(solutionList.scrollHeight);
+            } else {
+                const measure = solutionList.cloneNode(true);
+                measure.removeAttribute('id');
+                measure.setAttribute('aria-hidden', 'true');
+                measure.querySelectorAll('[data-target-text]').forEach((element) => {
+                    element.textContent = element.dataset.targetText;
+                });
+                const liveWidth = getComputedStyle(solutionList).width;
+                measure.style.cssText = `position:fixed !important; top:0 !important; width:${liveWidth} !important; height:auto !important; max-height:none !important; visibility:hidden !important; pointer-events:none !important; opacity:0 !important;`;
+                document.body.append(measure);
+                contentHeight = measure.scrollHeight;
+                const measuredRect = measure.getBoundingClientRect();
+                const measuredStyle = getComputedStyle(measure);
+                cloneInfo = { width: Math.round(measuredRect.width), height: Math.round(measuredRect.height), scrollHeight: contentHeight, cssWidth: measuredStyle.width, font: measuredStyle.fontFamily };
+                measure.remove();
+            }
             const height = Math.min(contentHeight, availableHeight);
-            measure.remove();
             solutionList.style.setProperty('--solution-list-height', `${height}px`);
-            if (!preserveTop) solutionList.style.setProperty('--solution-list-top', `${Math.max(96, Math.round((window.innerHeight - height) / 2))}px`);
-            solutionList.classList.toggle('is-scrollable', contentHeight > availableHeight);
+            // Keep the scroll container enabled while text is being rebuilt.
+            // Edge can report a smaller transient height during glyph updates;
+            // the custom thumb still stays hidden when there is no overflow.
+            solutionList.classList.add('is-scrollable');
+            const logLayout = (phase) => {
+                const rect = solutionList.getBoundingClientRect();
+                const style = getComputedStyle(solutionList);
+                console.info('[commerce:suboptions-layout]', {
+                    phase,
+                    time: Math.round(performance.now()),
+                    section: selectedSection,
+                    preserveTop,
+                    useRenderedContent,
+                    viewport: { width: window.innerWidth, height: window.innerHeight },
+                    before: { top: Math.round(beforeRect.top), width: Math.round(beforeRect.width), height: Math.round(beforeRect.height), cssWidth: beforeStyle.width },
+                    clone: cloneInfo,
+                    applied: { contentHeight, availableHeight, height },
+                    result: {
+                        top: Math.round(rect.top), width: Math.round(rect.width), height: Math.round(rect.height),
+                        scrollHeight: solutionList.scrollHeight, clientHeight: solutionList.clientHeight,
+                        isScrollable: solutionList.classList.contains('is-scrollable'),
+                        cssTop: style.top, cssWidth: style.width, font: style.fontFamily
+                    }
+                });
+            };
+            logLayout('synchronous');
             requestAnimationFrame(refreshCustomScrollbars);
+            requestAnimationFrame(() => logLayout('next-frame'));
+            setTimeout(() => logLayout('after-transition'), 500);
         }
         function getScrollbarState(element) {
             let state = scrollbarStates.get(element);
@@ -850,6 +887,30 @@
                 if (!targets.has(target)) thumb.classList.remove('is-visible');
             });
             targets.forEach(syncCustomScrollbar);
+        }
+        function logSuboptionsState(phase) {
+            const rect = solutionList.getBoundingClientRect();
+            const style = getComputedStyle(solutionList);
+            console.info('[commerce:suboptions-state]', {
+                phase,
+                time: Math.round(performance.now()),
+                section: selectedSection,
+                selectedCompetency,
+                top: Math.round(rect.top),
+                height: Math.round(rect.height),
+                width: Math.round(rect.width),
+                scrollHeight: solutionList.scrollHeight,
+                clientHeight: solutionList.clientHeight,
+                isScrollable: solutionList.classList.contains('is-scrollable'),
+                cssTop: style.top,
+                cssHeight: style.height,
+                cssWidth: style.width,
+                rows: Array.from(solutionList.querySelectorAll('button')).map((button) => ({
+                    target: button.querySelector('.solution-title')?.dataset.targetText || '',
+                    rendered: button.querySelector('.solution-title')?.textContent || '',
+                    height: Math.round(button.getBoundingClientRect().height)
+                }))
+            });
         }
         function selectSection(section, preserveDetail = false, job = ++animationJob, preserveDetailContent = false) {
             if (!preserveDetail) { selectedSolution = null; lastSolution = null; selectedCompetency = null; }
@@ -1119,6 +1180,9 @@
             });
             return revealSequence(items, job).then((result) => {
                 if (result) solutionList.querySelectorAll('li[data-remove-after-reveal="true"]').forEach((row) => row.remove());
+                if (result) {
+                    logSuboptionsState('text-reveal-complete');
+                }
                 requestAnimationFrame(refreshCustomScrollbars);
                 return result;
             });
@@ -1267,6 +1331,11 @@
             option.addEventListener('click', () => runInteraction(() => openMenu(option.dataset.language)));
         });
         topOptions.forEach((option) => option.addEventListener('click', () => runInteraction(() => setMenuLanguage(option.dataset.language))));
+        solutionList.addEventListener('transitionend', (event) => {
+            if (event.target === solutionList && (event.propertyName === 'top' || event.propertyName === 'height')) {
+                logSuboptionsState(`transition-end:${event.propertyName}`);
+            }
+        });
         menu.addEventListener('click', (event) => {
             const solutionButton = event.target.closest('button[data-menu-solution]');
             if (solutionButton) runInteraction(() => selectSolution(Number(solutionButton.dataset.menuSolution)));
@@ -1314,7 +1383,7 @@
                     ...languageItems
                 ], job));
             }
-            document.fonts?.ready.then(positionSolutionsList);
+            document.fonts?.ready.then(() => positionSolutionsList());
             startGlitchLoop();
         });
     </script>
