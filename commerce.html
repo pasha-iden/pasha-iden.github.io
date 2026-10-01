@@ -58,7 +58,7 @@
         .solution-list.is-scrollable { overflow-x: hidden; overflow-y: auto; }
         .solution-list, .detail-panel, .detail-current, .detail-next { scrollbar-width: none !important; }
         .solution-list::-webkit-scrollbar, .detail-panel::-webkit-scrollbar, .detail-current::-webkit-scrollbar, .detail-next::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
-        .custom-scrollbar { position: fixed; z-index: 20; width: 12px; opacity: 0; pointer-events: none; }
+        .custom-scrollbar { position: fixed; z-index: 20; width: 12px; opacity: 0; pointer-events: none; transition: opacity .66s ease; }
         .custom-scrollbar.is-visible { opacity: 1; pointer-events: auto; }
         .custom-scrollbar::before { content: ''; position: absolute; top: 0; left: 5px; width: 2px; height: 100%; background: var(--muted); transition: background-color .35s ease; }
         .custom-scrollbar:hover::before { background: rgba(78, 93, 120, .55); }
