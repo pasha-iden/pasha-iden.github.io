@@ -885,6 +885,19 @@
             });
             targets.forEach(syncCustomScrollbar);
         }
+        let scrollbarRefreshFrame = 0;
+        function scheduleScrollbarRefresh() {
+            if (scrollbarRefreshFrame) return;
+            scrollbarRefreshFrame = requestAnimationFrame(() => {
+                scrollbarRefreshFrame = 0;
+                refreshCustomScrollbars();
+            });
+        }
+        new MutationObserver(scheduleScrollbarRefresh).observe(detailPanel, {
+            childList: true,
+            characterData: true,
+            subtree: true
+        });
         function logSuboptionsState(phase) {
             const rect = solutionList.getBoundingClientRect();
             const style = getComputedStyle(solutionList);
