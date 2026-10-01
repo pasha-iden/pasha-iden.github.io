@@ -55,6 +55,7 @@
         .menu-layout { --column-gap: clamp(32px, 8vw, 112px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--column-gap); align-items: start; }
         .menu-layout > nav { grid-column: 1; grid-row: 1; min-width: 0; transition: opacity .35s ease, transform .5s ease; }
         .solution-list { position: fixed; top: 50%; left: calc(50% + var(--column-gap) / 2); width: calc((min(980px, 100vw - 48px) - var(--column-gap)) / 2); height: var(--solution-list-height, auto); max-height: calc(100vh - 192px); min-width: 0; margin: 0; padding: 0; overflow: visible; overscroll-behavior: contain; list-style: none; opacity: 0; pointer-events: none; transform: translateY(-50%); scrollbar-width: thin; scrollbar-color: var(--muted) transparent; transition: height .45s ease; }
+        .solution-list.is-initializing { transition: none; }
         .solution-list.is-scrollable { overflow-x: hidden; overflow-y: auto; }
         .solution-list, .detail-panel, .detail-current, .detail-next { scrollbar-width: none !important; }
         .solution-list::-webkit-scrollbar, .detail-panel::-webkit-scrollbar, .detail-current::-webkit-scrollbar, .detail-next::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
@@ -790,6 +791,8 @@
                 solutionList.style.removeProperty('--solution-list-height');
                 return;
             }
+            const opensFromEmpty = !solutionList.classList.contains('is-open') && getSubOptions().items.length > 0;
+            if (opensFromEmpty) solutionList.classList.add('is-initializing');
             const beforeRect = solutionList.getBoundingClientRect();
             const beforeStyle = getComputedStyle(solutionList);
             const availableHeight = Math.max(1, window.innerHeight - 192);
@@ -840,6 +843,7 @@
             logLayout('synchronous');
             requestAnimationFrame(refreshCustomScrollbars);
             requestAnimationFrame(() => logLayout('next-frame'));
+            if (opensFromEmpty) requestAnimationFrame(() => requestAnimationFrame(() => solutionList.classList.remove('is-initializing')));
             setTimeout(() => logLayout('after-transition'), 500);
         }
         function getScrollbarState(element) {
