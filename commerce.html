@@ -89,8 +89,8 @@
         .detail-kicker { margin: 0 0 8px; color: var(--blue); font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
         .detail-title { margin: 0 0 14px; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; }
         .detail-timeline { display: flex; gap: clamp(20px, 4vw, 52px); margin: -5px 0 15px; }
-        .timeline-value { display: block; color: var(--ink); font-size: .72rem; font-weight: 600; letter-spacing: -.03em; }
-        .timeline-caption { display: block; margin-top: 2px; color: var(--muted); font-size: .6rem; line-height: 1.35; letter-spacing: -.025em; }
+        .timeline-value { display: block; color: var(--ink); font-size: .72rem; font-weight: 600; letter-spacing: -.03em; white-space: nowrap; }
+        .timeline-caption { display: block; margin-top: 2px; color: var(--muted); font-size: .6rem; line-height: 1.35; letter-spacing: -.025em; white-space: nowrap; }
         .timeline-caption.is-unit { white-space: nowrap; }
         .detail-lead, .detail-block { margin: 0; color: var(--muted); font-size: clamp(.67rem, 1vw, .8rem); line-height: 1.55; letter-spacing: -.025em; }
         .detail-grid { display: grid; gap: 15px; margin-top: 22px; }
@@ -204,6 +204,84 @@
                         productUrl: 'https://dreamcarcy.com',
                         contactCta: 'One message away from aligning your product',
                         contact: 'Message on Telegram'
+                    }
+                },
+                booker: {
+                    kicker: 'Booker Library',
+                    title: 'Library service in a Telegram bot',
+                    lead: 'An end-to-end library-management service for a local coffee shop: it turns an in-house reading room into a book-lending experience accessible from Telegram and the web.',
+                    milestones: [{ value: 'Solo Fullstack', caption: 'Engineer' }, { value: 'Production-ready', caption: 'Launch did not happen' }, { value: 'Telegram Bot', caption: '5,300 LOC' }],
+                    package: {
+                        baseTitle: 'Engineering solutions:',
+                        items: [
+                            { title: 'Service architecture', text: 'A coordinated system of a Telegram bot, asynchronous web service, user catalogue and administration SPA.' },
+                            { title: 'Transactional data layer', text: 'PostgreSQL transactions protect book availability and reservation operations from conflicting concurrent actions.' },
+                            { title: 'Booking & queues', text: 'Book reservations, availability control, waiting lists and scheduled collection and return scenarios.' },
+                            { title: 'Telegram product', text: 'A Telegram bot and MiniApp user catalogue for registration, book discovery, reservations, personal library status and notifications.' },
+                            { title: 'Web interfaces', text: 'A public catalogue with reviews and a separate administration panel for the collection, orders, moderation and schedule.' },
+                            { title: 'Notifications & automation', text: 'Scheduled messages for bookings, due dates, returns and queue changes, coordinated through Redis.' },
+                            { title: 'Security & resilience', text: 'Telegram-based user authentication, CSRF protection for web forms, input validation and cross-channel rate limiting.' },
+                            { title: 'Deployment design', text: 'A container-ready setup with Docker, Nginx and SSL/TLS configuration.' }
+                        ],
+                        extrasTitle: '',
+                        extras: []
+                    },
+                    outcome: {
+                        title: 'Result',
+                        lead: 'A functional technical prototype of a library service with complete user and administrator workflows. The project was not released into production.',
+                        effectsTitle: 'Potential business impact:',
+                        effects: [
+                            { title: 'Digital catalogue', text: 'A searchable book catalogue and review flow, available in the web interface.' },
+                            { title: 'Home lending workflow', text: 'A user flow from Telegram registration to reservation, collection and return.' },
+                            { title: 'Operational control', text: 'An administration interface for managing books, copies, orders, schedules and moderation.' },
+                            { title: 'Reliable reservations', text: 'Transactional booking and queue handling designed to prevent availability conflicts.' }
+                        ],
+                        stackTitle: 'Stack:',
+                        stack: ['Python', 'asyncio', 'aiohttp', 'aiogram', 'Telegram Bot API', 'asyncpg', 'PostgreSQL', 'Redis', 'JavaScript', 'HTML/CSS', 'Telegram Web Apps', 'Docker', 'Nginx', 'Linux', 'aiocron'],
+                        cta: 'Explore Booker Library code on GitHub.',
+                        productName: 'GitHub',
+                        productUrl: 'https://github.com/pasha-iden/booker-library',
+                        contactCta: 'Discuss a solution for your task',
+                        contact: 'Message on Telegram'
+                    }
+                },
+                bookerRu: {
+                    kicker: 'Booker Библиотека',
+                    title: 'Библиотечный сервис в Telegram-боте',
+                    lead: 'Полноценный сервис управления библиотекой для локальной кофейни: переводит библиотеку из читального зала в сервис выдачи книг на дом, доступный через Telegram и web.',
+                    milestones: [{ value: 'Solo Fullstack', caption: 'Engineer' }, { value: 'Production-ready', caption: 'Запуск не состоялся' }, { value: 'Telegram-Bot', caption: '5300 LOC' }],
+                    package: {
+                        baseTitle: 'Инженерные решения:',
+                        items: [
+                            { title: 'Архитектура сервиса', text: 'Связанная система из Telegram-бота, асинхронного web-сервиса, пользовательского каталога и admin SPA.' },
+                            { title: 'Транзакционный слой данных', text: 'Транзакции PostgreSQL защищают доступность экземпляров и операции бронирования от конфликтов конкурентного доступа.' },
+                            { title: 'Бронирование и очереди', text: 'Резервирование книг, контроль доступности, очереди ожидания и сценарии выдачи и возврата по расписанию.' },
+                            { title: 'Telegram-продукт', text: 'Telegram-бот и MiniApp пользовательского каталога для регистрации, поиска книг, бронирований, просмотра статуса и уведомлений.' },
+                            { title: 'Web-интерфейсы', text: 'Пользовательский каталог с отзывами и отдельная admin-панель для управления фондом, заказами, модерацией и расписанием.' },
+                            { title: 'Уведомления и автоматизация', text: 'Запланированные сообщения о бронировании, сроках, возвратах и изменениях очереди с координацией через Redis.' },
+                            { title: 'Безопасность и устойчивость', text: 'Аутентификация пользователя через Telegram, CSRF-защита web-форм, валидация ввода и общий rate limiting между каналами.' },
+                            { title: 'Подготовка к развёртыванию', text: 'Контейнеризируемая конфигурация с Docker, Nginx и настройкой SSL/TLS.' }
+                        ],
+                        extrasTitle: '',
+                        extras: []
+                    },
+                    outcome: {
+                        title: 'Результат',
+                        lead: 'Функциональный технический прототип библиотечного сервиса с полным пользовательским и административным контуром. Проект не вышел в production.',
+                        effectsTitle: 'Потенциальный эффект для бизнеса:',
+                        effects: [
+                            { title: 'Цифровой каталог', text: 'Каталог книг с поиском и сценарием отзывов в web-интерфейсе.' },
+                            { title: 'Выдача книг на дом', text: 'Пользовательский путь от регистрации в Telegram до бронирования, выдачи и возврата.' },
+                            { title: 'Операционный контроль', text: 'Admin-интерфейс для управления книгами, экземплярами, заказами, расписанием и модерацией.' },
+                            { title: 'Надёжное бронирование', text: 'Транзакционная обработка бронирований и очередей, рассчитанная на предотвращение конфликтов доступности.' }
+                        ],
+                        stackTitle: 'Стек:',
+                        stack: ['Python', 'asyncio', 'aiohttp', 'aiogram', 'Telegram Bot API', 'asyncpg', 'PostgreSQL', 'Redis', 'JavaScript', 'HTML/CSS', 'Telegram Web Apps', 'Docker', 'Nginx', 'Linux', 'aiocron'],
+                        cta: 'Изучить код Booker Library на GitHub.',
+                        productName: 'GitHub',
+                        productUrl: 'https://github.com/pasha-iden/booker-library',
+                        contactCta: 'Обсудить решение для вашей задачи',
+                        contact: 'Написать в Telegram'
                     }
                 },
                 landing: {
@@ -642,6 +720,8 @@
                 }
             }
         };
+        copy.ru.booker = copy.en.bookerRu;
+        delete copy.en.bookerRu;
         const panel = document.getElementById('language-panel');
         const languageScreen = document.getElementById('language-screen');
         const menuScreen = document.getElementById('menu-screen');
@@ -1088,7 +1168,7 @@
             return [copy[currentLanguage].landing, copy[currentLanguage].saas, copy[currentLanguage].messenger, copy[currentLanguage].ai, copy[currentLanguage].team][index] || null;
         }
         function getCaseDetail(index) {
-            return [copy[currentLanguage].dreamcar][index] || null;
+            return [copy[currentLanguage].dreamcar, copy[currentLanguage].booker][index] || null;
         }
         function getActiveDetail() {
             if (selectedSection === 'section-0') return getSolutionDetail(selectedSolution);
@@ -1303,11 +1383,7 @@
             return Promise.all(items.map(([element, text, forceMorph = false]) => {
                 const elementJob = startTextAnimation(element);
                 const previousText = element.textContent;
-                if (previousText === text && !forceMorph) {
-                    element.dataset.glitchText = text;
-                    return Promise.resolve(true);
-                }
-                if (previousText) return morphText(element, previousText, text, elementJob);
+                if (previousText && (previousText !== text || forceMorph)) return morphText(element, previousText, text, elementJob);
                 return scrambleText(element, text, elementJob);
             })).then((results) => results.every(Boolean));
         }
