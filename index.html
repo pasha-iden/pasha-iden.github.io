@@ -81,6 +81,15 @@
         .language-option:hover, .language-option:focus-visible { outline: none; }
         .language-panel.is-hovering .language-option { color: var(--muted); }
         .language-panel.is-hovering .language-option.is-highlighted { color: var(--ink); }
+        .generation-note { position: absolute; top: calc(100% + 76px); left: 0; display: none; width: 100%; opacity: 0; transition: opacity .55s ease; }
+        .generation-note.is-visible { display: block; }
+        .generation-note.is-ready { opacity: 1; }
+        .generation-note.is-suspended { opacity: 0; pointer-events: none; }
+        .generation-message { margin: 0 0 12px; color: var(--muted); font-size: clamp(.62rem, 1vw, .76rem); font-weight: 500; line-height: 1.55; letter-spacing: -.025em; text-align: left; white-space: pre-line; }
+        .generation-terminal { color: var(--blue); font-size: .82rem; font-weight: 700; letter-spacing: .08em; }
+        .generation-cursor { animation: generation-cursor 1s steps(1, end) infinite; }
+        .generation-continue { min-height: 31px; padding: 6px 11px; }
+        @keyframes generation-cursor { 50% { visibility: hidden; } }
         .language-screen.is-leaving { visibility: hidden; pointer-events: none; }
         .menu-screen { visibility: hidden; }
         .menu-screen.is-visible { visibility: visible; }
@@ -277,6 +286,10 @@ Fullstack Product Engineer</p>
                 <div class="language-prompt" aria-hidden="true"><span data-language="en">Choose language</span><span class="divider">|</span><span data-language="ru">Выберите язык</span></div>
                 <div class="language-options">
                     <button class="language-option" type="button" data-language="en">English</button><span class="divider" aria-hidden="true">|</span><button class="language-option" type="button" data-language="ru">Русский</button>
+                </div>
+                <div class="generation-note" id="generation-note" aria-live="polite">
+                    <p class="generation-message" id="generation-message"></p>
+                    <button class="telegram-contact generation-continue" id="generation-continue" type="button" hidden></button>
                 </div>
             </div>
         </section>
@@ -1069,7 +1082,10 @@ Fullstack Product Engineer</p>
         const statusBar = document.getElementById('status-bar');
         const options = document.querySelectorAll('.language-option');
         const languageIdentity = document.getElementById('language-identity');
-        const languageItems = [[languageIdentity, languageIdentity.textContent], ...Array.from(document.querySelectorAll('.language-panel span, .language-panel button')).map((element) => [element, element.textContent])];
+        const languageItems = [[languageIdentity, languageIdentity.textContent], ...Array.from(document.querySelectorAll('.language-prompt span, .language-options button, .language-options .divider')).map((element) => [element, element.textContent])];
+        const generationNote = document.getElementById('generation-note');
+        const generationMessage = document.getElementById('generation-message');
+        const generationContinueButton = document.getElementById('generation-continue');
         const topOptions = document.querySelectorAll('.top-language-option');
         const copyPlainRouteButton = document.getElementById('copy-route-plain');
         const copyRouteButton = document.getElementById('copy-route');
@@ -1117,6 +1133,8 @@ Fullstack Product Engineer</p>
         let easterEggTransitionActive = false;
         let easterEggContentReady = false;
         let easterEggOrigin = 'language';
+        let generationGateShown = false;
+        let generationGateActive = false;
         const faviconGlyphs = [['>', '_'], ['/', '>'], ['P', '/'], ['P', '>'], ['P', '#']];
         const textAnimationJobs = new WeakMap();
         const glitchAnimationJobs = new WeakMap();
@@ -1316,16 +1334,20 @@ Fullstack Product Engineer</p>
             const query = params.toString();
             window.history.replaceState(null, '', `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`);
         }
+        function getLinkGeneration() {
+            const value = Number.parseInt(new URLSearchParams(window.location.search).get('g'), 10);
+            return Number.isFinite(value) && value > 0 ? value : 0;
+        }
         async function copyRoute(withParameters, button) {
             if (withParameters) syncRoute();
-            const url = withParameters
-                ? window.location.href
-                : `${window.location.origin}${window.location.pathname}${window.location.hash}`;
+            const url = new URL(window.location.href);
+            if (!withParameters) url.search = '';
+            url.searchParams.set('g', String(getLinkGeneration() + 1));
             try {
-                if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(url);
+                if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(url.href);
                 else {
                     const field = document.createElement('textarea');
-                    field.value = url;
+                    field.value = url.href;
                     field.style.position = 'fixed';
                     field.style.opacity = '0';
                     document.body.append(field);
@@ -1343,6 +1365,88 @@ Fullstack Product Engineer</p>
                 copyFeedbackTimer = window.setTimeout(() => copyFeedback.classList.remove('is-visible'), 1300);
                 window.setTimeout(() => button.classList.remove('is-copied'), 700);
             } catch (_) {}
+        }
+        function hasGenerationGate() {
+            return getLinkGeneration() >= 5 && !generationGateShown;
+        }
+        function fadeInGenerationNote() {
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                if (generationNote.classList.contains('is-visible') && !generationNote.classList.contains('is-suspended')) {
+                    generationNote.classList.add('is-ready');
+                }
+            }));
+        }
+        function generationGateMessage() {
+            const generation = getLinkGeneration();
+            if (currentLanguage === 'ru') {
+                return `Прежде чем попасть к вам, эта ссылка прошла цепочку из ${generation} человек!\nЯ несколько в замешательстве, как мы зашли так далеко)`;
+            }
+            return `Before reaching you, this link passed through a chain of ${generation} people!\nI am a little confused about how we got this far)`;
+        }
+        function renderGenerationTerminal() {
+            if (!hasGenerationGate()) {
+                generationNote.classList.remove('is-visible', 'is-ready', 'is-suspended');
+                delete generationNote.dataset.state;
+                return;
+            }
+            generationNote.classList.add('is-visible');
+            generationNote.classList.remove('is-suspended');
+            generationNote.dataset.state = 'terminal';
+            generationMessage.innerHTML = '<span class="generation-terminal">&gt;<span class="generation-cursor">_</span></span>';
+            generationContinueButton.hidden = true;
+            generationContinueButton.textContent = '';
+            fadeInGenerationNote();
+        }
+        function showGenerationGate(language) {
+            if (!hasGenerationGate() || generationGateActive) return;
+            generationGateShown = true;
+            generationGateActive = true;
+            generationNote.dataset.state = 'gate';
+            currentLanguage = language;
+            document.documentElement.lang = language;
+            setFooterLanguage(language, true);
+            generationNote.classList.add('is-visible');
+            generationNote.classList.remove('is-suspended');
+            generationMessage.textContent = '';
+            generationContinueButton.hidden = false;
+            generationContinueButton.textContent = '';
+            fadeInGenerationNote();
+            const job = ++animationJob;
+            trackAnimation(revealSequence([[generationMessage, generationGateMessage()]], job).then((completed) => {
+                if (!completed) return false;
+                return revealSequence([[generationContinueButton, language === 'ru' ? 'Продолжить' : 'Continue']], job);
+            }));
+        }
+        function setGenerationGateLanguage(language) {
+            if (!generationGateActive || language === currentLanguage) return;
+            currentLanguage = language;
+            document.documentElement.lang = language;
+            setFooterLanguage(language, true);
+            const job = ++animationJob;
+            trackAnimation(revealSequence([
+                [generationMessage, generationGateMessage()],
+                [generationContinueButton, language === 'ru' ? 'Продолжить' : 'Continue']
+            ], job));
+        }
+        function continueGenerationGate() {
+            if (!generationGateActive || languageScreen.dataset.closing === 'true') return;
+            languageScreen.dataset.closing = 'true';
+            const job = ++animationJob;
+            const gateItems = [
+                ...languageItems,
+                [generationMessage, generationMessage.dataset.glitchText || generationMessage.textContent],
+                [generationContinueButton, generationContinueButton.dataset.glitchText || generationContinueButton.textContent]
+            ];
+            trackAnimation(reverseSequence(gateItems, job)).then((completed) => {
+                if (!completed) return;
+                generationGateActive = false;
+                languageScreen.classList.add('is-leaving');
+                setMenuLanguage(currentLanguage);
+                statusBar.classList.add('is-menu-active');
+                menuScreen.classList.add('is-visible');
+                menuScreen.setAttribute('aria-hidden', 'false');
+                updateBackButton();
+            });
         }
         function openRoute(route) {
             if (route.theme) setTheme(route.theme);
@@ -1362,6 +1466,14 @@ Fullstack Product Engineer</p>
         }
         function openMenu(language) {
             if (languageScreen.dataset.closing === 'true') return;
+            if (generationGateActive) {
+                setGenerationGateLanguage(language);
+                return;
+            }
+            if (hasGenerationGate()) {
+                showGenerationGate(language);
+                return;
+            }
             languageScreen.dataset.closing = 'true';
             options.forEach((option) => { option.disabled = true; });
             const job = ++animationJob;
@@ -1503,7 +1615,17 @@ Fullstack Product Engineer</p>
         function getEasterOriginText(origin) {
             if (origin === 'detail') return getDetailScreenText();
             if (origin === 'menu') return getOptionsScreenText();
-            return languageItems;
+            return getLanguageScreenText();
+        }
+        function getLanguageScreenText() {
+            const items = [...languageItems];
+            if (!generationNote.classList.contains('is-visible')) return items;
+            if (generationNote.dataset.state === 'terminal') return items;
+            const message = generationMessage.dataset.glitchText || generationMessage.textContent;
+            const continueText = generationContinueButton.dataset.glitchText || generationContinueButton.textContent;
+            if (message) items.push([generationMessage, message]);
+            if (!generationContinueButton.hidden && continueText) items.push([generationContinueButton, continueText]);
+            return items;
         }
         function revealEasterOrigin(origin) {
             const job = ++animationJob;
@@ -1518,8 +1640,9 @@ Fullstack Product Engineer</p>
                 trackAnimation(revealSolutions(job));
                 return;
             }
-            prepareTextForReveal(languageItems);
-            trackAnimation(revealSequence(languageItems, job));
+            const languageText = getLanguageScreenText();
+            prepareTextForReveal(languageText);
+            trackAnimation(revealSequence(languageText, job));
         }
         function openEasterEgg() {
             if (!easterEggAvailable || easterEggTransitionActive) return;
@@ -1530,10 +1653,14 @@ Fullstack Product Engineer</p>
             easterEggTransitionActive = true;
             easterTrigger.classList.add('is-opened');
             easterEggOrigin = getEasterOrigin();
+            if (easterEggOrigin === 'language' && generationNote.dataset.state === 'terminal') {
+                generationNote.classList.add('is-suspended');
+            }
             if (easterEggOrigin === 'detail') detailPanel.querySelector('.detail-contact')?.classList.remove('is-cta-ready');
             const job = ++animationJob;
             trackAnimation(reverseSequence(getEasterOriginText(easterEggOrigin), job)).then((completed) => {
                 if (!completed) {
+                    generationNote.classList.remove('is-suspended');
                     easterEggTransitionActive = false;
                     return;
                 }
@@ -1570,6 +1697,9 @@ Fullstack Product Engineer</p>
                 easterEggContentReady = false;
                 easterScreen.classList.remove('is-visible');
                 easterScreen.setAttribute('aria-hidden', 'true');
+                if (easterEggOrigin === 'language' && generationNote.dataset.state === 'terminal') {
+                    renderGenerationTerminal();
+                }
                 revealEasterOrigin(easterEggOrigin);
                 updateBackButton();
                 easterEggTransitionActive = false;
@@ -1578,6 +1708,8 @@ Fullstack Product Engineer</p>
         function syncLanguageRoute() {
             const params = new URLSearchParams();
             params.set('theme', document.body.dataset.theme === 'dark' ? 'dark' : 'light');
+            const generation = getLinkGeneration();
+            if (generation > 0) params.set('g', generation);
             window.history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`);
         }
         function clearMenuForFreshReveal() {
@@ -1635,8 +1767,16 @@ Fullstack Product Engineer</p>
                 options.forEach((option) => { option.disabled = false; });
                 prepareTextForReveal(languageItems);
                 syncLanguageRoute();
+                if (hasGenerationGate()) {
+                    trackAnimation(revealSequence(languageItems, job).then((completed) => {
+                        if (completed) showGenerationGate(currentLanguage);
+                        return completed;
+                    }));
+                } else {
+                    renderGenerationTerminal();
+                    trackAnimation(revealSequence(languageItems, job));
+                }
                 updateBackButton();
-                trackAnimation(revealSequence(languageItems, job));
                 backTransitionActive = false;
             });
         }
@@ -2305,7 +2445,7 @@ Fullstack Product Engineer</p>
             });
         }
         function usesDistributedReveal(element) {
-            return element.matches?.('.solution-subtitle, .competency-stack-line, .detail-lead, .detail-result-lead, .detail-package strong, .detail-package span, .detail-effects strong, .detail-effects span, .detail-stack, .personal-project-description, .personal-project-stack, .easter-line');
+            return element.matches?.('.solution-subtitle, .competency-stack-line, .detail-lead, .detail-result-lead, .detail-package strong, .detail-package span, .detail-effects strong, .detail-effects span, .detail-stack, .personal-project-description, .personal-project-stack, .easter-line, .generation-message');
         }
         function revealSequence(items, job) {
             return Promise.all(items.map(([element, text, forceMorph = false]) => {
@@ -2660,6 +2800,7 @@ Fullstack Product Engineer</p>
         })));
         copyPlainRouteButton.addEventListener('click', () => copyRoute(false, copyPlainRouteButton));
         copyRouteButton.addEventListener('click', () => copyRoute(true, copyRouteButton));
+        generationContinueButton.addEventListener('click', () => runInteraction(continueGenerationGate));
         themeToggle.addEventListener('click', () => transitionTheme(document.body.dataset.theme === 'dark' ? 'light' : 'dark'));
         easterTrigger.addEventListener('click', () => runInteraction(openEasterEgg));
         solutionList.addEventListener('transitionend', (event) => {
@@ -2761,6 +2902,7 @@ Fullstack Product Engineer</p>
                 trackAnimation(revealSequence([
                     ...languageItems
                 ], job));
+                renderGenerationTerminal();
             }
             document.fonts?.ready.then(() => positionSolutionsList());
             startGlitchLoop();
