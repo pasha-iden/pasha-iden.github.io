@@ -52,6 +52,10 @@
         .menu { margin: 0; padding: 0; list-style: none; }
         .menu button { display: block; width: 100%; padding: 10px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; text-align: left; transition: color .35s ease; }
         .menu button:hover, .menu button:focus-visible, .menu button.is-selected { color: var(--ink); outline: none; }
+        .menu button.menu-telegram { display: flex; flex-direction: column; align-items: flex-start; width: auto; margin-top: 12px; padding: 0; border: 0; color: var(--muted); font-size: .68rem; letter-spacing: -.02em; }
+        .menu button.menu-telegram .menu-title { min-height: 31px; padding: 6px 11px; border: 1px solid var(--muted); transition: color .35s ease, border-color .35s ease; }
+        .menu button.menu-telegram .menu-subtitle { order: -1; margin: 0 0 8px; color: var(--ink); font-size: clamp(.67rem, 1vw, .8rem); font-weight: 600; line-height: 1.55; }
+        .menu button.menu-telegram:hover .menu-title, .menu button.menu-telegram:focus-visible .menu-title { border-color: var(--ink); color: var(--ink); }
         .menu-layout { --column-gap: clamp(32px, 8vw, 112px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--column-gap); align-items: start; }
         .menu-layout > nav { grid-column: 1; grid-row: 1; min-width: 0; transition: opacity .35s ease, transform .5s ease; }
         .solution-list { position: fixed; top: 50%; left: calc(50% + var(--column-gap) / 2); width: calc((min(980px, 100vw - 48px) - var(--column-gap)) / 2); height: var(--solution-list-height, auto); max-height: calc(100vh - 192px); min-width: 0; margin: 0; padding: 0; overflow: visible; overscroll-behavior: contain; list-style: none; opacity: 0; pointer-events: none; transform: translateY(-50%); scrollbar-width: thin; scrollbar-color: var(--muted) transparent; transition: height .45s ease; }
@@ -152,7 +156,7 @@
         const copy = {
             en: {
                 eyebrow: 'Pavel / Fullstack Product Engineer', title: 'What are you looking for?',
-                menu: ['Solutions', 'Cases', 'Skills', 'About me', 'Get in touch'],
+                menu: ['Solutions', 'Cases', 'Skills', 'Approach', 'Write on Telegram'],
                 solutions: [
                     { title: 'Landing pages & SEO sites', subtitle: 'Fast, discoverable, and built for conversion.' },
                     { title: 'SaaS & custom platforms', subtitle: 'From an MVP to a production-ready product.' },
@@ -173,6 +177,12 @@
                     { title: 'Infrastructure & DevOps', subtitle: 'Docker, CI/CD, Linux, deployment and operations.', stack: ['Docker · Docker Compose · GitHub Actions · GHCR · Linux · Nginx', 'Blue-green deployment · DB migrations · pytest · Faker · Black · Git', 'MinIO / S3 · aiobotocore · Web Push / VAPID'] },
                     { title: 'Security & performance', subtitle: 'Security controls, efficient workloads and predictable recovery.', stack: ['bcrypt · JWT · HMAC · Fernet · CORS · XSS protection · encrypted environments', 'caching · concurrency · load testing'] },
                     { title: 'AI Engineering', subtitle: 'LLMs and APIs, prompt engineering, data pipelines and automation.', stack: ['LLM APIs · prompt engineering · data pipelines', 'AI-assisted development'] }
+                ],
+                approach: [
+                    { title: 'Engineering approach', subtitle: 'I take a business problem, break it down and carry it through to a working production solution.' },
+                    { title: 'Working principles', subtitle: 'Independence, ownership of the outcome, pragmatic decisions and transparent communication.' },
+                    { title: 'Growth', subtitle: 'AI-assisted development, continuous expansion of my engineering range, personal projects and experiments.' },
+                    { title: 'Beyond development', subtitle: 'Electronic music, physical computing, visual digital art and a connection to video games.' }
                 ],
                 dreamcar: {
                     kicker: 'DreamCar',
@@ -634,7 +644,7 @@
             },
             ru: {
                 eyebrow: 'Павел / Fullstack Product Engineer', title: 'Что вас интересует?',
-                menu: ['Решения', 'Кейсы', 'Компетенции', 'Обо мне', 'Связаться'],
+                menu: ['Решения', 'Кейсы', 'Компетенции', 'Подход', 'Написать в Telegram'],
                 solutions: [
                     { title: 'Лендинги и SEO-сайты', subtitle: 'Быстрые, заметные в поиске и ориентированные на конверсию.' },
                     { title: 'SaaS и пользовательские платформы', subtitle: 'От MVP до полноценного production-продукта.' },
@@ -655,6 +665,12 @@
                     { title: 'Инфраструктура и DevOps', subtitle: 'CI/CD, Linux-администрирование, deployment и эксплуатация.', stack: ['Docker · Docker Compose · GitHub Actions · GHCR · Linux · Nginx', 'Blue-green deployment · DB migrations · pytest · Faker · Black · Git', 'MinIO / S3 · aiobotocore · Web Push / VAPID'] },
                     { title: 'Безопасность и производительность', subtitle: 'Контроль безопасности, эффективная обработка нагрузки и предсказуемое восстановление.', stack: ['bcrypt · JWT · HMAC · Fernet · CORS · XSS protection · encrypted environments', 'caching · concurrency · load testing'] },
                     { title: 'Интеграция ИИ', subtitle: 'LLM API, промпт-инжиниринг, конвейеры данных и автоматизация.', stack: ['LLM APIs · prompt engineering · data pipelines', 'AI-assisted development'] }
+                ],
+                approach: [
+                    { title: 'Инженерный подход', subtitle: 'Беру бизнес-задачу, декомпозирую и довожу до работающего production-решения.' },
+                    { title: 'Принципы работы', subtitle: 'Самостоятельность, ответственность за результат, прагматичные решения, прозрачная коммуникация.' },
+                    { title: 'Развитие', subtitle: 'AI-assisted development, постоянное расширение инженерного диапазона, собственные проекты и эксперименты.' },
+                    { title: 'За пределами разработки', subtitle: 'Электронная музыка, physical computing, визуальное цифровое искусство и причастность к видеоиграм.' }
                 ],
                 dreamcar: {
                     kicker: 'DreamCar',
@@ -908,6 +924,7 @@
         let selectedCase = null;
         let lastCase = null;
         let selectedCompetency = null;
+        let selectedApproach = null;
         let animationJob = 0;
         let screenTransition = 0;
         let competencyTransition = 0;
@@ -1026,7 +1043,7 @@
             const content = copy[currentLanguage];
             const targets = showSolutions
                 ? content.solutions.map((item, index) => ({ title: item.title, subtitle: item.subtitle, action: 'solution', index }))
-                : content.menu.map((title, index) => ({ title, subtitle: '', action: 'section', index }));
+                : content.menu.map((title, index) => ({ title, subtitle: index === 4 ? (currentLanguage === 'ru' ? 'Напишите, и мы обсудим интересующие вас вопросы.' : 'Write to me and we will discuss what matters to you.') : '', action: index === 4 ? 'telegram' : 'section', index }));
             const rows = Array.from(menu.children);
             const allRows = Math.max(rows.length, targets.length);
             for (let index = 0; index < allRows; index += 1) {
@@ -1051,8 +1068,10 @@
                 }
                 const target = targets[index];
                 button.classList.remove('is-selected');
+                button.classList.remove('menu-telegram');
                 button.removeAttribute('data-section');
                 button.removeAttribute('data-menu-solution');
+                button.removeAttribute('data-telegram');
                 delete button.dataset.removeAfterMorph;
                 if (!target) {
                     button.disabled = true;
@@ -1063,7 +1082,11 @@
                 }
                 button.disabled = false;
                 if (target.action === 'section') button.dataset.section = `section-${target.index}`;
-                else button.dataset.menuSolution = String(target.index);
+                else if (target.action === 'solution') button.dataset.menuSolution = String(target.index);
+                else {
+                    button.dataset.telegram = 'true';
+                    button.classList.add('menu-telegram');
+                }
                 button.classList.toggle('is-selected',
                     (target.action === 'section' && selectedSection === `section-${target.index}`) ||
                     (target.action === 'solution' && selectedSolution === target.index)
@@ -1076,6 +1099,7 @@
             if (section === 'section-0') return { items: copy[currentLanguage].solutions, type: 'solution' };
             if (section === 'section-1') return { items: copy[currentLanguage].cases, type: 'case' };
             if (section === 'section-2') return { items: copy[currentLanguage].competencies, type: 'competency' };
+            if (section === 'section-3') return { items: copy[currentLanguage].approach, type: 'approach' };
             return { items: [], type: null };
         }
         function renderSolutionsList(section = selectedSection, preserveTop = false) {
@@ -1093,13 +1117,17 @@
                 delete button.dataset.solution;
                 delete button.dataset.case;
                 delete button.dataset.competency;
+                delete button.dataset.approach;
                 button.dataset[type] = String(index);
                 button.disabled = false;
+                button.classList.remove('is-static');
                 button.classList.toggle('is-selected', type === 'solution'
                     ? index === (selectedSolution ?? lastSolution)
                     : type === 'case'
                         ? index === (selectedCase ?? lastCase)
-                    : type === 'competency' && index === selectedCompetency);
+                    : type === 'competency'
+                        ? index === selectedCompetency
+                        : type === 'approach' && index === selectedApproach);
                 button.querySelector('.solution-title').dataset.targetText = item.title;
                 button.querySelector('.solution-subtitle').dataset.targetText = item.subtitle;
                 const stack = row.querySelector('.competency-stack');
@@ -1127,6 +1155,7 @@
                 delete button.dataset.solution;
                 delete button.dataset.case;
                 delete button.dataset.competency;
+                delete button.dataset.approach;
                 button.querySelector('.solution-title').dataset.targetText = '';
                 button.querySelector('.solution-subtitle').dataset.targetText = '';
                 row.dataset.removeAfterReveal = 'true';
@@ -1299,6 +1328,7 @@
                 selectedCase = null;
                 lastCase = null;
                 selectedCompetency = null;
+                selectedApproach = null;
             }
             selectedSection = section;
             if (!preserveDetail) renderMenu(false);
@@ -1704,6 +1734,12 @@
                 openSelected();
             });
         }
+        function selectApproach(index) {
+            selectedApproach = index;
+            solutionList.querySelectorAll('button[data-approach]').forEach((button) => {
+                button.classList.toggle('is-selected', Number(button.dataset.approach) === index);
+            });
+        }
         function revealLanding(landing, job) {
             const titleElements = detailPanel.querySelectorAll('.detail-kicker, .detail-title, .detail-lead');
             const items = [[titleElements[0], landing.kicker], [titleElements[1], landing.title], [titleElements[2], landing.lead]];
@@ -1836,6 +1872,8 @@
             if (solutionButton) runInteraction(() => selectSolution(Number(solutionButton.dataset.menuSolution)));
             const button = event.target.closest('button[data-section]');
             if (button) runInteraction(() => selectSection(button.dataset.section));
+            const telegramButton = event.target.closest('button[data-telegram]');
+            if (telegramButton) window.open('https://t.me/pasha_iden', '_blank', 'noopener');
         });
         solutionList.addEventListener('click', (event) => {
             const button = event.target.closest('button[data-solution]');
@@ -1850,6 +1888,8 @@
             }
             const competencyButton = event.target.closest('button[data-competency]');
             if (competencyButton) runInteraction(() => selectCompetency(Number(competencyButton.dataset.competency)));
+            const approachButton = event.target.closest('button[data-approach]');
+            if (approachButton) runInteraction(() => selectApproach(Number(approachButton.dataset.approach)));
         });
         backButton.addEventListener('click', () => runInteraction(() => {
             if (backTransitionActive) return;
