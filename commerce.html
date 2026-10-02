@@ -20,6 +20,10 @@
         }
         body[data-theme="dark"] { --ink: #eee9e0; --muted: #ada69b; --line: rgba(221, 207, 186, .15); --blue: #d9a46a; --surface: #161718; --surface-highlight: rgba(69, 72, 76, .48); --surface-glow: rgba(128, 74, 40, .22); color-scheme: dark; }
         .theme-wash { position: fixed; inset: 0; z-index: 0; opacity: 0; pointer-events: none; transition: opacity 1.5s ease; }
+        .credit-wash { display: none; }
+        .site-credit { position: fixed; bottom: 18px; left: 24px; z-index: 5; margin: 0; color: var(--muted); font-size: .5rem; line-height: 1.45; letter-spacing: -.02em; pointer-events: none; white-space: nowrap; }
+        .site-credit a { color: inherit; pointer-events: auto; text-decoration: underline dashed; text-decoration-color: currentColor; text-underline-offset: 2px; }
+        .site-credit a:hover, .site-credit a:focus-visible { color: var(--ink); outline: none; }
         body:not(.ui-ready) .language-panel span,
         body:not(.ui-ready) .language-panel button,
         body:not(.ui-ready) .language-identity { visibility: hidden; }
@@ -191,6 +195,10 @@
             .language-identity { line-height: 1.35; text-align: right; white-space: pre-line; }
         }
         @media (max-width: 480px) { .language-panel { column-gap: 10px; row-gap: 14px; } }
+        @media (max-width: 600px) {
+            .site-credit { bottom: 16px; left: 18px; max-width: calc(100vw - 36px); font-size: .5rem; white-space: normal; }
+            .credit-wash { display: block; position: fixed; right: 0; bottom: 0; left: 0; z-index: 4; height: 92px; background: linear-gradient(to bottom, transparent 0, var(--surface) 36px, var(--surface) 100%); pointer-events: none; }
+        }
         @media (min-width: 601px) {
             #copy-route-plain { right: calc(50% + 78px); }
             .status-bar.is-menu-active #copy-route-plain { right: calc(50% + clamp(82px, 4.5vw, 91px)); }
@@ -224,6 +232,8 @@ Fullstack Product Engineer</p>
             <div class="menu-panel" id="menu-panel"><p class="eyebrow" id="menu-eyebrow"></p><h1 id="menu-title"></h1><div class="menu-layout"><nav><ul class="menu" id="menu"></ul></nav><ul class="solution-list" id="solution-list" aria-live="polite"></ul><aside class="detail-panel" id="detail-panel" aria-live="polite"></aside></div></div>
         </section>
     </main>
+    <div class="credit-wash" aria-hidden="true"></div>
+    <p class="site-credit">Copyright © 2026 Pavel. Визуальные эффекты вдохновлены <a href="https://yandex.ru/cup/" target="_blank" rel="noopener noreferrer">Yandex Cup</a>. Реализация выполнена независимо и расширена с использованием OpenAI Terra-medium. Код распространяется по лицензии MIT.</p>
     <div class="theme-wash" id="theme-wash" aria-hidden="true"></div>
     <script>
         const copy = {
