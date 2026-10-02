@@ -161,6 +161,11 @@
             .menu-panel.is-suboptions-open > h1,
             .menu-panel.is-suboptions-open .menu-layout > nav { display: none; }
             .menu-panel:not(.is-suboptions-open):not(.is-detail-open) .solution-list { display: none; }
+            .menu-panel:not(.is-suboptions-open):not(.is-detail-open) .eyebrow { margin-bottom: 7px; }
+            .menu-panel:not(.is-suboptions-open):not(.is-detail-open) h1 { margin-bottom: 20px; font-size: 1.5rem; line-height: 1.1; }
+            .menu-panel:not(.is-suboptions-open):not(.is-detail-open) .menu button { padding: 6px 0; font-size: 1.05rem; }
+            .menu-panel:not(.is-suboptions-open):not(.is-detail-open) .menu button.menu-telegram { padding: 0; font-size: .68rem; }
+            .menu-panel:not(.is-suboptions-open):not(.is-detail-open) .menu button.menu-telegram .menu-title { min-height: 31px; padding: 6px 11px; }
             .solution-list { position: static; width: 100%; max-height: calc(100vh - 150px); transform: none; }
             .menu-panel.is-detail-open .solution-list { transform: none; }
             .menu-panel.is-detail-open { align-self: start; margin-top: 76px; margin-bottom: 24px; }
@@ -168,7 +173,12 @@
             .detail-current, .detail-next { max-height: none; overflow: visible; }
             .detail-next { margin-top: 32px; padding: 0 0 clamp(110px, 18vh, 180px) !important; }
         }
-        @media (max-width: 600px) { .menu-layout { grid-template-columns: 1fr; gap: 18px; } .menu-layout > nav, .solution-list, .detail-panel { grid-column: 1; grid-row: 1; } }
+        @media (max-width: 600px) {
+            .menu-layout { grid-template-columns: 1fr; gap: 18px; }
+            .menu-layout > nav, .solution-list, .detail-panel { grid-column: 1; grid-row: 1; }
+            .language-prompt { font-size: 1.08rem; }
+            .language-identity { line-height: 1.35; text-align: right; white-space: pre-line; }
+        }
         @media (max-width: 480px) { .language-panel { column-gap: 10px; row-gap: 14px; } }
     </style>
 </head>
@@ -176,7 +186,8 @@
     <main>
         <section class="screen language-screen" id="language-screen" aria-label="Language selection">
             <div class="language-panel" id="language-panel">
-                <p class="language-identity" id="language-identity">Pavel / Fullstack Product Engineer</p>
+                <p class="language-identity" id="language-identity">PAVEL /
+Fullstack Product Engineer</p>
                 <div class="language-prompt" aria-hidden="true"><span data-language="en">Choose language</span><span class="divider">|</span><span data-language="ru">Выберите язык</span></div>
                 <div class="language-options">
                     <button class="language-option" type="button" data-language="en">English</button><span class="divider" aria-hidden="true">|</span><button class="language-option" type="button" data-language="ru">Русский</button>
