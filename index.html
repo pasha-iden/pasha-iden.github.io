@@ -22,6 +22,7 @@
         .theme-wash { position: fixed; inset: 0; z-index: 0; opacity: 0; pointer-events: none; transition: opacity 1.5s ease; }
         .credit-wash { display: none; }
         .site-credit { position: fixed; bottom: 18px; left: 24px; z-index: 5; margin: 0; color: var(--muted); font-size: .5rem; line-height: 1.45; letter-spacing: -.02em; pointer-events: none; white-space: nowrap; }
+        .site-version { position: fixed; right: 24px; bottom: 18px; z-index: 5; margin: 0; color: var(--muted); font-size: .5rem; line-height: 1.45; letter-spacing: -.02em; pointer-events: none; }
         .site-credit a { color: inherit; pointer-events: auto; text-decoration: underline dashed; text-decoration-color: currentColor; text-underline-offset: 2px; }
         .site-credit a:hover, .site-credit a:focus-visible { color: var(--ink); outline: none; }
         body:not(.ui-ready) .language-panel span,
@@ -196,7 +197,8 @@
         }
         @media (max-width: 480px) { .language-panel { column-gap: 10px; row-gap: 14px; } }
         @media (max-width: 600px) {
-            .site-credit { bottom: 16px; left: 18px; max-width: calc(100vw - 36px); font-size: .5rem; white-space: normal; }
+            .site-credit { bottom: 16px; left: 18px; max-width: calc(100vw - 82px); font-size: .5rem; white-space: normal; }
+            .site-version { right: 18px; bottom: 16px; }
             .credit-wash { display: block; position: fixed; right: 0; bottom: 0; left: 0; z-index: 4; height: 92px; background: linear-gradient(to bottom, transparent 0, var(--surface) 36px, var(--surface) 100%); pointer-events: none; }
         }
         @media (min-width: 601px) {
@@ -234,6 +236,7 @@ Fullstack Product Engineer</p>
     </main>
     <div class="credit-wash" aria-hidden="true"></div>
     <p class="site-credit">Copyright © 2026 Pavel. Визуальные эффекты вдохновлены <a href="https://yandex.ru/cup/" target="_blank" rel="noopener noreferrer">Yandex Cup</a>. Реализация выполнена независимо и расширена с использованием OpenAI Terra-medium. Код распространяется по лицензии MIT.</p>
+    <p class="site-version">v1.0.1</p>
     <div class="theme-wash" id="theme-wash" aria-hidden="true"></div>
     <script>
         const copy = {
@@ -1185,6 +1188,7 @@ Fullstack Product Engineer</p>
             setMenuLanguage(route.language);
             menuScreen.classList.add('is-visible');
             menuScreen.setAttribute('aria-hidden', 'false');
+            updateBackButton();
         }
         function openMenu(language) {
             if (languageScreen.dataset.closing === 'true') return;
@@ -1198,6 +1202,7 @@ Fullstack Product Engineer</p>
                 statusBar.classList.add('is-menu-active');
                 menuScreen.classList.add('is-visible');
                 menuScreen.setAttribute('aria-hidden', 'false');
+                updateBackButton();
             });
         }
         function renderMenu(showSolutions = false) {
@@ -1270,7 +1275,47 @@ Fullstack Product Engineer</p>
             return isPortraitLayout() && menuPanel.classList.contains('is-suboptions-open');
         }
         function updateBackButton() {
-            backButton.classList.toggle('is-visible', Boolean(getActiveDetail()) || isPortraitSuboptionsOpen());
+            const canReturnToLanguage = menuScreen.classList.contains('is-visible') && !getActiveDetail() && !isPortraitSuboptionsOpen();
+            backButton.classList.toggle('is-visible', Boolean(getActiveDetail()) || isPortraitSuboptionsOpen() || canReturnToLanguage);
+        }
+        function syncLanguageRoute() {
+            const params = new URLSearchParams();
+            params.set('theme', document.body.dataset.theme === 'dark' ? 'dark' : 'light');
+            window.history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`);
+        }
+        function returnToLanguageSelection() {
+            if (backTransitionActive) return;
+            backTransitionActive = true;
+            const job = ++animationJob;
+            const transition = ++screenTransition;
+            trackAnimation(reverseSequence(getOptionsScreenText(), job)).then((completed) => {
+                if (!completed || transition !== screenTransition) {
+                    backTransitionActive = false;
+                    return;
+                }
+                selectedSection = null;
+                selectedSolution = null;
+                selectedCase = null;
+                selectedCompetency = null;
+                selectedApproach = null;
+                renderMenu(false);
+                renderSolutionsList(null);
+                solutionList.classList.remove('is-open', 'is-scrollable');
+                menuPanel.classList.remove('is-suboptions-open', 'is-detail-open');
+                detailPanel.classList.remove('is-open');
+                detailPanel.replaceChildren();
+                menuScreen.classList.remove('is-visible', 'is-content-ready');
+                menuScreen.setAttribute('aria-hidden', 'true');
+                statusBar.classList.remove('is-menu-active');
+                languageScreen.classList.remove('is-leaving');
+                delete languageScreen.dataset.closing;
+                options.forEach((option) => { option.disabled = false; });
+                prepareTextForReveal(languageItems);
+                syncLanguageRoute();
+                updateBackButton();
+                trackAnimation(revealSequence(languageItems, job));
+                backTransitionActive = false;
+            });
         }
         function openPortraitSuboptions(section) {
             const job = ++animationJob;
@@ -2194,6 +2239,10 @@ Fullstack Product Engineer</p>
         backButton.addEventListener('click', () => runInteraction(() => {
             if (!getActiveDetail() && isPortraitSuboptionsOpen()) {
                 closePortraitSuboptions();
+                return;
+            }
+            if (!getActiveDetail() && menuScreen.classList.contains('is-visible')) {
+                returnToLanguageSelection();
                 return;
             }
             if (backTransitionActive) return;
