@@ -1489,7 +1489,7 @@ Fullstack Product Engineer</p>
             easterLines[1].dataset.glitchText = text;
         }
         function updateEasterTimer() {
-            if (!easterEggAvailable && getVisibleTime() >= 8 * 1000) {
+            if (!easterEggAvailable && getVisibleTime() >= 3 * 1000) {
                 easterEggAvailable = true;
                 easterTrigger.classList.add('is-available');
             }
@@ -1523,9 +1523,14 @@ Fullstack Product Engineer</p>
         }
         function openEasterEgg() {
             if (!easterEggAvailable || easterEggTransitionActive) return;
+            if (easterEggOpen) {
+                previewCurrentLanguageRepaint();
+                return;
+            }
             easterEggTransitionActive = true;
             easterTrigger.classList.add('is-opened');
             easterEggOrigin = getEasterOrigin();
+            if (easterEggOrigin === 'detail') detailPanel.querySelector('.detail-contact')?.classList.remove('is-cta-ready');
             const job = ++animationJob;
             trackAnimation(reverseSequence(getEasterOriginText(easterEggOrigin), job)).then((completed) => {
                 if (!completed) {
@@ -2035,7 +2040,7 @@ Fullstack Product Engineer</p>
                 }));
                 return;
             }
-            const renderPackageItem = () => '<li><strong></strong> - <span></span></li>';
+            const renderPackageItem = () => '<li><strong></strong><span class="detail-separator"></span><span></span></li>';
             const stackMarkup = landing.outcome.stack ? '<p class="detail-stack-title"></p><div class="detail-stack-list"></div>' : '';
             const hasSecondaryCta = Boolean(landing.outcome.productUrl && landing.outcome.contactCta);
             const projectCtaMarkup = hasSecondaryCta ? `<div class="detail-project-contact"><p class="detail-cta"><span class="detail-cta-text"></span></p><a class="telegram-contact detail-project-link" href="${landing.outcome.productUrl}" target="_blank" rel="noopener noreferrer"></a></div>` : '';
@@ -2400,7 +2405,7 @@ Fullstack Product Engineer</p>
                 : [...getMainMenuText(), ...getSuboptionsScreenText()];
         }
         function getDetailScreenText() {
-            return getTextItems('.detail-kicker, .detail-title, .detail-lead, .timeline-value, .timeline-caption, .detail-package-title, .detail-extras-title, .detail-package strong, .detail-package span, .detail-result-lead, .detail-effects-title, .detail-effects strong, .detail-effects span, .detail-stack-title, .detail-stack, .detail-cta-text, .detail-contact-cta-text, .telegram-contact, .personal-project-kicker, .personal-project-title, .personal-project-subtitle, .personal-project-description, .personal-project-stack-title, .personal-project-stack', detailPanel);
+            return getTextItems('.detail-kicker, .detail-title, .detail-lead, .timeline-value, .timeline-caption, .detail-package-title, .detail-extras-title, .detail-package strong, .detail-package span, .detail-result-lead, .detail-effects-title, .detail-effects strong, .detail-effects span, .detail-stack-title, .detail-stack, .detail-cta-text, .detail-contact-cta-text, .loading-dots, .telegram-contact, .personal-project-kicker, .personal-project-title, .personal-project-subtitle, .personal-project-description, .personal-project-stack-title, .personal-project-stack', detailPanel);
         }
         function prepareTextForReveal(items) {
             items.forEach(([element]) => {
@@ -2487,14 +2492,14 @@ Fullstack Product Engineer</p>
             items.push([detailPanel.querySelector('.detail-package-title'), landing.package.baseTitle]);
             const packageItems = [...landing.package.items, ...landing.package.extras];
             detailPanel.querySelectorAll('.detail-current .detail-package li').forEach((element, index) => {
-                items.push([element.querySelector('strong'), `• ${packageItems[index].title}`], [element.querySelector('span'), packageItems[index].text]);
+                items.push([element.querySelector('strong'), `• ${packageItems[index].title}`], [element.querySelector('.detail-separator'), ' — '], [element.querySelector('span:last-child'), packageItems[index].text]);
             });
             items.push([detailPanel.querySelector('.detail-extras-title'), landing.package.extrasTitle]);
             items.push([detailPanel.querySelector('.detail-result-title'), landing.outcome.title]);
             items.push([detailPanel.querySelector('.detail-result-lead'), landing.outcome.lead]);
             items.push([detailPanel.querySelector('.detail-effects-title'), landing.outcome.effectsTitle]);
             detailPanel.querySelectorAll('.detail-effects li').forEach((element, index) => {
-                items.push([element.querySelector('strong'), `• ${landing.outcome.effects[index].title}`], [element.querySelector('span'), landing.outcome.effects[index].text]);
+                items.push([element.querySelector('strong'), `• ${landing.outcome.effects[index].title}`], [element.querySelector('.detail-separator'), ' — '], [element.querySelector('span:last-child'), landing.outcome.effects[index].text]);
             });
             if (landing.outcome.stack) {
                 items.push([detailPanel.querySelector('.detail-stack-title'), landing.outcome.stackTitle]);
