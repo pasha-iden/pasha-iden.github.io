@@ -229,7 +229,7 @@
             .solution-list { position: static; width: 100%; max-height: calc(100vh - 150px); transform: none; }
             .menu-panel.is-detail-open .solution-list { transform: none; }
             .menu-panel.is-detail-open { align-self: start; margin-top: 76px; margin-bottom: 24px; }
-            .menu-panel.is-detail-open .detail-panel { display: block; width: 100%; max-height: calc(100vh - 116px); padding-right: 20px; overflow-x: hidden; overflow-y: auto; }
+            .menu-panel.is-detail-open .detail-panel { display: block; width: 100%; max-height: calc(100vh - 116px); padding-right: 10px; overflow-x: hidden; overflow-y: auto; }
             .detail-current, .detail-next { max-height: none; overflow: visible; }
             .detail-next { margin-top: 32px; padding: 0 0 clamp(126px, 20vh, 196px) !important; }
         }
@@ -1704,7 +1704,7 @@ Fullstack Product Engineer</p>
             thumb.style.top = `${top}px`;
             thumb.dataset.trackTop = String(track.top);
             thumb.dataset.trackHeight = String(track.height);
-            thumb.style.left = `${Math.round(window.innerWidth <= 600 ? rect.right - 12 : rect.right + 9)}px`;
+            thumb.style.left = `${Math.round(window.innerWidth <= 600 ? rect.right - 7 : rect.right + 9)}px`;
             thumb.classList.add('is-visible');
         }
         function refreshCustomScrollbars() {
