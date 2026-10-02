@@ -1,0 +1,18 @@
+# Pavel - Fullstack Product Engineer
+
+> Independent Fullstack Product Engineer for SaaS, web platforms, Telegram bots, PWA applications and AI integrations.
+
+## Portfolio
+
+- [Portfolio](https://pasha-iden.github.io/): Interactive portfolio with services, competencies, project cases and contact details.
+
+## Key work
+
+- [DreamCar](https://dreamcarcy.com): Production automotive marketplace for Cyprus.
+- [Booker Library](https://github.com/pasha-iden/booker-library): Library service in a Telegram bot.
+- [8-bit Adventure](https://github.com/pasha-iden/booker-game): 2D game demo built on a custom game engine.
+
+## Contact
+
+- [Telegram](https://t.me/pasha_iden): Contact Pavel directly.
+- [GitHub](https://github.com/pasha-iden): Public code and project repositories.
