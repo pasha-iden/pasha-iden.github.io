@@ -229,7 +229,7 @@
             .solution-list { position: static; width: 100%; max-height: calc(100vh - 150px); transform: none; }
             .menu-panel.is-detail-open .solution-list { transform: none; }
             .menu-panel.is-detail-open { align-self: start; margin-top: 76px; margin-bottom: 24px; }
-            .menu-panel.is-detail-open .detail-panel { display: block; width: 100%; max-height: calc(100vh - 116px); overflow-x: hidden; overflow-y: auto; }
+            .menu-panel.is-detail-open .detail-panel { display: block; width: 100%; max-height: calc(100vh - 116px); padding-right: 20px; overflow-x: hidden; overflow-y: auto; }
             .detail-current, .detail-next { max-height: none; overflow: visible; }
             .detail-next { margin-top: 32px; padding: 0 0 clamp(126px, 20vh, 196px) !important; }
         }
@@ -1663,12 +1663,11 @@ Fullstack Product Engineer</p>
                 event.preventDefault();
                 const maxScroll = element.scrollHeight - element.clientHeight;
                 if (maxScroll <= 0) return;
-                const rect = element.getBoundingClientRect();
                 const thumbHeight = thumb.getBoundingClientRect().height;
                 const startY = event.clientY;
                 const startScroll = element.scrollTop;
                 const move = (moveEvent) => {
-                    const trackHeight = Math.max(1, rect.height - thumbHeight);
+                    const trackHeight = Math.max(1, Number(thumb.dataset.trackHeight || 0) - thumbHeight);
                     element.scrollTop = startScroll + (moveEvent.clientY - startY) * maxScroll / trackHeight;
                 };
                 const stop = () => {
@@ -1680,9 +1679,17 @@ Fullstack Product Engineer</p>
             });
             return state;
         }
+        function getScrollbarTrack(element) {
+            const rect = element.getBoundingClientRect();
+            const footerClearance = window.innerWidth <= 600 ? 108 : 44;
+            const top = rect.top;
+            const bottom = Math.max(top, Math.min(rect.bottom, window.innerHeight - footerClearance));
+            return { rect, top, bottom, height: Math.max(0, bottom - top) };
+        }
         function syncCustomScrollbar(element) {
             const { thumb } = getScrollbarState(element);
-            const rect = element.getBoundingClientRect();
+            const track = getScrollbarTrack(element);
+            const { rect } = track;
             const isSolutionList = element === solutionList;
             const isVisible = document.body.contains(element) && rect.width > 0 && rect.height > 0 &&
                 (!isSolutionList || (element.classList.contains('is-open') && element.classList.contains('is-scrollable')));
@@ -1691,10 +1698,12 @@ Fullstack Product Engineer</p>
                 thumb.classList.remove('is-visible');
                 return;
             }
-            const height = window.innerHeight * .25;
-            const top = rect.top + Math.max(0, rect.height - height) * element.scrollTop / maxScroll;
+            const height = Math.min(window.innerHeight * .25, track.height);
+            const top = track.top + Math.max(0, track.height - height) * element.scrollTop / maxScroll;
             thumb.style.height = `${height}px`;
             thumb.style.top = `${top}px`;
+            thumb.dataset.trackTop = String(track.top);
+            thumb.dataset.trackHeight = String(track.height);
             thumb.style.left = `${Math.round(window.innerWidth <= 600 ? rect.right - 12 : rect.right + 9)}px`;
             thumb.classList.add('is-visible');
         }
