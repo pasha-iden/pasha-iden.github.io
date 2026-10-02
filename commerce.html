@@ -51,14 +51,16 @@
         .top-language-switch .divider { font-size: .8rem; }
         .copy-route { position: absolute; top: 31px; right: calc(50% + 38px); width: 18px; height: 18px; padding: 0; border: 0; background: transparent; cursor: pointer; transition: right .55s ease; }
         .status-bar.is-menu-active .copy-route { right: calc(50% + clamp(42px, 4.5vw, 51px)); }
+        #copy-route-plain { right: calc(50% + 66px); }
+        .status-bar.is-menu-active #copy-route-plain { right: calc(50% + clamp(70px, 4.5vw, 79px)); }
         .copy-route::before, .copy-route::after { content: ''; position: absolute; width: 9px; height: 9px; border: 2px solid var(--muted); transition: border-color .35s ease, opacity .35s ease; }
         .copy-route::before { top: 2px; right: 2px; opacity: .48; }
         .copy-route::after { top: 6px; right: 6px; border-color: var(--ink); background: var(--surface); }
+        #copy-route::after { content: '+'; display: grid; place-items: center; color: var(--ink); font-size: 9px; font-weight: 700; line-height: 1; }
         .copy-route:hover::before, .copy-route:hover::after, .copy-route:focus-visible::before, .copy-route:focus-visible::after, .copy-route.is-copied::before, .copy-route.is-copied::after { border-color: var(--ink); }
         .copy-route:focus-visible { outline: none; }
-        .copy-feedback { position: absolute; top: 33px; right: calc(50% + 64px); color: var(--ink); font-size: .62rem; font-weight: 600; letter-spacing: -.02em; opacity: 0; pointer-events: none; transform: translateX(4px); transition: right .55s ease, opacity .35s ease, transform .35s ease; white-space: nowrap; }
-        .status-bar.is-menu-active .copy-feedback { right: calc(50% + clamp(42px, 4.5vw, 51px) + 26px); }
-        .copy-feedback.is-visible { opacity: 1; transform: translateX(0); }
+        .copy-feedback { position: absolute; top: 57px; left: 50%; color: var(--ink); font-size: .62rem; font-weight: 600; letter-spacing: -.02em; opacity: 0; pointer-events: none; transform: translate(-50%, 4px); transition: opacity .35s ease, transform .35s ease; white-space: nowrap; }
+        .copy-feedback.is-visible { opacity: 1; transform: translate(-50%, 0); }
         .theme-toggle { position: absolute; top: 32px; left: calc(50% - 20px); width: 34px; height: 18px; padding: 0; border: 2px solid var(--muted); border-radius: 999px; background: transparent; cursor: pointer; transition: left .55s ease, border-color .35s ease; }
         .status-bar.is-menu-active .theme-toggle { left: calc(50% + clamp(42px, 4.5vw, 51px)); }
         .theme-toggle::after { content: ''; position: absolute; top: 50%; left: 1px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); transform: translate(16px, -50%); transition: transform .35s ease, background-color .35s ease; }
@@ -195,6 +197,7 @@
             <div class="top-language-switch" aria-label="Language switcher">
                 <button class="top-language-option" type="button" data-language="en">EN</button><span class="divider" aria-hidden="true">|</span><button class="top-language-option" type="button" data-language="ru">RU</button>
             </div>
+            <button class="copy-route" id="copy-route-plain" type="button" aria-label="Copy page link"></button>
             <button class="copy-route" id="copy-route" type="button" aria-label="Copy current link"></button>
             <span class="copy-feedback" id="copy-feedback" aria-live="polite"></span>
             <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Enable dark theme" aria-pressed="false"></button>
@@ -977,6 +980,7 @@ Fullstack Product Engineer</p>
         const languageIdentity = document.getElementById('language-identity');
         const languageItems = [[languageIdentity, languageIdentity.textContent], ...Array.from(document.querySelectorAll('.language-panel span, .language-panel button')).map((element) => [element, element.textContent])];
         const topOptions = document.querySelectorAll('.top-language-option');
+        const copyPlainRouteButton = document.getElementById('copy-route-plain');
         const copyRouteButton = document.getElementById('copy-route');
         const copyFeedback = document.getElementById('copy-feedback');
         const themeToggle = document.getElementById('theme-toggle');
@@ -1114,9 +1118,11 @@ Fullstack Product Engineer</p>
             const query = params.toString();
             window.history.replaceState(null, '', `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`);
         }
-        async function copyCurrentRoute() {
-            syncRoute();
-            const url = window.location.href;
+        async function copyRoute(withParameters, button) {
+            if (withParameters) syncRoute();
+            const url = withParameters
+                ? window.location.href
+                : `${window.location.origin}${window.location.pathname}${window.location.hash}`;
             try {
                 if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(url);
                 else {
@@ -1129,12 +1135,15 @@ Fullstack Product Engineer</p>
                     document.execCommand('copy');
                     field.remove();
                 }
-                copyRouteButton.classList.add('is-copied');
-                copyFeedback.textContent = currentLanguage === 'ru' ? 'Ссылка скопирована' : 'Link copied';
+                button.classList.add('is-copied');
+                copyFeedback.classList.toggle('is-plain-copy', !withParameters);
+                copyFeedback.textContent = currentLanguage === 'ru'
+                    ? (withParameters ? 'Ссылка с параметрами скопирована' : 'Ссылка скопирована')
+                    : (withParameters ? 'Link with parameters copied' : 'Link copied');
                 copyFeedback.classList.add('is-visible');
                 window.clearTimeout(copyFeedbackTimer);
                 copyFeedbackTimer = window.setTimeout(() => copyFeedback.classList.remove('is-visible'), 1300);
-                window.setTimeout(() => copyRouteButton.classList.remove('is-copied'), 700);
+                window.setTimeout(() => button.classList.remove('is-copied'), 700);
             } catch (_) {}
         }
         function openRoute(route) {
@@ -2060,7 +2069,8 @@ Fullstack Product Engineer</p>
             option.addEventListener('click', () => runInteraction(() => openMenu(option.dataset.language)));
         });
         topOptions.forEach((option) => option.addEventListener('click', () => runInteraction(() => setMenuLanguage(option.dataset.language))));
-        copyRouteButton.addEventListener('click', copyCurrentRoute);
+        copyPlainRouteButton.addEventListener('click', () => copyRoute(false, copyPlainRouteButton));
+        copyRouteButton.addEventListener('click', () => copyRoute(true, copyRouteButton));
         themeToggle.addEventListener('click', () => transitionTheme(document.body.dataset.theme === 'dark' ? 'light' : 'dark'));
         solutionList.addEventListener('transitionend', (event) => {
             if (event.target === solutionList && (event.propertyName === 'top' || event.propertyName === 'height')) {
