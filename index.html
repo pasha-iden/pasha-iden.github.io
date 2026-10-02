@@ -1135,6 +1135,7 @@ Fullstack Product Engineer</p>
         let easterEggOrigin = 'language';
         let generationGateShown = false;
         let generationGateActive = false;
+        const generationEggStorageKey = 'pavel-product-engineer:generation-egg-seen';
         const faviconGlyphs = [['>', '_'], ['/', '>'], ['P', '/'], ['P', '>'], ['P', '#']];
         const textAnimationJobs = new WeakMap();
         const glitchAnimationJobs = new WeakMap();
@@ -1338,10 +1339,26 @@ Fullstack Product Engineer</p>
             const value = Number.parseInt(new URLSearchParams(window.location.search).get('g'), 10);
             return Number.isFinite(value) && value > 0 ? value : 0;
         }
+        function isEggPreview() {
+            return new URLSearchParams(window.location.search).get('egg') === '1';
+        }
+        function hasSeenGenerationEgg() {
+            try {
+                return sessionStorage.getItem(generationEggStorageKey) === 'true';
+            } catch (_) {
+                return false;
+            }
+        }
+        function markGenerationEggSeen() {
+            try {
+                sessionStorage.setItem(generationEggStorageKey, 'true');
+            } catch (_) {}
+        }
         async function copyRoute(withParameters, button) {
             if (withParameters) syncRoute();
             const url = new URL(window.location.href);
             if (!withParameters) url.search = '';
+            url.searchParams.delete('egg');
             url.searchParams.set('g', String(getLinkGeneration() + 1));
             try {
                 if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(url.href);
@@ -1367,7 +1384,7 @@ Fullstack Product Engineer</p>
             } catch (_) {}
         }
         function hasGenerationGate() {
-            return getLinkGeneration() >= 5 && !generationGateShown;
+            return getLinkGeneration() >= 5 && !generationGateShown && (isEggPreview() || !hasSeenGenerationEgg());
         }
         function fadeInGenerationNote() {
             requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -1401,6 +1418,7 @@ Fullstack Product Engineer</p>
             if (!hasGenerationGate() || generationGateActive) return;
             generationGateShown = true;
             generationGateActive = true;
+            markGenerationEggSeen();
             generationNote.dataset.state = 'gate';
             currentLanguage = language;
             document.documentElement.lang = language;
@@ -1710,6 +1728,7 @@ Fullstack Product Engineer</p>
             params.set('theme', document.body.dataset.theme === 'dark' ? 'dark' : 'light');
             const generation = getLinkGeneration();
             if (generation > 0) params.set('g', generation);
+            if (isEggPreview()) params.set('egg', '1');
             window.history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`);
         }
         function clearMenuForFreshReveal() {
