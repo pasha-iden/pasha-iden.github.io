@@ -1485,6 +1485,28 @@ Fullstack Product Engineer</p>
                 backTransitionActive = false;
             });
         }
+        function buildCompetencyStackLines(stack, technologies) {
+            const probe = document.createElement('span');
+            probe.className = 'competency-stack-line';
+            probe.style.cssText = 'position:absolute; visibility:hidden; display:inline-block; width:auto; margin:0; white-space:nowrap;';
+            stack.append(probe);
+            const availableWidth = stack.getBoundingClientRect().width;
+            const lines = [];
+            let line = '';
+            technologies.forEach((technology) => {
+                const candidate = line ? `${line} · ${technology}` : technology;
+                probe.textContent = candidate;
+                if (line && probe.getBoundingClientRect().width > availableWidth) {
+                    lines.push(line);
+                    line = technology;
+                } else {
+                    line = candidate;
+                }
+            });
+            probe.remove();
+            if (line) lines.push(line);
+            return lines;
+        }
         function renderSolutionsList(section = selectedSection, preserveTop = false) {
             const { items, type } = getSubOptions(section);
             const rows = Array.from(solutionList.children);
@@ -1519,8 +1541,10 @@ Fullstack Product Engineer</p>
                     stack.classList.remove('is-open');
                     return;
                 }
+                const technologies = item.stack.flatMap((line) => line.split(/\s*·\s*/));
+                const stackLines = buildCompetencyStackLines(stack, technologies);
                 const lines = Array.from(stack.querySelectorAll('.competency-stack-line'));
-                item.stack.forEach((text, lineIndex) => {
+                stackLines.forEach((text, lineIndex) => {
                     let line = lines[lineIndex];
                     if (!line) {
                         line = document.createElement('span');
@@ -1529,7 +1553,7 @@ Fullstack Product Engineer</p>
                     }
                     line.dataset.targetText = text;
                 });
-                lines.slice(item.stack.length).forEach((line) => line.remove());
+                lines.slice(stackLines.length).forEach((line) => line.remove());
                 stack.classList.toggle('is-open', index === selectedCompetency);
             });
             rows.slice(items.length).forEach((row) => {
@@ -2165,9 +2189,8 @@ Fullstack Product Engineer</p>
         function revealCompetencyStack(index, job) {
             const button = solutionList.querySelector(`button[data-competency="${index}"]`);
             if (!button) return Promise.resolve(true);
-            const item = copy[currentLanguage].competencies[index];
             const lines = button.closest('li').querySelectorAll('.competency-stack-line');
-            return revealSequence(Array.from(lines, (line, lineIndex) => [line, item.stack[lineIndex]])).then((result) => {
+            return revealSequence(Array.from(lines, (line) => [line, line.dataset.targetText || ''])).then((result) => {
                 if (result) enableSolutionScrollIfOverflowing();
                 requestAnimationFrame(refreshCustomScrollbars);
                 return result;
