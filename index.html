@@ -317,7 +317,7 @@ Fullstack Product Engineer</p>
     </div>
     <div class="credit-wash" aria-hidden="true"></div>
     <p class="site-credit">Copyright © 2026 Pavel. Визуальные эффекты вдохновлены <a href="https://yandex.ru/cup/" target="_blank" rel="noopener noreferrer">Yandex Cup</a>. Реализация выполнена независимо и расширена с использованием OpenAI Terra-medium. Код распространяется по лицензии MIT.</p>
-    <p class="site-version">v1.0.1</p>
+    <p class="site-version">v1.0.2</p>
     <div class="theme-wash" id="theme-wash" aria-hidden="true"></div>
     <script>
         const footerCopy = {
@@ -1768,10 +1768,8 @@ Fullstack Product Engineer</p>
                 prepareTextForReveal(languageItems);
                 syncLanguageRoute();
                 if (hasGenerationGate()) {
-                    trackAnimation(revealSequence(languageItems, job).then((completed) => {
-                        if (completed) showGenerationGate(currentLanguage);
-                        return completed;
-                    }));
+                    showGenerationGate(currentLanguage);
+                    trackAnimation(revealSequence(languageItems, job));
                 } else {
                     renderGenerationTerminal();
                     trackAnimation(revealSequence(languageItems, job));
