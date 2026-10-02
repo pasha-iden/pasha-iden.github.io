@@ -1619,7 +1619,7 @@ Fullstack Product Engineer</p>
             easterLines[1].dataset.glitchText = text;
         }
         function updateEasterTimer() {
-            if (!easterEggAvailable && getVisibleTime() >= 3 * 1000) {
+            if (!easterEggAvailable && getVisibleTime() >= 5 * 60 * 1000) {
                 easterEggAvailable = true;
                 easterTrigger.classList.add('is-available');
             }
