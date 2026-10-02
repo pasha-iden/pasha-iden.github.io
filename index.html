@@ -242,7 +242,7 @@
         @media (max-width: 480px) { .language-panel { column-gap: 10px; row-gap: 14px; } }
         @media (max-width: 600px) {
             .status-bar::before { content: ''; position: absolute; top: 0; right: 0; left: 0; z-index: 0; height: 92px; background: linear-gradient(to bottom, var(--surface) 0, var(--surface) 36px, transparent 92px); pointer-events: none; }
-            .status-bar > * { position: relative; z-index: 1; }
+            .status-bar > * { z-index: 1; }
             .site-credit { bottom: calc(20px + env(safe-area-inset-bottom)); left: 18px; max-width: calc(100vw - 70px); font-size: .5rem; white-space: normal; }
             .site-version { right: 18px; bottom: calc(20px + env(safe-area-inset-bottom)); }
             .credit-wash { display: block; position: fixed; right: 0; bottom: 0; left: 0; z-index: 4; height: calc(96px + env(safe-area-inset-bottom)); background: linear-gradient(to bottom, transparent 0, var(--surface) 36px, var(--surface) 100%); pointer-events: none; }
