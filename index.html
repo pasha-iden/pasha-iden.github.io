@@ -231,7 +231,7 @@
             .menu-panel.is-detail-open { align-self: start; margin-top: 76px; margin-bottom: 24px; }
             .menu-panel.is-detail-open .detail-panel { display: block; width: 100%; max-height: calc(100vh - 116px); overflow-x: hidden; overflow-y: auto; }
             .detail-current, .detail-next { max-height: none; overflow: visible; }
-            .detail-next { margin-top: 32px; padding: 0 0 clamp(110px, 18vh, 180px) !important; }
+            .detail-next { margin-top: 32px; padding: 0 0 clamp(126px, 20vh, 196px) !important; }
         }
         @media (max-width: 600px) {
             .menu-layout { grid-template-columns: 1fr; gap: 18px; }
@@ -243,7 +243,7 @@
         @media (max-width: 600px) {
             .status-bar::before { content: ''; position: absolute; top: 0; right: 0; left: 0; z-index: 0; height: 92px; background: linear-gradient(to bottom, var(--surface) 0, var(--surface) 36px, transparent 92px); pointer-events: none; }
             .status-bar > * { z-index: 1; }
-            .site-credit { bottom: calc(20px + env(safe-area-inset-bottom)); left: 18px; max-width: calc(100vw - 70px); font-size: .5rem; white-space: normal; }
+            .site-credit { bottom: calc(18px + env(safe-area-inset-bottom)); left: 18px; max-width: calc(100vw - 70px); font-size: .5rem; white-space: normal; }
             .site-version { right: 18px; bottom: calc(21px + env(safe-area-inset-bottom)); }
             .credit-wash { display: block; position: fixed; right: 0; bottom: 0; left: 0; z-index: 4; height: calc(97px + env(safe-area-inset-bottom)); background: linear-gradient(to bottom, transparent 0, var(--surface) 36px, var(--surface) 100%); pointer-events: none; }
         }
@@ -285,6 +285,10 @@ Fullstack Product Engineer</p>
     <p class="site-version">v1.0.1</p>
     <div class="theme-wash" id="theme-wash" aria-hidden="true"></div>
     <script>
+        const footerCopy = {
+            en: 'Copyright © 2026 Pavel. Visual effects are inspired by Yandex Cup. The implementation was independently developed and extended with OpenAI Terra-medium. The code is released under the MIT License.',
+            ru: 'Copyright © 2026 Pavel. Визуальные эффекты вдохновлены Yandex Cup. Реализация выполнена независимо и расширена с использованием OpenAI Terra-medium. Код распространяется по лицензии MIT.'
+        };
         const copy = {
             en: {
                 eyebrow: 'Pavel / Fullstack Product Engineer', title: 'What are you looking for?',
@@ -1197,6 +1201,7 @@ Fullstack Product Engineer</p>
         function setMenuLanguage(language) {
             const content = copy[language];
             currentLanguage = language;
+            setFooterLanguage(language, true);
             const isDetailOpen = Boolean(getActiveDetail());
             renderMenu(false);
             renderSolutionsList(selectedSection);
@@ -2027,6 +2032,27 @@ Fullstack Product Engineer</p>
                 }
             });
         }
+        function footerMarkup(language) {
+            const link = '<a href="https://yandex.ru/cup/" target="_blank" rel="noopener noreferrer">Yandex Cup</a>';
+            return footerCopy[language].replace('Yandex Cup', link);
+        }
+        function setFooterLanguage(language, animate = false) {
+            const targetText = footerCopy[language];
+            const currentText = siteCredit.dataset.glitchText || siteCredit.textContent;
+            if (!animate) {
+                siteCredit.innerHTML = footerMarkup(language);
+                siteCredit.dataset.glitchText = targetText;
+                return;
+            }
+            if (currentText === targetText) return;
+            const job = startTextAnimation(siteCredit);
+            trackAnimation(morphText(siteCredit, currentText, targetText, job).then((completed) => {
+                if (!completed) return false;
+                siteCredit.innerHTML = footerMarkup(language);
+                siteCredit.dataset.glitchText = targetText;
+                return true;
+            }));
+        }
         function morphText(element, fromText, toText, job) {
             const from = Array.from(fromText);
             const to = Array.from(toText);
@@ -2364,6 +2390,50 @@ Fullstack Product Engineer</p>
                 candidates.sort(() => Math.random() - .5).slice(0, count).forEach(glitchText);
             }, 700);
         }
+        function previewCurrentLanguageRepaint() {
+            const items = (getActiveDetail() ? getDetailScreenText() : getOptionsScreenText())
+                .filter(([element, text]) => text && element.dataset.isLeaving !== 'true' && element.textContent === text);
+            const positions = items.flatMap(([element, text]) => Array.from(text)
+                .map((character, index) => (/\s/.test(character) ? null : { element, index }))
+                .filter(Boolean));
+            const selectedCount = Math.max(1, Math.round(positions.length * .2));
+            const selectedByElement = new Map();
+            positions.sort(() => Math.random() - .5).slice(0, selectedCount).forEach(({ element, index }) => {
+                if (!selectedByElement.has(element)) selectedByElement.set(element, []);
+                selectedByElement.get(element).push(index);
+            });
+            selectedByElement.forEach((indexes, element) => {
+                const text = items.find(([candidate]) => candidate === element)[1];
+                const frames = new Map(indexes.map((index) => {
+                    const original = Array.from(text)[index];
+                    const first = randomGlitchSymbol(original);
+                    let second = randomGlitchSymbol(original);
+                    while (second === first) second = randomGlitchSymbol(original);
+                    return [index, [first, second, first]];
+                }));
+                const job = startGlitchAnimation(element);
+                let step = 0;
+                element.dataset.glitching = 'true';
+                const timer = window.setInterval(() => {
+                    if (!isCurrentGlitchAnimation(element, job) || !element.isConnected) {
+                        delete element.dataset.glitching;
+                        window.clearInterval(timer);
+                        return;
+                    }
+                    if (step >= 3) {
+                        element.textContent = text;
+                        element.dataset.glitchText = text;
+                        delete element.dataset.glitching;
+                        window.clearInterval(timer);
+                        return;
+                    }
+                    const characters = Array.from(text);
+                    indexes.forEach((index) => { characters[index] = frames.get(index)[step]; });
+                    element.textContent = characters.join('');
+                    step += 1;
+                }, 220);
+            });
+        }
         function startLoadingDots(element) {
             let step = 1;
             element.textContent = '';
@@ -2383,7 +2453,13 @@ Fullstack Product Engineer</p>
             option.addEventListener('blur', () => setHighlight(null));
             option.addEventListener('click', () => runInteraction(() => openMenu(option.dataset.language)));
         });
-        topOptions.forEach((option) => option.addEventListener('click', () => runInteraction(() => setMenuLanguage(option.dataset.language))));
+        topOptions.forEach((option) => option.addEventListener('click', () => runInteraction(() => {
+            if (option.dataset.language === currentLanguage) {
+                previewCurrentLanguageRepaint();
+                return;
+            }
+            setMenuLanguage(option.dataset.language);
+        })));
         copyPlainRouteButton.addEventListener('click', () => copyRoute(false, copyPlainRouteButton));
         copyRouteButton.addEventListener('click', () => copyRoute(true, copyRouteButton));
         themeToggle.addEventListener('click', () => transitionTheme(document.body.dataset.theme === 'dark' ? 'light' : 'dark'));
@@ -2461,10 +2537,11 @@ Fullstack Product Engineer</p>
         window.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('ui-ready');
             requestAnimationFrame(() => requestAnimationFrame(() => statusBar.classList.add('is-ready')));
-            revealFooter();
             const urlTheme = getThemeFromUrl();
             if (urlTheme) setTheme(urlTheme);
             const route = getRouteFromUrl();
+            setFooterLanguage(route?.language || currentLanguage);
+            revealFooter();
             if (route) {
                 openRoute(route);
             } else {
