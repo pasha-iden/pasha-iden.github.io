@@ -122,8 +122,7 @@
         .detail-block strong { color: var(--ink); font-size: inherit; font-weight: 600; letter-spacing: inherit; }
         .detail-package-title { margin: 0; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
         .detail-package, .detail-effects { margin: 5px 0 0; padding: 0; color: var(--muted); font-size: .68rem; letter-spacing: -.02em; list-style: none; }
-        .detail-package li, .detail-effects li { position: relative; margin-top: 7px; padding-left: 1.15em; }
-        .detail-package li::before, .detail-effects li::before { content: '•'; position: absolute; top: -.08em; left: 0; color: var(--ink); font-size: 1.45em; line-height: 1; }
+        .detail-package li, .detail-effects li { margin-top: 7px; padding-left: 1.15em; text-indent: -1.15em; }
         .detail-package strong, .detail-effects strong { color: var(--ink); font-weight: 600; }
         .detail-extras-title { margin: 16px 0 0; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
         .detail-extras-title:empty, .detail-extras:empty { display: none; }
@@ -1826,14 +1825,14 @@
             items.push([detailPanel.querySelector('.detail-package-title'), landing.package.baseTitle]);
             const packageItems = [...landing.package.items, ...landing.package.extras];
             detailPanel.querySelectorAll('.detail-current .detail-package li').forEach((element, index) => {
-                items.push([element.querySelector('strong'), packageItems[index].title], [element.querySelector('span'), packageItems[index].text]);
+                items.push([element.querySelector('strong'), `• ${packageItems[index].title}`], [element.querySelector('span'), packageItems[index].text]);
             });
             items.push([detailPanel.querySelector('.detail-extras-title'), landing.package.extrasTitle]);
             items.push([detailPanel.querySelector('.detail-result-title'), landing.outcome.title]);
             items.push([detailPanel.querySelector('.detail-result-lead'), landing.outcome.lead]);
             items.push([detailPanel.querySelector('.detail-effects-title'), landing.outcome.effectsTitle]);
             detailPanel.querySelectorAll('.detail-effects li').forEach((element, index) => {
-                items.push([element.querySelector('strong'), landing.outcome.effects[index].title], [element.querySelector('span'), landing.outcome.effects[index].text]);
+                items.push([element.querySelector('strong'), `• ${landing.outcome.effects[index].title}`], [element.querySelector('span'), landing.outcome.effects[index].text]);
             });
             if (landing.outcome.stack) {
                 items.push([detailPanel.querySelector('.detail-stack-title'), landing.outcome.stackTitle]);
