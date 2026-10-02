@@ -152,7 +152,23 @@
         .telegram-contact:hover, .telegram-contact:focus-visible { border-color: var(--ink); color: var(--ink); outline: none; }
         .solution-title, .menu-title { display: block; }
         .menu-subtitle { display: block; margin-top: 2px; font-size: clamp(.62rem, 1vw, .76rem); font-weight: 400; line-height: 1.45; letter-spacing: -.025em; }
-        @media (max-width: 600px) { .menu-layout { grid-template-columns: 1fr; gap: 18px; } .menu-layout > nav, .solution-list, .detail-panel { grid-column: 1; grid-row: 1; } .solution-list { position: static; width: auto; max-height: calc(100vh - 150px); overflow-y: auto; transform: none; } .menu-panel.is-detail-open .solution-list { transform: none; } }
+        @media (orientation: portrait) {
+            .menu-panel { width: min(640px, 100%); }
+            .menu-layout { display: block; }
+            .back-button { top: 28px; left: 19px; width: 18px; height: 24px; z-index: 2; transform: none; }
+            .back-button::before, .back-button::after { top: 11px; width: 14px; }
+            .menu-panel.is-suboptions-open > .eyebrow,
+            .menu-panel.is-suboptions-open > h1,
+            .menu-panel.is-suboptions-open .menu-layout > nav { display: none; }
+            .menu-panel:not(.is-suboptions-open):not(.is-detail-open) .solution-list { display: none; }
+            .solution-list { position: static; width: 100%; max-height: calc(100vh - 150px); transform: none; }
+            .menu-panel.is-detail-open .solution-list { transform: none; }
+            .menu-panel.is-detail-open { align-self: start; margin-top: 76px; margin-bottom: 24px; }
+            .menu-panel.is-detail-open .detail-panel { display: block; width: 100%; max-height: calc(100vh - 116px); overflow-x: hidden; overflow-y: auto; }
+            .detail-current, .detail-next { max-height: none; overflow: visible; }
+            .detail-next { margin-top: 32px; padding: 0 0 clamp(110px, 18vh, 180px) !important; }
+        }
+        @media (max-width: 600px) { .menu-layout { grid-template-columns: 1fr; gap: 18px; } .menu-layout > nav, .solution-list, .detail-panel { grid-column: 1; grid-row: 1; } }
         @media (max-width: 480px) { .language-panel { column-gap: 10px; row-gap: 14px; } }
     </style>
 </head>
@@ -1052,7 +1068,7 @@
             const caseIndex = caseKeys.indexOf(params.get('case'));
             if (screen === 'solution' && solutionIndex >= 0) return { language, screen, section: 0, solution: solutionIndex };
             if (screen === 'case' && caseIndex >= 0) return { language, screen, section: 1, solution: null, case: caseIndex };
-            if (screen === 'menu') return { language, screen, section: sectionIndex, solution: null, case: null };
+            if (screen === 'menu') return { language, screen, section: sectionIndex >= 0 ? sectionIndex : null, solution: null, case: null };
             return null;
         }
         function syncRoute() {
@@ -1100,6 +1116,7 @@
             lastSolution = route.solution;
             selectedCase = route.case ?? null;
             lastCase = route.case ?? null;
+            menuPanel.classList.toggle('is-suboptions-open', isPortraitLayout() && selectedSection !== null);
             languageScreen.classList.add('is-leaving');
             setMenuLanguage(route.language);
             menuScreen.classList.add('is-visible');
@@ -1181,6 +1198,64 @@
             if (section === 'section-3') return { items: copy[currentLanguage].approach, type: 'approach' };
             return { items: [], type: null };
         }
+        function isPortraitLayout() {
+            return window.matchMedia('(orientation: portrait)').matches;
+        }
+        function isPortraitSuboptionsOpen() {
+            return isPortraitLayout() && menuPanel.classList.contains('is-suboptions-open');
+        }
+        function updateBackButton() {
+            backButton.classList.toggle('is-visible', Boolean(getActiveDetail()) || isPortraitSuboptionsOpen());
+        }
+        function openPortraitSuboptions(section) {
+            const job = ++animationJob;
+            const transition = ++screenTransition;
+            trackAnimation(reverseSequence(getMainMenuText(), job)).then((completed) => {
+                if (!completed || transition !== screenTransition) return;
+                selectedSolution = null;
+                lastSolution = null;
+                selectedCase = null;
+                lastCase = null;
+                selectedCompetency = null;
+                selectedApproach = null;
+                selectedSection = section;
+                renderMenu(false);
+                renderSolutionsList(section);
+                solutionList.classList.remove('is-scrollable');
+                solutionList.classList.add('is-open');
+                menuPanel.classList.add('is-suboptions-open');
+                updateDetail(job);
+                updateBackButton();
+                syncRoute();
+                trackAnimation(revealSolutions(job));
+            });
+        }
+        function closePortraitSuboptions() {
+            if (backTransitionActive || !isPortraitSuboptionsOpen()) return;
+            backTransitionActive = true;
+            const job = ++animationJob;
+            const transition = ++screenTransition;
+            trackAnimation(reverseSequence(getSuboptionsScreenText(), job)).then((completed) => {
+                if (!completed || transition !== screenTransition) {
+                    backTransitionActive = false;
+                    return;
+                }
+                selectedSection = null;
+                selectedSolution = null;
+                selectedCase = null;
+                selectedCompetency = null;
+                selectedApproach = null;
+                renderMenu(false);
+                renderSolutionsList(null);
+                solutionList.classList.remove('is-open', 'is-scrollable');
+                menuPanel.classList.remove('is-suboptions-open');
+                updateDetail(job);
+                updateBackButton();
+                syncRoute();
+                trackAnimation(revealMenu(job));
+                backTransitionActive = false;
+            });
+        }
         function renderSolutionsList(section = selectedSection, preserveTop = false) {
             const { items, type } = getSubOptions(section);
             const rows = Array.from(solutionList.children);
@@ -1242,7 +1317,7 @@
             positionSolutionsList(preserveTop);
         }
         function positionSolutionsList(preserveTop = false, useRenderedContent = false) {
-            if (window.matchMedia('(max-width: 600px)').matches) {
+            if (isPortraitLayout()) {
                 solutionList.style.removeProperty('--solution-list-height');
                 return;
             }
@@ -1401,6 +1476,10 @@
             requestAnimationFrame(refreshCustomScrollbars);
         }
         function selectSection(section, preserveDetail = false, job = ++animationJob, preserveDetailContent = false) {
+            if (!preserveDetail && isPortraitLayout() && getSubOptions(section).items.length && !menuPanel.classList.contains('is-suboptions-open')) {
+                openPortraitSuboptions(section);
+                return;
+            }
             if (!preserveDetail) {
                 selectedSolution = null;
                 lastSolution = null;
@@ -1417,6 +1496,7 @@
             solutionList.classList.toggle('is-open', getSubOptions(section).items.length > 0);
             requestAnimationFrame(refreshCustomScrollbars);
             updateDetail(job, preserveDetailContent);
+            updateBackButton();
             if (getSubOptions(section).items.length && selectedSolution === null && selectedCase === null) trackAnimation(revealSolutions(job));
             if (selectedCompetency !== null) trackAnimation(revealCompetencyStack(selectedCompetency, job));
             syncRoute();
@@ -1477,7 +1557,7 @@
             solutionList.querySelectorAll('button[data-case]').forEach((button) => button.classList.toggle('is-selected', Number(button.dataset.case) === (selectedCase ?? lastCase)));
             menuPanel.classList.toggle('is-detail-open', isLandingOpen);
             detailPanel.classList.toggle('is-open', isLandingOpen);
-            backButton.classList.toggle('is-visible', isLandingOpen);
+            updateBackButton();
             if (!isLandingOpen) { detailPanel.innerHTML = ''; requestAnimationFrame(refreshCustomScrollbars); return; }
             const landing = detail;
             if (landing.projects) {
@@ -1733,12 +1813,19 @@
             });
             return revealSequence(items, job);
         }
-        function getOptionsScreenText() {
+        function getMainMenuText() {
             return [
                 ...getTextItems('#menu-eyebrow, #menu-title'),
-                ...getTextItems('.menu-title, .menu-subtitle', menu),
-                ...getTextItems('.solution-title, .solution-subtitle, .competency-stack-line', solutionList)
+                ...getTextItems('.menu-title, .menu-subtitle', menu)
             ];
+        }
+        function getSuboptionsScreenText() {
+            return getTextItems('.solution-title, .solution-subtitle, .competency-stack-line', solutionList);
+        }
+        function getOptionsScreenText() {
+            return isPortraitSuboptionsOpen()
+                ? getSuboptionsScreenText()
+                : [...getMainMenuText(), ...getSuboptionsScreenText()];
         }
         function getDetailScreenText() {
             return getTextItems('.detail-kicker, .detail-title, .detail-lead, .timeline-value, .timeline-caption, .detail-package-title, .detail-extras-title, .detail-package strong, .detail-package span, .detail-result-lead, .detail-effects-title, .detail-effects strong, .detail-effects span, .detail-stack-title, .detail-stack, .detail-cta-text, .detail-contact-cta-text, .telegram-contact, .personal-project-kicker, .personal-project-title, .personal-project-subtitle, .personal-project-description, .personal-project-stack-title, .personal-project-stack', detailPanel);
@@ -1875,6 +1962,7 @@
             const detailNext = detailPanel.querySelector('.detail-next');
             if (!timelineValue || !detailNext) return;
             detailNext.style.paddingTop = '0';
+            if (isPortraitLayout()) return;
             const offset = timelineValue.getBoundingClientRect().top - detailNext.getBoundingClientRect().top;
             detailNext.style.paddingTop = `${Math.max(0, offset)}px`;
         }
@@ -1973,6 +2061,10 @@
             if (approachButton) runInteraction(() => selectApproach(Number(approachButton.dataset.approach)));
         });
         backButton.addEventListener('click', () => runInteraction(() => {
+            if (!getActiveDetail() && isPortraitSuboptionsOpen()) {
+                closePortraitSuboptions();
+                return;
+            }
             if (backTransitionActive) return;
             backTransitionActive = true;
             const job = ++animationJob;
@@ -1987,14 +2079,17 @@
                 prepareTextForReveal(getOptionsScreenText());
                 updateDetail(job);
                 syncRoute();
-                trackAnimation(revealMenu(job));
+                if (!isPortraitSuboptionsOpen()) trackAnimation(revealMenu(job));
                 trackAnimation(revealSolutions(job));
                 backTransitionActive = false;
             });
         }));
         window.addEventListener('resize', () => requestAnimationFrame(() => {
+            if (!isPortraitLayout()) menuPanel.classList.remove('is-suboptions-open');
+            else if (selectedSection !== null) menuPanel.classList.add('is-suboptions-open');
             alignDetailColumns();
             positionSolutionsList();
+            updateBackButton();
             refreshCustomScrollbars();
         }));
         window.addEventListener('DOMContentLoaded', () => {
