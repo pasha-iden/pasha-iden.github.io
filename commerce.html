@@ -42,25 +42,32 @@
         .menu-screen.is-visible { visibility: visible; }
         .menu-screen:not(.is-content-ready) #menu-eyebrow,
         .menu-screen:not(.is-content-ready) #menu-title { visibility: hidden; }
-        .top-language-switch { position: absolute; top: 28px; left: 50%; display: flex; align-items: center; gap: 9px; transform: translateX(-50%); }
+        .status-bar { position: fixed; inset: 0; z-index: 10; pointer-events: none; }
+        .status-bar > * { pointer-events: auto; }
+        .top-language-switch { position: absolute; top: 28px; left: 50%; display: flex; align-items: center; gap: 9px; max-width: 0; overflow: hidden; opacity: 0; pointer-events: none; transform: translateX(-50%); transition: max-width .55s ease, opacity .35s ease; }
+        .status-bar.is-menu-active .top-language-switch { max-width: 88px; opacity: 1; pointer-events: auto; }
         .top-language-option { padding: 4px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: .78rem; font-weight: 600; letter-spacing: .05em; transition: color .25s ease; }
         .top-language-option:hover, .top-language-option:focus-visible, .top-language-option.is-active { color: var(--ink); outline: none; }
         .top-language-switch .divider { font-size: .8rem; }
-        .copy-route { position: absolute; top: 31px; right: calc(50% + clamp(42px, 4.5vw, 51px)); width: 18px; height: 18px; padding: 0; border: 0; background: transparent; cursor: pointer; }
+        .copy-route { position: absolute; top: 31px; right: calc(50% + 38px); width: 18px; height: 18px; padding: 0; border: 0; background: transparent; cursor: pointer; transition: right .55s ease; }
+        .status-bar.is-menu-active .copy-route { right: calc(50% + clamp(42px, 4.5vw, 51px)); }
         .copy-route::before, .copy-route::after { content: ''; position: absolute; width: 9px; height: 9px; border: 2px solid var(--muted); transition: border-color .35s ease, opacity .35s ease; }
         .copy-route::before { top: 2px; right: 2px; opacity: .48; }
         .copy-route::after { top: 6px; right: 6px; border-color: var(--ink); background: var(--surface); }
         .copy-route:hover::before, .copy-route:hover::after, .copy-route:focus-visible::before, .copy-route:focus-visible::after, .copy-route.is-copied::before, .copy-route.is-copied::after { border-color: var(--ink); }
         .copy-route:focus-visible { outline: none; }
-        .copy-feedback { position: absolute; top: 33px; right: calc(50% + clamp(42px, 4.5vw, 51px) + 26px); color: var(--ink); font-size: .62rem; font-weight: 600; letter-spacing: -.02em; opacity: 0; pointer-events: none; transform: translateX(4px); transition: opacity .35s ease, transform .35s ease; white-space: nowrap; }
+        .copy-feedback { position: absolute; top: 33px; right: calc(50% + 64px); color: var(--ink); font-size: .62rem; font-weight: 600; letter-spacing: -.02em; opacity: 0; pointer-events: none; transform: translateX(4px); transition: right .55s ease, opacity .35s ease, transform .35s ease; white-space: nowrap; }
+        .status-bar.is-menu-active .copy-feedback { right: calc(50% + clamp(42px, 4.5vw, 51px) + 26px); }
         .copy-feedback.is-visible { opacity: 1; transform: translateX(0); }
-        .theme-toggle { position: absolute; top: 32px; left: calc(50% + clamp(42px, 4.5vw, 51px)); width: 34px; height: 18px; padding: 0; border: 2px solid var(--muted); border-radius: 999px; background: transparent; cursor: pointer; transition: border-color .35s ease; }
+        .theme-toggle { position: absolute; top: 32px; left: calc(50% - 20px); width: 34px; height: 18px; padding: 0; border: 2px solid var(--muted); border-radius: 999px; background: transparent; cursor: pointer; transition: left .55s ease, border-color .35s ease; }
+        .status-bar.is-menu-active .theme-toggle { left: calc(50% + clamp(42px, 4.5vw, 51px)); }
         .theme-toggle::after { content: ''; position: absolute; top: 50%; left: 1px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); transform: translate(16px, -50%); transition: transform .35s ease, background-color .35s ease; }
         body[data-theme="dark"] .theme-toggle { border-color: var(--muted); background: transparent; }
         body[data-theme="dark"] .theme-toggle::after { background: var(--ink); transform: translateY(-50%); }
         .theme-toggle:hover, .theme-toggle:focus-visible { border-color: var(--ink); outline: none; }
         body[data-theme="dark"] .theme-toggle:hover, body[data-theme="dark"] .theme-toggle:focus-visible { border-color: var(--ink); }
-        .github-link { position: absolute; top: 32px; left: calc(50% + clamp(42px, 4.5vw, 51px) + 50px); display: grid; width: 20px; height: 20px; place-items: center; color: var(--muted); text-decoration: none; transition: color .35s ease; }
+        .github-link { position: absolute; top: 32px; left: calc(50% + 30px); display: grid; width: 20px; height: 20px; place-items: center; color: var(--muted); text-decoration: none; transition: left .55s ease, color .35s ease; }
+        .status-bar.is-menu-active .github-link { left: calc(50% + clamp(42px, 4.5vw, 51px) + 50px); }
         .github-link svg { display: block; width: 18px; height: 18px; fill: currentColor; transform: translateY(-1px); }
         .github-link:hover, .github-link:focus-visible { color: var(--ink); outline: none; }
         .back-button { position: fixed; top: 50%; left: 20px; width: 22px; height: 28px; padding: 0; border: 0; opacity: 0; background: transparent; cursor: pointer; pointer-events: none; transform: translateY(-50%); }
@@ -184,6 +191,15 @@
 </head>
 <body>
     <main>
+        <div class="status-bar" id="status-bar">
+            <div class="top-language-switch" aria-label="Language switcher">
+                <button class="top-language-option" type="button" data-language="en">EN</button><span class="divider" aria-hidden="true">|</span><button class="top-language-option" type="button" data-language="ru">RU</button>
+            </div>
+            <button class="copy-route" id="copy-route" type="button" aria-label="Copy current link"></button>
+            <span class="copy-feedback" id="copy-feedback" aria-live="polite"></span>
+            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Enable dark theme" aria-pressed="false"></button>
+            <a class="github-link" href="https://github.com/pasha-iden" target="_blank" rel="noopener noreferrer" aria-label="Open Pavel's GitHub profile"><svg viewBox="-1 -1 26 26" aria-hidden="true"><path d="M12 .297C5.373.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.73.083-.73 1.205.084 1.838 1.237 1.838 1.237 1.07 1.835 2.809 1.304 3.495.998.108-.776.418-1.305.762-1.605-2.665-.305-5.467-1.332-5.467-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.62-5.475 5.92.43.37.815 1.096.815 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297 24 5.67 18.627.297 12 .297Z"/></svg></a>
+        </div>
         <section class="screen language-screen" id="language-screen" aria-label="Language selection">
             <div class="language-panel" id="language-panel">
                 <p class="language-identity" id="language-identity">PAVEL /
@@ -195,13 +211,6 @@ Fullstack Product Engineer</p>
             </div>
         </section>
         <section class="screen menu-screen" id="menu-screen" aria-label="Main menu" aria-hidden="true">
-            <div class="top-language-switch" aria-label="Language switcher">
-                <button class="top-language-option" type="button" data-language="en">EN</button><span class="divider" aria-hidden="true">|</span><button class="top-language-option" type="button" data-language="ru">RU</button>
-            </div>
-            <button class="copy-route" id="copy-route" type="button" aria-label="Copy current link"></button>
-            <span class="copy-feedback" id="copy-feedback" aria-live="polite"></span>
-            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Enable dark theme" aria-pressed="false"></button>
-            <a class="github-link" href="https://github.com/pasha-iden" target="_blank" rel="noopener noreferrer" aria-label="Open Pavel's GitHub profile"><svg viewBox="-1 -1 26 26" aria-hidden="true"><path d="M12 .297C5.373.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.73.083-.73 1.205.084 1.838 1.237 1.838 1.237 1.07 1.835 2.809 1.304 3.495.998.108-.776.418-1.305.762-1.605-2.665-.305-5.467-1.332-5.467-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.62-5.475 5.92.43.37.815 1.096.815 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297 24 5.67 18.627.297 12 .297Z"/></svg></a>
             <button class="back-button" id="back-button" type="button" aria-label="Back"></button>
             <div class="menu-panel" id="menu-panel"><p class="eyebrow" id="menu-eyebrow"></p><h1 id="menu-title"></h1><div class="menu-layout"><nav><ul class="menu" id="menu"></ul></nav><ul class="solution-list" id="solution-list" aria-live="polite"></ul><aside class="detail-panel" id="detail-panel" aria-live="polite"></aside></div></div>
         </section>
@@ -963,6 +972,7 @@ Fullstack Product Engineer</p>
         const panel = document.getElementById('language-panel');
         const languageScreen = document.getElementById('language-screen');
         const menuScreen = document.getElementById('menu-screen');
+        const statusBar = document.getElementById('status-bar');
         const options = document.querySelectorAll('.language-option');
         const languageIdentity = document.getElementById('language-identity');
         const languageItems = [[languageIdentity, languageIdentity.textContent], ...Array.from(document.querySelectorAll('.language-panel span, .language-panel button')).map((element) => [element, element.textContent])];
@@ -1036,6 +1046,7 @@ Fullstack Product Engineer</p>
             themeWash.style.opacity = '1';
             void themeWash.offsetWidth;
             setTheme(theme);
+            syncRoute();
             requestAnimationFrame(() => {
                 themeWash.style.transition = 'opacity 1.5s ease';
                 themeWash.style.opacity = '0';
@@ -1073,20 +1084,26 @@ Fullstack Product Engineer</p>
         function getRouteFromUrl() {
             const params = new URLSearchParams(window.location.search);
             const language = ['ru', 'en'].includes(params.get('lang')) ? params.get('lang') : 'en';
+            const theme = ['light', 'dark'].includes(params.get('theme')) ? params.get('theme') : null;
             const screen = params.get('screen');
             const sectionIndex = sectionKeys.indexOf(params.get('section'));
             const solutionIndex = solutionKeys.indexOf(params.get('solution'));
             const caseIndex = caseKeys.indexOf(params.get('case'));
-            if (screen === 'solution' && solutionIndex >= 0) return { language, screen, section: 0, solution: solutionIndex };
-            if (screen === 'case' && caseIndex >= 0) return { language, screen, section: 1, solution: null, case: caseIndex };
-            if (screen === 'menu') return { language, screen, section: sectionIndex >= 0 ? sectionIndex : null, solution: null, case: null };
+            if (screen === 'solution' && solutionIndex >= 0) return { language, theme, screen, section: 0, solution: solutionIndex };
+            if (screen === 'case' && caseIndex >= 0) return { language, theme, screen, section: 1, solution: null, case: caseIndex };
+            if (screen === 'menu') return { language, theme, screen, section: sectionIndex >= 0 ? sectionIndex : null, solution: null, case: null };
             return null;
+        }
+        function getThemeFromUrl() {
+            const theme = new URLSearchParams(window.location.search).get('theme');
+            return ['light', 'dark'].includes(theme) ? theme : null;
         }
         function syncRoute() {
             const params = new URLSearchParams(window.location.search);
             const hasSolutionDetail = selectedSection === 'section-0' && Boolean(getSolutionDetail(selectedSolution));
             const hasCaseDetail = selectedSection === 'section-1' && Boolean(getCaseDetail(selectedCase));
             params.set('lang', currentLanguage);
+            params.set('theme', document.body.dataset.theme === 'dark' ? 'dark' : 'light');
             params.set('screen', hasSolutionDetail ? 'solution' : hasCaseDetail ? 'case' : 'menu');
             if (selectedSection !== null) params.set('section', sectionKeys[Number(selectedSection.split('-')[1])]);
             else params.delete('section');
@@ -1121,6 +1138,8 @@ Fullstack Product Engineer</p>
             } catch (_) {}
         }
         function openRoute(route) {
+            if (route.theme) setTheme(route.theme);
+            statusBar.classList.add('is-menu-active');
             currentLanguage = route.language;
             selectedSection = route.section === null ? null : `section-${route.section}`;
             selectedSolution = route.solution;
@@ -1142,6 +1161,7 @@ Fullstack Product Engineer</p>
                 if (!completed) return;
                 languageScreen.classList.add('is-leaving');
                 setMenuLanguage(language);
+                statusBar.classList.add('is-menu-active');
                 menuScreen.classList.add('is-visible');
                 menuScreen.setAttribute('aria-hidden', 'false');
             });
@@ -2105,6 +2125,8 @@ Fullstack Product Engineer</p>
         }));
         window.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('ui-ready');
+            const urlTheme = getThemeFromUrl();
+            if (urlTheme) setTheme(urlTheme);
             const route = getRouteFromUrl();
             if (route) {
                 openRoute(route);
