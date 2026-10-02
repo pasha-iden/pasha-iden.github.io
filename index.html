@@ -47,11 +47,11 @@
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <style>
         :root { --ink: #10141d; --muted: #919baa; --line: rgba(44, 62, 92, .14); --blue: #6d91ff; --surface: #edf5ff; --surface-highlight: rgba(255, 255, 255, .95); --surface-glow: rgba(153, 203, 255, .32); }
-        html { height: 100%; overflow: hidden; overscroll-behavior: none; }
+        html { overscroll-behavior: none; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         main { position: relative; z-index: 1; }
         body {
-            margin: 0; width: 100%; min-width: 320px; min-height: 100vh; overflow: hidden; overscroll-behavior: none; color: var(--ink);
+            margin: 0; width: 100%; min-width: 320px; min-height: 100dvh; overflow: hidden; overscroll-behavior: none; color: var(--ink);
             font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
             background: radial-gradient(circle at 20% 18%, var(--surface-highlight), transparent 30rem), radial-gradient(circle at 82% 88%, var(--surface-glow), transparent 31rem), var(--surface);
             transition: color .5s ease;
@@ -241,9 +241,11 @@
         }
         @media (max-width: 480px) { .language-panel { column-gap: 10px; row-gap: 14px; } }
         @media (max-width: 600px) {
-            .site-credit { bottom: 16px; left: 18px; max-width: calc(100vw - 70px); font-size: .5rem; white-space: normal; }
-            .site-version { right: 18px; bottom: 16px; }
-            .credit-wash { display: block; position: fixed; right: 0; bottom: 0; left: 0; z-index: 4; height: 92px; background: linear-gradient(to bottom, transparent 0, var(--surface) 36px, var(--surface) 100%); pointer-events: none; }
+            .status-bar::before { content: ''; position: absolute; top: 0; right: 0; left: 0; z-index: 0; height: 92px; background: linear-gradient(to bottom, var(--surface) 0, var(--surface) 36px, transparent 92px); pointer-events: none; }
+            .status-bar > * { position: relative; z-index: 1; }
+            .site-credit { bottom: calc(20px + env(safe-area-inset-bottom)); left: 18px; max-width: calc(100vw - 70px); font-size: .5rem; white-space: normal; }
+            .site-version { right: 18px; bottom: calc(20px + env(safe-area-inset-bottom)); }
+            .credit-wash { display: block; position: fixed; right: 0; bottom: 0; left: 0; z-index: 4; height: calc(96px + env(safe-area-inset-bottom)); background: linear-gradient(to bottom, transparent 0, var(--surface) 36px, var(--surface) 100%); pointer-events: none; }
         }
         @media (min-width: 601px) {
             #copy-route-plain { right: calc(50% + 78px); }
@@ -1686,7 +1688,7 @@ Fullstack Product Engineer</p>
             const top = rect.top + Math.max(0, rect.height - height) * element.scrollTop / maxScroll;
             thumb.style.height = `${height}px`;
             thumb.style.top = `${top}px`;
-            thumb.style.left = `${Math.round(rect.right + 9)}px`;
+            thumb.style.left = `${Math.round(window.innerWidth <= 600 ? rect.right - 12 : rect.right + 9)}px`;
             thumb.classList.add('is-visible');
         }
         function refreshCustomScrollbars() {
