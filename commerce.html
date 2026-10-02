@@ -21,10 +21,12 @@
         body[data-theme="dark"] { --ink: #eee9e0; --muted: #ada69b; --line: rgba(221, 207, 186, .15); --blue: #d9a46a; --surface: #161718; --surface-highlight: rgba(69, 72, 76, .48); --surface-glow: rgba(128, 74, 40, .22); color-scheme: dark; }
         .theme-wash { position: fixed; inset: 0; z-index: 0; opacity: 0; pointer-events: none; transition: opacity 1.5s ease; }
         body:not(.ui-ready) .language-panel span,
-        body:not(.ui-ready) .language-panel button { visibility: hidden; }
+        body:not(.ui-ready) .language-panel button,
+        body:not(.ui-ready) .language-identity { visibility: hidden; }
         button { font: inherit; }
         .screen { position: fixed; inset: 0; display: grid; place-items: center; padding: 24px; }
-        .language-panel { display: grid; grid-template-columns: max-content max-content max-content; align-items: center; justify-content: center; column-gap: 18px; row-gap: 18px; text-align: center; }
+        .language-panel { position: relative; display: grid; grid-template-columns: max-content max-content max-content; align-items: center; justify-content: center; column-gap: 18px; row-gap: 18px; text-align: center; }
+        .language-identity { position: absolute; right: 0; bottom: calc(100% + 4px); margin: 0; color: var(--blue); font-size: .72rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; white-space: nowrap; }
         .language-prompt, .language-options { display: contents; }
         .language-prompt span:first-child, .language-option:first-child { justify-self: end; }
         .language-prompt span:last-child, .language-option:last-child { justify-self: start; }
@@ -158,6 +160,7 @@
     <main>
         <section class="screen language-screen" id="language-screen" aria-label="Language selection">
             <div class="language-panel" id="language-panel">
+                <p class="language-identity" id="language-identity">Pavel / Fullstack Product Engineer</p>
                 <div class="language-prompt" aria-hidden="true"><span data-language="en">Choose language</span><span class="divider">|</span><span data-language="ru">Выберите язык</span></div>
                 <div class="language-options">
                     <button class="language-option" type="button" data-language="en">English</button><span class="divider" aria-hidden="true">|</span><button class="language-option" type="button" data-language="ru">Русский</button>
@@ -934,7 +937,8 @@
         const languageScreen = document.getElementById('language-screen');
         const menuScreen = document.getElementById('menu-screen');
         const options = document.querySelectorAll('.language-option');
-        const languageItems = Array.from(document.querySelectorAll('.language-panel span, .language-panel button')).map((element) => [element, element.textContent]);
+        const languageIdentity = document.getElementById('language-identity');
+        const languageItems = [[languageIdentity, languageIdentity.textContent], ...Array.from(document.querySelectorAll('.language-panel span, .language-panel button')).map((element) => [element, element.textContent])];
         const topOptions = document.querySelectorAll('.top-language-option');
         const copyRouteButton = document.getElementById('copy-route');
         const copyFeedback = document.getElementById('copy-feedback');
