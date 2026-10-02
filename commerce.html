@@ -85,7 +85,8 @@
         .menu button { display: block; width: 100%; padding: 10px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; text-align: left; transition: color .35s ease; }
         .menu button:hover, .menu button:focus-visible, .menu button.is-selected { color: var(--ink); outline: none; }
         .menu button.menu-telegram { display: flex; flex-direction: column; align-items: flex-start; width: auto; margin-top: 12px; padding: 0; border: 0; color: var(--muted); font-size: .68rem; letter-spacing: -.02em; }
-        .menu button.menu-telegram .menu-title { min-height: 31px; padding: 6px 11px; border: 1px solid var(--muted); transition: color .35s ease, border-color .35s ease; }
+        .menu button.menu-telegram .menu-title { min-height: 31px; padding: 6px 11px; border: 1px solid transparent; transition: color .35s ease, border-color .35s ease; }
+        .menu button.menu-telegram .menu-title.is-outline-ready { border-color: var(--muted); }
         .menu button.menu-telegram .menu-subtitle { order: -1; margin: 0 0 8px; color: var(--ink); font-size: clamp(.67rem, 1vw, .8rem); font-weight: 600; line-height: 1.55; }
         .menu button.menu-telegram:hover .menu-title, .menu button.menu-telegram:focus-visible .menu-title { border-color: var(--ink); color: var(--ink); }
         .menu-layout { --column-gap: clamp(32px, 8vw, 112px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--column-gap); align-items: start; }
@@ -157,7 +158,8 @@
         .detail-contact-secondary { margin-top: 20px; }
         .loading-dots { display: inline-block; width: 1.7em; color: var(--ink); opacity: 0; }
         .detail-contact.is-cta-ready .loading-dots { opacity: 1; }
-        .telegram-contact { display: inline-flex; align-items: center; min-height: 31px; padding: 6px 11px; border: 1px solid var(--muted); color: var(--muted); background: transparent; cursor: pointer; font-size: .68rem; letter-spacing: -.02em; text-decoration: none; white-space: pre-wrap; transition: color .35s ease, border-color .35s ease; }
+        .telegram-contact { display: inline-flex; align-items: center; min-height: 31px; padding: 6px 11px; border: 1px solid transparent; color: var(--muted); background: transparent; cursor: pointer; font-size: .68rem; letter-spacing: -.02em; text-decoration: none; white-space: pre-wrap; transition: color .35s ease, border-color .35s ease; }
+        .telegram-contact.is-outline-ready { border-color: var(--muted); }
         .telegram-contact:hover, .telegram-contact:focus-visible { border-color: var(--ink); color: var(--ink); outline: none; }
         .solution-title, .menu-title { display: block; }
         .menu-subtitle { display: block; margin-top: 2px; font-size: clamp(.62rem, 1vw, .76rem); font-weight: 400; line-height: 1.45; letter-spacing: -.025em; }
@@ -288,7 +290,7 @@ Fullstack Product Engineer</p>
                         cta: 'Explore DreamCar in production.',
                         productName: 'DreamCar',
                         productUrl: 'https://dreamcarcy.com',
-                        contactCta: 'One message away from aligning your product',
+                        contactCta: 'Discuss your product challenge',
                         contact: 'Message on Telegram'
                     }
                 },
@@ -328,7 +330,7 @@ Fullstack Product Engineer</p>
                         cta: 'Explore Booker Library code on GitHub.',
                         productName: 'GitHub',
                         productUrl: 'https://github.com/pasha-iden/booker-library',
-                        contactCta: 'Discuss a solution for your task',
+                        contactCta: 'Discuss a similar service',
                         contact: 'Message on Telegram'
                     }
                 },
@@ -368,7 +370,7 @@ Fullstack Product Engineer</p>
                         cta: 'Изучить код Booker Library на GitHub.',
                         productName: 'GitHub',
                         productUrl: 'https://github.com/pasha-iden/booker-library',
-                        contactCta: 'Обсудить решение для вашей задачи',
+                        contactCta: 'Обсудить ваш подобный сервис',
                         contact: 'Написать в Telegram'
                     }
                 },
@@ -393,7 +395,7 @@ Fullstack Product Engineer</p>
                     },
                     outcome: {
                         title: 'Result',
-                        lead: 'A distinctive brand product that turns a physical place into a memorable digital experience and gives the audience a new reason to engage with it.',
+                        lead: 'A distinctive brand product that turns a physical place into a memorable game story and gives the audience a new reason to engage with it.',
                         effectsTitle: 'Potential business impact:',
                         effects: [
                             { title: 'Emotional connection', text: 'The game format creates a deeper interaction with the brand than a conventional advertising touchpoint.' },
@@ -407,7 +409,7 @@ Fullstack Product Engineer</p>
                         cta: 'Explore the 8-bit Adventure code on GitHub.',
                         productName: 'GitHub',
                         productUrl: 'https://github.com/pasha-iden/booker-game',
-                        contactCta: 'One message away from the start of a new game story',
+                        contactCta: 'Discuss an unconventional digital project',
                         contact: 'Message on Telegram'
                     }
                 },
@@ -432,7 +434,7 @@ Fullstack Product Engineer</p>
                     },
                     outcome: {
                         title: 'Результат',
-                        lead: 'Необычный имиджевый продукт, который превращает физическое место в запоминающийся цифровой опыт и даёт аудитории новый повод взаимодействовать с брендом.',
+                        lead: 'Необычный имиджевый продукт, который превращает физическое место в запоминающуюся игровую историю и даёт аудитории новый повод взаимодействовать с брендом.',
                         effectsTitle: 'Потенциальный эффект для бизнеса:',
                         effects: [
                             { title: 'Эмоциональная связь', text: 'Игровой формат создаёт более глубокое взаимодействие с брендом, чем традиционный рекламный контакт.' },
@@ -446,7 +448,7 @@ Fullstack Product Engineer</p>
                         cta: 'Изучить код «8-битного приключения» на GitHub.',
                         productName: 'GitHub',
                         productUrl: 'https://github.com/pasha-iden/booker-game',
-                        contactCta: 'В одном сообщении от начала новой игровой истории',
+                        contactCta: 'Обсудить нестандартный цифровой проект',
                         contact: 'Написать в Telegram'
                     }
                 },
@@ -558,7 +560,7 @@ Fullstack Product Engineer</p>
                             { title: 'Lower operating costs', text: 'Automation of enquiries, bookings, calculations and routine communications.' },
                             { title: 'Measurable marketing', text: 'Data on traffic sources, user behaviour and conversions.' }
                         ],
-                        cta: 'One message away from launching your website',
+                        cta: 'Discuss your website and goals',
                         contact: 'Message on Telegram'
                     }
                 },
@@ -597,7 +599,7 @@ Fullstack Product Engineer</p>
                             { title: 'Accumulating product data', text: 'Real data on user behaviour for future business decisions.' },
                             { title: 'Stronger customer experience', text: 'A convenient service that people are more likely to return to and recommend.' }
                         ],
-                        cta: 'One message away from the first working prototype of your idea',
+                        cta: 'Discuss an idea or existing product',
                         contact: 'Message on Telegram'
                     }
                 },
@@ -635,7 +637,7 @@ Fullstack Product Engineer</p>
                             { title: 'Lower launch cost', text: 'One product instead of separate web, iOS and Android solutions in the right scenarios.' },
                             { title: 'A direct communication channel', text: 'The ability to continue interacting with users after the first enquiry.' }
                         ],
-                        cta: 'One message away from your business behind an icon in the customer’s pocket',
+                        cta: 'Discuss a service for your audience',
                         contact: 'Message on Telegram'
                     }
                 },
@@ -672,7 +674,7 @@ Fullstack Product Engineer</p>
                             { title: 'Higher productivity', text: 'A larger volume of operations without proportional expansion of the team.' },
                             { title: 'Measurable impact', text: 'Metrics show where the workflow saves time, reduces errors and creates value.' }
                         ],
-                        cta: 'One message away from turning processes into a cutting-edge modern industry',
+                        cta: 'Find processes worth automating',
                         contact: 'Message on Telegram'
                     }
                 },
@@ -704,7 +706,7 @@ Fullstack Product Engineer</p>
                             { title: 'Development flexibility', text: 'Quickly reassessing priorities and technical direction when the product, market or available data changes.' },
                             { title: 'Fast team reinforcement', text: 'Joining development with a minimal adaptation period and taking full ownership of a defined area.' }
                         ],
-                        cta: 'One message away from an engineer you can hand a task to end-to-end',
+                        cta: 'Discuss the tasks and engagement format',
                         contact: 'Message on Telegram'
                     }
                 }
@@ -776,7 +778,7 @@ Fullstack Product Engineer</p>
                         cta: 'Изучить DreamCar в production.',
                         productName: 'DreamCar',
                         productUrl: 'https://dreamcarcy.com',
-                        contactCta: 'В одном сообщении до согласования вашего продукта',
+                        contactCta: 'Обсудить вашу продуктовую задачу',
                         contact: 'Написать в Telegram'
                     }
                 },
@@ -814,7 +816,7 @@ Fullstack Product Engineer</p>
                             { title: 'Снижение операционных затрат', text: 'Автоматизация заявок, записи, расчётов и типовых коммуникаций.' },
                             { title: 'Измеримость маркетинга', text: 'Данные об источниках трафика, поведении и конверсиях.' }
                         ],
-                        cta: 'В одном сообщении от запуска вашего сайта',
+                        cta: 'Обсудить ваш сайт и задачу',
                         contact: 'Написать в Telegram'
                     }
                 },
@@ -853,7 +855,7 @@ Fullstack Product Engineer</p>
                             { title: 'Накопление продуктовых данных', text: 'Реальные данные о поведении пользователей для принятия дальнейших бизнес-решений.' },
                             { title: 'Сильнее клиентский опыт', text: 'Удобный сервис, к которому чаще возвращаются и который рекомендуют.' }
                         ],
-                        cta: 'В одном сообщении до первого рабочего прототипа вашей идеи',
+                        cta: 'Обсудить идею или существующий продукт',
                         contact: 'Написать в Telegram'
                     }
                 },
@@ -891,7 +893,7 @@ Fullstack Product Engineer</p>
                             { title: 'Снижение стоимости запуска', text: 'Один продукт вместо отдельных web/iOS/Android-решений в подходящих сценариях.' },
                             { title: 'Прямой канал коммуникации', text: 'Возможность продолжать взаимодействие с пользователем после первого обращения.' }
                         ],
-                        cta: 'В одном сообщении до вашего бизнеса за иконкой в кармане клиента',
+                        cta: 'Обсудить сервис для вашей аудитории',
                         contact: 'Написать в Telegram'
                     }
                 },
@@ -928,7 +930,7 @@ Fullstack Product Engineer</p>
                             { title: 'Рост производительности', text: 'Больший объём операций без пропорционального расширения команды.' },
                             { title: 'Измеримый эффект', text: 'Метрики показывают, где процесс экономит время, снижает ошибки и создаёт ценность.' }
                         ],
-                        cta: 'В одном сообщении от превращения процессов в передовую современную индустрию',
+                        cta: 'Найти процессы, которые можно автоматизировать',
                         contact: 'Написать в Telegram'
                     }
                 },
@@ -960,7 +962,7 @@ Fullstack Product Engineer</p>
                             { title: 'Гибкость в разработке', text: 'Быстро пересматриваю приоритеты и технический курс при изменении продукта, рынка или получении новых данных.' },
                             { title: 'Быстрое усиление команды', text: 'Подключаюсь к разработке с минимальным периодом адаптации и беру полноценную зону ответственности.' }
                         ],
-                        cta: 'В одном сообщении от инженера, которому можно передать задачу целиком',
+                        cta: 'Обсудить задачи и формат подключения',
                         contact: 'Написать в Telegram'
                     }
                 }
@@ -1014,6 +1016,7 @@ Fullstack Product Engineer</p>
             textAnimationJobs.set(element, job);
             glitchAnimationJobs.set(element, (glitchAnimationJobs.get(element) || 0) + 1);
             delete element.dataset.glitching;
+            if (element.matches?.('.telegram-contact, .menu button.menu-telegram .menu-title')) element.classList.remove('is-outline-ready');
             return job;
         }
         function isCurrentTextAnimation(element, job) {
@@ -1026,6 +1029,14 @@ Fullstack Product Engineer</p>
         }
         function isCurrentGlitchAnimation(element, job) {
             return glitchAnimationJobs.get(element) === job;
+        }
+        function revealLinkOutline(element, job) {
+            if (!element.matches?.('.telegram-contact, .menu button.menu-telegram .menu-title')) return;
+            requestAnimationFrame(() => {
+                if (isCurrentTextAnimation(element, job) && element.dataset.isLeaving !== 'true') {
+                    element.classList.add('is-outline-ready');
+                }
+            });
         }
         function trackAnimation(promise) {
             return Promise.resolve(promise);
@@ -1631,6 +1642,7 @@ Fullstack Product Engineer</p>
         function scrambleText(element, text, job) {
             const characters = Array.from(text);
             delete element.dataset.isLeaving;
+            revealLinkOutline(element, job);
             if (!characters.length) {
                 element.textContent = '';
                 element.dataset.glitchText = '';
@@ -1728,6 +1740,7 @@ Fullstack Product Engineer</p>
             const from = Array.from(fromText);
             const to = Array.from(toText);
             delete element.dataset.isLeaving;
+            revealLinkOutline(element, job);
             const length = Math.max(from.length, to.length);
             if (!length) {
                 element.textContent = '';
