@@ -107,6 +107,15 @@
         .detail-effects-title, .detail-stack-title { margin: 22px 0 0; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
         .detail-stack { margin: 5px 0 0; color: var(--muted); font-size: .68rem; line-height: 1.55; letter-spacing: -.02em; white-space: nowrap; }
         .detail-stack + .detail-stack { margin-top: 2px; }
+        .detail-personal-column { display: flex; flex-direction: column; gap: 30px; }
+        .personal-project { min-width: 0; }
+        .personal-project-kicker { margin: 0 0 7px; color: var(--blue); font-size: .62rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+        .personal-project-title { margin: 0; color: var(--ink); font-size: clamp(.82rem, 1.25vw, 1rem); font-weight: 600; line-height: 1.35; letter-spacing: -.035em; }
+        .personal-project-subtitle { margin: 4px 0 0; color: var(--muted); font-size: .65rem; line-height: 1.45; letter-spacing: -.025em; }
+        .personal-project-description { margin: 11px 0 0; color: var(--muted); font-size: .67rem; line-height: 1.55; letter-spacing: -.025em; }
+        .personal-project-stack-title { margin: 12px 0 0; color: var(--ink); font-size: .64rem; font-weight: 600; letter-spacing: -.02em; }
+        .personal-project-stack { margin: 4px 0 0; color: var(--muted); font-size: .64rem; line-height: 1.5; letter-spacing: -.02em; }
+        .personal-project-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .detail-contact { margin-top: 26px; padding-bottom: 4px; }
         .detail-project-contact { margin-top: 14px; }
         .detail-cta { margin: 0 0 9px; color: var(--ink); font-size: clamp(.67rem, 1vw, .8rem); font-weight: 600; line-height: 1.55; letter-spacing: -.025em; }
@@ -285,6 +294,158 @@
                         contactCta: 'Обсудить решение для вашей задачи',
                         contact: 'Написать в Telegram'
                     }
+                },
+                adventure: {
+                    kicker: '8-bit Adventure',
+                    title: 'A video game demo about a local coffee shop',
+                    lead: 'A 2D game demo built on a custom game engine, about a place dear to the city.',
+                    milestones: [{ value: 'Indie Game', caption: 'Developer' }, { value: 'Demo version', caption: 'Project closed' }, { value: '2D Game', caption: '4,000 LOC' }],
+                    package: {
+                        baseTitle: 'Engineering solutions:',
+                        items: [
+                            { title: 'Custom game engine', text: 'A self-built update, render and input loop with explicit states for menus, scenes, cutscenes, dialogue and gameplay.' },
+                            { title: 'World & scenes', text: 'A multi-room coffee shop world with map composition, scene transitions, fade effects and layered rendering.' },
+                            { title: 'Characters & interactions', text: 'Player movement, story characters, visitors, collision zones, interactive objects and navigation scenarios.' },
+                            { title: 'Barista mini-game', text: 'Order queue, guest states, timers, scoring, scripted onboarding and service mechanics built into the core game flow.' },
+                            { title: 'Narrative systems', text: 'Acts, dialogue, scripted events and cutscenes that connect the playable experience into a single story.' },
+                            { title: 'Visual & audio layer', text: 'Pixel-art assets, custom fonts, music, video intro and post-processing effects integrated into the game runtime.' },
+                            { title: 'Sense of place', text: 'The real coffee shop is translated into a digital setting through its space, characters, visual language and story.' }
+                        ],
+                        extrasTitle: '',
+                        extras: []
+                    },
+                    outcome: {
+                        title: 'Result',
+                        lead: 'A distinctive brand product that turns a physical place into a memorable digital experience and gives the audience a new reason to engage with it.',
+                        effectsTitle: 'Potential business impact:',
+                        effects: [
+                            { title: 'Emotional connection', text: 'The game format creates a deeper interaction with the brand than a conventional advertising touchpoint.' },
+                            { title: 'Higher engagement', text: 'People spend time inside a branded digital experience rather than simply consuming content.' },
+                            { title: 'Stronger identity', text: 'The visual style, atmosphere and familiar space shape a recognisable digital image of the brand.' },
+                            { title: 'Organic sharing', text: 'An unusual format creates its own newsworthy hook and content people want to share.' },
+                            { title: 'A new communication format', text: 'Game mechanics open space for future promotions, events, rewards and other audience interaction scenarios.' }
+                        ],
+                        stackTitle: 'Stack:',
+                        stack: ['Python', 'Pygame', 'Pillow', 'MoviePy', 'Custom Game Engine', 'Data-Driven Design', 'AI (Pathfinding, Behavioral Trees)', 'State Machines', '2D Rendering Pipeline (Z-ordering, Post-Effects)', 'OOP', 'event-driven architecture'],
+                        cta: 'Explore the 8-bit Adventure code on GitHub.',
+                        productName: 'GitHub',
+                        productUrl: 'https://github.com/pasha-iden/booker-game',
+                        contactCta: 'One message away from the start of a new game story',
+                        contact: 'Message on Telegram'
+                    }
+                },
+                adventureRu: {
+                    kicker: '«8-битное приключение»',
+                    title: 'Демоверсия видеоигры про локальную кофейню',
+                    lead: '2D видеоигра на стадии демо-версии на самописном игровом движке о дорогом городу месте.',
+                    milestones: [{ value: 'Indie Game', caption: 'Developer' }, { value: 'Демо-версия', caption: 'Проект свёрнут' }, { value: 'Видеоигра', caption: '4000 LOC' }],
+                    package: {
+                        baseTitle: 'Инженерные решения:',
+                        items: [
+                            { title: 'Самописный игровой движок', text: 'Собственный цикл обновления, рендеринга и обработки ввода с явными состояниями меню, сцен, катсцен, диалогов и геймплея.' },
+                            { title: 'Мир и сцены', text: 'Многоэкранное пространство кофейни: композиция карт, переходы между комнатами, fade-эффекты и послойный рендеринг.' },
+                            { title: 'Персонажи и интерактивы', text: 'Перемещение игрока, сценарные персонажи и посетители, зоны коллизий, интерактивные объекты и навигационные сценарии.' },
+                            { title: 'Мини-игра бариста', text: 'Очередь заказов, состояния гостей, таймеры, подсчёт результата, сценарное обучение и механика обслуживания внутри основного игрового цикла.' },
+                            { title: 'Сюжетные системы', text: 'Акты, диалоги, сценарные события и катсцены, которые связывают игровой опыт в единую историю.' },
+                            { title: 'Визуальный и звуковой слой', text: 'Пиксельные ассеты, собственные шрифты, музыка, видеоинтро и пост-эффекты, встроенные в рантайм игры.' },
+                            { title: 'Передача духа места', text: 'Реальная кофейня переведена в цифровое пространство через её атмосферу, персонажей, визуальный язык и историю.' }
+                        ],
+                        extrasTitle: '',
+                        extras: []
+                    },
+                    outcome: {
+                        title: 'Результат',
+                        lead: 'Необычный имиджевый продукт, который превращает физическое место в запоминающийся цифровой опыт и даёт аудитории новый повод взаимодействовать с брендом.',
+                        effectsTitle: 'Потенциальный эффект для бизнеса:',
+                        effects: [
+                            { title: 'Эмоциональная связь', text: 'Игровой формат создаёт более глубокое взаимодействие с брендом, чем традиционный рекламный контакт.' },
+                            { title: 'Рост вовлечённости', text: 'Пользователь проводит время внутри брендированного цифрового опыта, а не просто просматривает контент.' },
+                            { title: 'Усиление идентичности', text: 'Визуальный стиль, атмосфера и знакомое пространство формируют узнаваемый цифровой образ бренда.' },
+                            { title: 'Органическое распространение', text: 'Необычный формат создаёт самостоятельный информационный повод и контент, которым хочется делиться.' },
+                            { title: 'Новый формат коммуникации', text: 'Игровая механика открывает пространство для дальнейших промоакций, событий, наград и других сценариев взаимодействия с аудиторией.' }
+                        ],
+                        stackTitle: 'Стек:',
+                        stack: ['Python', 'Pygame', 'Pillow', 'MoviePy', 'Custom Game Engine', 'Data-Driven Design', 'AI (Pathfinding, Behavioral Trees)', 'State Machines', '2D Rendering Pipeline (Z-ordering, Post-Effects)', 'OOP', 'event-driven architecture'],
+                        cta: 'Изучить код «8-битного приключения» на GitHub.',
+                        productName: 'GitHub',
+                        productUrl: 'https://github.com/pasha-iden/booker-game',
+                        contactCta: 'В одном сообщении от начала новой игровой истории',
+                        contact: 'Написать в Telegram'
+                    }
+                },
+                personal: {
+                    projects: [
+                        {
+                            name: 'Literature List v2.0',
+                            title: 'Refactoring a first web project',
+                            subtitle: 'From a learning project to a tested service with CI/CD.',
+                            description: 'A more mature iteration of my first application for tracking books I have read. Management moved from a Telegram bot to Google Sheets, while the service turns source data into a structured web catalogue. The refactor was a practical way to learn the full delivery cycle: tests, linters, containerisation and automatic deployment through GitHub Actions.',
+                            stack: 'Python · Flask · HTML · Google Sheets · Jinja · pytest · Docker · GitHub Actions · GHCR',
+                            url: 'https://github.com/pasha-iden/literature-list-2.0'
+                        },
+                        {
+                            name: 'Overlay Render',
+                            title: 'Visual renderer for original music',
+                            subtitle: 'A data-driven video overlay for a track created on Teenage Engineering EP-133 K.O. II.',
+                            description: 'A creative tool that renders animated text, a sequencer visualisation and graphic effects over a source video. Configuration describes the sequence and timing, allowing the visual language to follow the rhythm of a particular track. The pipeline works both as an interactive preview and as an export renderer with audio processing.',
+                            stack: 'Python · Pygame · OpenCV · NumPy · MoviePy · FFmpeg · data-driven configuration',
+                            url: 'https://github.com/pasha-iden/ep133-overlay-vol-1',
+                            videoUrl: 'https://youtu.be/iA8bkf65opI'
+                        },
+                        {
+                            name: 'YanWeather',
+                            title: 'Weather data for a winery',
+                            subtitle: 'A Telegram bot that turns weather APIs into reports for a specific operational task.',
+                            description: 'Built for a winery manager who needed weather information in a particular format and for fixed coordinates. The bot provides daily forecasts, factual readings and historical reports in XLSX and PDF, then sends scheduled updates automatically. It is packaged and deployed as a small independent service with a CI/CD pipeline.',
+                            stack: 'Python · asyncio · aiogram · Open-Meteo API · OpenPyXL · ReportLab · Docker · GitHub Actions',
+                            url: 'https://github.com/pasha-iden/yan-weather'
+                        },
+                        {
+                            name: 'Physical Computing Sessions',
+                            title: 'Code that touches the physical world',
+                            subtitle: 'An ongoing hands-on study of chips, interfaces and electronics controlled through code.',
+                            description: 'A series of practical sessions around FT232H and low-level device configuration. I work through firmware flashing, drivers, pin conversion and Python communication with connected hardware. This is an active learning laboratory rather than a finished product.',
+                            stack: 'Python · pyusb · pyftdi · FT232H · PCA9685 (PWM) · MCP3008 (ADC) · libusbK · hardware interfaces',
+                            url: 'https://github.com/pasha-iden/physical-computing-sessions'
+                        }
+                    ]
+                },
+                personalRu: {
+                    projects: [
+                        {
+                            name: 'Literature List v2.0',
+                            title: 'Рефактор первого учебного проекта',
+                            subtitle: 'От учебного приложения к тестируемому сервису с CI/CD.',
+                            description: 'Более зрелая версия моего первого приложения для учёта прочитанной литературы. Управление перенесено из Telegram-бота в Google Sheets, а сервис преобразует исходные данные в структурированный web-каталог. Рефактор стал практикой полного цикла поставки: тесты, линтеры, контейнеризация и автоматический деплой через GitHub Actions.',
+                            stack: 'Python · Flask · HTML · Google Sheets · Jinja · pytest · Docker · GitHub Actions · GHCR',
+                            url: 'https://github.com/pasha-iden/literature-list-2.0'
+                        },
+                        {
+                            name: 'Overlay Render',
+                            title: 'Визуальный рендер для авторской музыки',
+                            subtitle: 'Data-driven видеооверлей для трека, написанного на Teenage Engineering EP-133 K.O. II.',
+                            description: 'Творческий инструмент, который рендерит поверх исходного видео анимированный текст, визуализацию секвенсора и графические эффекты. Конфигурация описывает последовательность и тайминг, позволяя визуальному языку следовать за ритмом конкретного трека. Пайплайн работает и как интерактивный preview, и как экспортный рендер со звуковой обработкой.',
+                            stack: 'Python · Pygame · OpenCV · NumPy · MoviePy · FFmpeg · data-driven configuration',
+                            url: 'https://github.com/pasha-iden/ep133-overlay-vol-1',
+                            videoUrl: 'https://youtu.be/iA8bkf65opI'
+                        },
+                        {
+                            name: 'YanWeather',
+                            title: 'Погодные данные для винодельни',
+                            subtitle: 'Telegram-бот, который превращает погодные API в отчёты под конкретную операционную задачу.',
+                            description: 'Сделан для руководителя винодельни, которому нужны погодные данные в заданном формате и для фиксированных координат. Бот формирует прогнозы, фактические данные и исторические отчёты в XLSX и PDF, а затем автоматически отправляет ежедневные обновления. Сервис упакован и развёрнут как самостоятельный продукт с CI/CD-пайплайном.',
+                            stack: 'Python · asyncio · aiogram · Open-Meteo API · OpenPyXL · ReportLab · Docker · GitHub Actions',
+                            url: 'https://github.com/pasha-iden/yan-weather'
+                        },
+                        {
+                            name: 'Physical Computing Sessions',
+                            title: 'Код, который взаимодействует с физическим миром',
+                            subtitle: 'Текущее практическое изучение чипов, интерфейсов и электроники, управляемой через код.',
+                            description: 'Серия практических сессий вокруг FT232H и низкоуровневой настройки устройств. Изучаю прошивку, драйверы, преобразование пинов и взаимодействие Python с подключённым оборудованием. Это активная учебная лаборатория, а не законченный продукт.',
+                            stack: 'Python · pyusb · pyftdi · FT232H · PCA9685 (ШИМ) · MCP3008 (АЦП) · libusbK · hardware interfaces',
+                            url: 'https://github.com/pasha-iden/physical-computing-sessions'
+                        }
+                    ]
                 },
                 landing: {
                     kicker: 'Landing pages & SEO sites',
@@ -724,6 +885,10 @@
         };
         copy.ru.booker = copy.en.bookerRu;
         delete copy.en.bookerRu;
+        copy.ru.adventure = copy.en.adventureRu;
+        delete copy.en.adventureRu;
+        copy.ru.personal = copy.en.personalRu;
+        delete copy.en.personalRu;
         const panel = document.getElementById('language-panel');
         const languageScreen = document.getElementById('language-screen');
         const menuScreen = document.getElementById('menu-screen');
@@ -1170,7 +1335,7 @@
             return [copy[currentLanguage].landing, copy[currentLanguage].saas, copy[currentLanguage].messenger, copy[currentLanguage].ai, copy[currentLanguage].team][index] || null;
         }
         function getCaseDetail(index) {
-            return [copy[currentLanguage].dreamcar, copy[currentLanguage].booker][index] || null;
+            return [copy[currentLanguage].dreamcar, copy[currentLanguage].booker, copy[currentLanguage].adventure, copy[currentLanguage].personal][index] || null;
         }
         function getActiveDetail() {
             if (selectedSection === 'section-0') return getSolutionDetail(selectedSolution);
@@ -1206,6 +1371,10 @@
             backButton.classList.toggle('is-visible', isLandingOpen);
             if (!isLandingOpen) { detailPanel.innerHTML = ''; requestAnimationFrame(refreshCustomScrollbars); return; }
             const landing = detail;
+            if (landing.projects) {
+                renderPersonalProjects(landing, job, preserveDetailContent);
+                return;
+            }
             if (preserveDetailContent && detailPanel.querySelector('.detail-current')) {
                 requestAnimationFrame(refreshCustomScrollbars);
                 trackAnimation(revealLanding(landing, job).then((result) => {
@@ -1426,6 +1595,35 @@
                 return element;
             }));
         }
+        function renderPersonalProjects(personal, job, preserveDetailContent = false) {
+            if (!preserveDetailContent || !detailPanel.querySelector('.personal-project') || (personal.projects.some((project) => project.videoUrl) && !detailPanel.querySelector('.personal-project-video-link'))) {
+                const projectMarkup = (project) => `<article class="personal-project"><p class="personal-project-kicker"></p><h2 class="personal-project-title"></h2><p class="personal-project-subtitle"></p><p class="personal-project-description"></p><p class="personal-project-stack-title"></p><p class="personal-project-stack"></p><div class="personal-project-links"><a class="telegram-contact personal-project-link" href="${project.url}" target="_blank" rel="noopener noreferrer"></a>${project.videoUrl ? `<a class="telegram-contact personal-project-video-link" href="${project.videoUrl}" target="_blank" rel="noopener noreferrer"></a>` : ''}</div></article>`;
+                const splitIndex = Math.ceil(personal.projects.length / 2);
+                detailPanel.innerHTML = `<div class="detail-current detail-personal-column">${personal.projects.slice(0, splitIndex).map(projectMarkup).join('')}</div><div class="detail-next detail-personal-column" aria-live="polite">${personal.projects.slice(splitIndex).map(projectMarkup).join('')}</div>`;
+            }
+            requestAnimationFrame(refreshCustomScrollbars);
+            trackAnimation(revealPersonalProjects(personal, job).then((result) => {
+                requestAnimationFrame(refreshCustomScrollbars);
+                return result;
+            }));
+        }
+        function revealPersonalProjects(personal, job) {
+            const items = [];
+            detailPanel.querySelectorAll('.personal-project').forEach((element, index) => {
+                const project = personal.projects[index];
+                items.push(
+                    [element.querySelector('.personal-project-kicker'), project.name],
+                    [element.querySelector('.personal-project-title'), project.title],
+                    [element.querySelector('.personal-project-subtitle'), project.subtitle],
+                    [element.querySelector('.personal-project-description'), project.description],
+                    [element.querySelector('.personal-project-stack-title'), currentLanguage === 'ru' ? 'Стек:' : 'Stack:'],
+                    [element.querySelector('.personal-project-stack'), project.stack],
+                    [element.querySelector('.personal-project-link'), 'GitHub']
+                );
+                if (project.videoUrl) items.push([element.querySelector('.personal-project-video-link'), 'YouTube']);
+            });
+            return revealSequence(items, job);
+        }
         function getOptionsScreenText() {
             return [
                 ...getTextItems('#menu-eyebrow, #menu-title'),
@@ -1434,7 +1632,7 @@
             ];
         }
         function getDetailScreenText() {
-            return getTextItems('.detail-kicker, .detail-title, .detail-lead, .timeline-value, .timeline-caption, .detail-package-title, .detail-extras-title, .detail-package strong, .detail-package span, .detail-result-lead, .detail-effects-title, .detail-effects strong, .detail-effects span, .detail-stack-title, .detail-stack, .detail-cta-text, .detail-contact-cta-text, .telegram-contact', detailPanel);
+            return getTextItems('.detail-kicker, .detail-title, .detail-lead, .timeline-value, .timeline-caption, .detail-package-title, .detail-extras-title, .detail-package strong, .detail-package span, .detail-result-lead, .detail-effects-title, .detail-effects strong, .detail-effects span, .detail-stack-title, .detail-stack, .detail-cta-text, .detail-contact-cta-text, .telegram-contact, .personal-project-kicker, .personal-project-title, .personal-project-subtitle, .personal-project-description, .personal-project-stack-title, .personal-project-stack', detailPanel);
         }
         function prepareTextForReveal(items) {
             items.forEach(([element]) => {
