@@ -127,7 +127,7 @@
         .menu button.menu-telegram { display: flex; flex-direction: column; align-items: flex-start; width: auto; margin-top: 12px; padding: 0; border: 0; color: var(--muted); font-size: .68rem; letter-spacing: -.02em; }
         .menu button.menu-telegram .menu-title { min-height: 31px; padding: 6px 11px; border: 1px solid transparent; transition: color .35s ease, border-color .35s ease; }
         .menu button.menu-telegram .menu-title.is-outline-ready { border-color: var(--muted); }
-        .menu button.menu-telegram .menu-subtitle { order: -1; margin: 0 0 8px; color: var(--ink); font-size: clamp(.67rem, 1vw, .8rem); font-weight: 600; line-height: 1.55; }
+        .menu button.menu-telegram .menu-subtitle { order: -1; margin: 0 0 8px; color: var(--ink); font-size: clamp(.67rem, 1vw, .8rem); font-weight: 600; line-height: 1.55; cursor: default; }
         .menu button.menu-telegram:hover .menu-title, .menu button.menu-telegram:focus-visible .menu-title { border-color: var(--ink); color: var(--ink); }
         .menu-layout { --column-gap: clamp(32px, 8vw, 112px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--column-gap); align-items: start; }
         .menu-layout > nav { grid-column: 1; grid-row: 1; min-width: 0; transition: opacity .35s ease, transform .5s ease; }
@@ -1375,6 +1375,21 @@ Fullstack Product Engineer</p>
             params.set('theme', document.body.dataset.theme === 'dark' ? 'dark' : 'light');
             window.history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`);
         }
+        function clearMenuForFreshReveal() {
+            const elements = [
+                document.getElementById('menu-eyebrow'),
+                document.getElementById('menu-title'),
+                ...menu.querySelectorAll('.menu-title, .menu-subtitle'),
+                ...solutionList.querySelectorAll('.solution-title, .solution-subtitle, .competency-stack-line')
+            ];
+            elements.forEach((element) => {
+                startTextAnimation(element);
+                delete element.dataset.glitchText;
+                delete element.dataset.isLeaving;
+                element.textContent = '';
+                element.style.opacity = '1';
+            });
+        }
         function returnToLanguageSelection() {
             if (backTransitionActive) return;
             backTransitionActive = true;
@@ -1392,6 +1407,7 @@ Fullstack Product Engineer</p>
                 selectedApproach = null;
                 renderMenu(false);
                 renderSolutionsList(null);
+                clearMenuForFreshReveal();
                 solutionList.classList.remove('is-open', 'is-scrollable');
                 menuPanel.classList.remove('is-suboptions-open', 'is-detail-open');
                 detailPanel.classList.remove('is-open');
@@ -2310,6 +2326,7 @@ Fullstack Product Engineer</p>
             const button = event.target.closest('button[data-section]');
             if (button) runInteraction(() => selectSection(button.dataset.section));
             const telegramButton = event.target.closest('button[data-telegram]');
+            if (telegramButton && event.target.closest('.menu-subtitle')) return;
             if (telegramButton) window.open('https://t.me/pasha_iden', '_blank', 'noopener');
         });
         solutionList.addEventListener('click', (event) => {
