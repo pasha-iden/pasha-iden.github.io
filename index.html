@@ -1390,6 +1390,15 @@ Fullstack Product Engineer</p>
                 element.style.opacity = '1';
             });
         }
+        function clearSuboptionsForFreshReveal() {
+            solutionList.querySelectorAll('.solution-title, .solution-subtitle, .competency-stack-line').forEach((element) => {
+                startTextAnimation(element);
+                delete element.dataset.glitchText;
+                delete element.dataset.isLeaving;
+                element.textContent = '';
+                element.style.opacity = '1';
+            });
+        }
         function returnToLanguageSelection() {
             if (backTransitionActive) return;
             backTransitionActive = true;
@@ -1464,7 +1473,9 @@ Fullstack Product Engineer</p>
                 selectedCompetency = null;
                 selectedApproach = null;
                 renderMenu(false);
+                clearMenuForFreshReveal();
                 renderSolutionsList(null);
+                clearSuboptionsForFreshReveal();
                 solutionList.classList.remove('is-open', 'is-scrollable');
                 menuPanel.classList.remove('is-suboptions-open');
                 updateDetail(job);
