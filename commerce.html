@@ -53,9 +53,9 @@
         .copy-feedback { position: absolute; top: 33px; right: calc(50% + clamp(42px, 4.5vw, 51px) + 26px); color: var(--ink); font-size: .62rem; font-weight: 600; letter-spacing: -.02em; opacity: 0; pointer-events: none; transform: translateX(4px); transition: opacity .35s ease, transform .35s ease; white-space: nowrap; }
         .copy-feedback.is-visible { opacity: 1; transform: translateX(0); }
         .theme-toggle { position: absolute; top: 32px; left: calc(50% + clamp(42px, 4.5vw, 51px)); width: 34px; height: 18px; padding: 0; border: 2px solid var(--muted); border-radius: 999px; background: transparent; cursor: pointer; transition: border-color .35s ease; }
-        .theme-toggle::after { content: ''; position: absolute; top: 50%; left: 1px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); transform: translateY(-50%); transition: transform .35s ease, background-color .35s ease; }
+        .theme-toggle::after { content: ''; position: absolute; top: 50%; left: 1px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); transform: translate(16px, -50%); transition: transform .35s ease, background-color .35s ease; }
         body[data-theme="dark"] .theme-toggle { border-color: var(--muted); background: transparent; }
-        body[data-theme="dark"] .theme-toggle::after { background: var(--ink); transform: translate(16px, -50%); }
+        body[data-theme="dark"] .theme-toggle::after { background: var(--ink); transform: translateY(-50%); }
         .theme-toggle:hover, .theme-toggle:focus-visible { border-color: var(--ink); outline: none; }
         body[data-theme="dark"] .theme-toggle:hover, body[data-theme="dark"] .theme-toggle:focus-visible { border-color: var(--ink); }
         .github-link { position: absolute; top: 32px; left: calc(50% + clamp(42px, 4.5vw, 51px) + 50px); display: grid; width: 20px; height: 20px; place-items: center; color: var(--muted); text-decoration: none; transition: color .35s ease; }
