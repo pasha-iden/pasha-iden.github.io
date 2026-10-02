@@ -42,6 +42,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link id="favicon" rel="icon" type="image/svg+xml" href="assets/favicon/light-03-p-slash.svg">
     <style>
         :root { --ink: #10141d; --muted: #919baa; --line: rgba(44, 62, 92, .14); --blue: #6d91ff; --surface: #edf5ff; --surface-highlight: rgba(255, 255, 255, .95); --surface-glow: rgba(153, 203, 255, .32); }
         * { box-sizing: border-box; }
@@ -1037,6 +1038,7 @@ Fullstack Product Engineer</p>
         const copyRouteButton = document.getElementById('copy-route');
         const copyFeedback = document.getElementById('copy-feedback');
         const themeToggle = document.getElementById('theme-toggle');
+        let faviconLink = document.getElementById('favicon');
         const themeWash = document.getElementById('theme-wash');
         const menu = document.getElementById('menu');
         const solutionList = document.getElementById('solution-list');
@@ -1057,6 +1059,9 @@ Fullstack Product Engineer</p>
         let competencyTransition = 0;
         let backTransitionActive = false;
         let copyFeedbackTimer = 0;
+        let faviconFrame = 2;
+        let faviconRevision = 0;
+        const faviconGlyphs = [['>', '_'], ['/', '>'], ['P', '/'], ['P', '>'], ['P', '#']];
         const textAnimationJobs = new WeakMap();
         const glitchAnimationJobs = new WeakMap();
         const sectionKeys = ['solutions', 'cases', 'skills', 'about', 'contact'];
@@ -1095,9 +1100,62 @@ Fullstack Product Engineer</p>
         function runInteraction(interaction) {
             interaction();
         }
+        function setFaviconFrame(frame) {
+            faviconFrame = frame;
+            const theme = document.body.dataset.theme === 'dark' ? 'dark' : 'light';
+            const colors = theme === 'dark'
+                ? { background: '#161718', ink: '#EEE9E0', accent: '#D9A46A' }
+                : { background: '#EDF5FF', ink: '#10141D', accent: '#6D91FF' };
+            const escapeGlyph = (glyph) => glyph === '>' ? '&gt;' : glyph;
+            const [firstGlyph, secondGlyph] = faviconGlyphs[frame];
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="${colors.background}"/><text x="7" y="43" fill="${colors.ink}" font-family="JetBrains Mono,monospace" font-size="34" font-weight="700">${escapeGlyph(firstGlyph)}</text><text x="31" y="43" fill="${colors.accent}" font-family="JetBrains Mono,monospace" font-size="34" font-weight="700">${escapeGlyph(secondGlyph)}</text></svg>`;
+            faviconLink.href = `data:image/svg+xml,${encodeURIComponent(svg)}#${++faviconRevision}`;
+        }
+        function randomFaviconFrame(frames, except = []) {
+            const available = frames.filter((frame) => !except.includes(frame));
+            return available[Math.floor(Math.random() * available.length)];
+        }
+        function setRandomStableFavicon() {
+            setFaviconFrame(randomFaviconFrame([2, 3, 4]));
+        }
+        function playFaviconSequence(frames, interval, done) {
+            let index = 0;
+            const showNextFrame = () => {
+                setFaviconFrame(frames[index]);
+                index += 1;
+                if (index < frames.length) {
+                    window.setTimeout(showNextFrame, interval);
+                    return;
+                }
+                window.setTimeout(done, interval);
+            };
+            showNextFrame();
+        }
+        function scheduleFaviconAnimation() {
+            const delay = 1500 + Math.floor(Math.random() * 1200);
+            const tick = 85;
+            window.setTimeout(() => {
+                if (Math.random() < .38) {
+                    playFaviconSequence([0, 1, 2, 3, 4], tick, () => {
+                        setRandomStableFavicon();
+                        scheduleFaviconAnimation();
+                    });
+                    return;
+                }
+                const stableFrame = faviconFrame;
+                const glitchFrame = randomFaviconFrame([0, 1, 2, 3, 4], [stableFrame]);
+                setFaviconFrame(glitchFrame);
+                const flickerTick = tick;
+                window.setTimeout(() => {
+                    setFaviconFrame(stableFrame);
+                    scheduleFaviconAnimation();
+                }, flickerTick);
+            }, delay);
+        }
         function setTheme(theme, persist = true) {
             const isDark = theme === 'dark';
             document.body.dataset.theme = isDark ? 'dark' : 'light';
+            setFaviconFrame(faviconFrame);
             themeToggle.textContent = '';
             themeToggle.setAttribute('aria-pressed', String(isDark));
             themeToggle.setAttribute('aria-label', isDark ? 'Enable light theme' : 'Enable dark theme');
@@ -2321,6 +2379,8 @@ Fullstack Product Engineer</p>
             }
             document.fonts?.ready.then(() => positionSolutionsList());
             startGlitchLoop();
+            setRandomStableFavicon();
+            scheduleFaviconAnimation();
         });
     </script>
 </body>
