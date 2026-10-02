@@ -215,7 +215,7 @@
         @media (orientation: portrait) {
             .menu-panel { width: min(640px, 100%); }
             .menu-layout { display: block; }
-            .back-button { top: 28px; left: 19px; width: 18px; height: 24px; z-index: 2; transform: none; }
+            .back-button { top: 29px; left: 19px; width: 18px; height: 24px; z-index: 11; transform: none; }
             .back-button::before, .back-button::after { top: 11px; width: 14px; }
             .menu-panel.is-suboptions-open > .eyebrow,
             .menu-panel.is-suboptions-open > h1,
@@ -243,9 +243,9 @@
         @media (max-width: 600px) {
             .status-bar::before { content: ''; position: absolute; top: 0; right: 0; left: 0; z-index: 0; height: 92px; background: linear-gradient(to bottom, var(--surface) 0, var(--surface) 36px, transparent 92px); pointer-events: none; }
             .status-bar > * { z-index: 1; }
-            .site-credit { bottom: calc(20px + env(safe-area-inset-bottom)); left: 18px; max-width: calc(100vw - 70px); font-size: .5rem; white-space: normal; }
-            .site-version { right: 18px; bottom: calc(20px + env(safe-area-inset-bottom)); }
-            .credit-wash { display: block; position: fixed; right: 0; bottom: 0; left: 0; z-index: 4; height: calc(96px + env(safe-area-inset-bottom)); background: linear-gradient(to bottom, transparent 0, var(--surface) 36px, var(--surface) 100%); pointer-events: none; }
+            .site-credit { bottom: calc(21px + env(safe-area-inset-bottom)); left: 18px; max-width: calc(100vw - 70px); font-size: .5rem; white-space: normal; }
+            .site-version { right: 18px; bottom: calc(21px + env(safe-area-inset-bottom)); }
+            .credit-wash { display: block; position: fixed; right: 0; bottom: 0; left: 0; z-index: 4; height: calc(97px + env(safe-area-inset-bottom)); background: linear-gradient(to bottom, transparent 0, var(--surface) 36px, var(--surface) 100%); pointer-events: none; }
         }
         @media (min-width: 601px) {
             #copy-route-plain { right: calc(50% + 78px); }
@@ -255,16 +255,6 @@
 </head>
 <body>
     <main>
-        <div class="status-bar" id="status-bar">
-            <div class="top-language-switch" aria-label="Language switcher">
-                <button class="top-language-option" type="button" data-language="en">EN</button><span class="divider" aria-hidden="true">|</span><button class="top-language-option" type="button" data-language="ru">RU</button>
-            </div>
-            <button class="copy-route" id="copy-route-plain" type="button" aria-label="Copy page link"></button>
-            <button class="copy-route" id="copy-route" type="button" aria-label="Copy current link"></button>
-            <span class="copy-feedback" id="copy-feedback" aria-live="polite"></span>
-            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Enable dark theme" aria-pressed="false"></button>
-            <a class="github-link" href="https://github.com/pasha-iden" target="_blank" rel="noopener noreferrer" aria-label="Open Pavel's GitHub profile"><svg viewBox="-1 -1 26 26" aria-hidden="true"><path d="M12 .297C5.373.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.73.083-.73 1.205.084 1.838 1.237 1.838 1.237 1.07 1.835 2.809 1.304 3.495.998.108-.776.418-1.305.762-1.605-2.665-.305-5.467-1.332-5.467-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.62-5.475 5.92.43.37.815 1.096.815 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297 24 5.67 18.627.297 12 .297Z"/></svg></a>
-        </div>
         <section class="screen language-screen" id="language-screen" aria-label="Language selection">
             <div class="language-panel" id="language-panel">
                 <p class="language-identity" id="language-identity">PAVEL /
@@ -280,6 +270,16 @@ Fullstack Product Engineer</p>
             <div class="menu-panel" id="menu-panel"><p class="eyebrow" id="menu-eyebrow"></p><h1 id="menu-title"></h1><div class="menu-layout"><nav><ul class="menu" id="menu"></ul></nav><ul class="solution-list" id="solution-list" aria-live="polite"></ul><aside class="detail-panel" id="detail-panel" aria-live="polite"></aside></div></div>
         </section>
     </main>
+    <div class="status-bar" id="status-bar">
+        <div class="top-language-switch" aria-label="Language switcher">
+            <button class="top-language-option" type="button" data-language="en">EN</button><span class="divider" aria-hidden="true">|</span><button class="top-language-option" type="button" data-language="ru">RU</button>
+        </div>
+        <button class="copy-route" id="copy-route-plain" type="button" aria-label="Copy page link"></button>
+        <button class="copy-route" id="copy-route" type="button" aria-label="Copy current link"></button>
+        <span class="copy-feedback" id="copy-feedback" aria-live="polite"></span>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Enable dark theme" aria-pressed="false"></button>
+        <a class="github-link" href="https://github.com/pasha-iden" target="_blank" rel="noopener noreferrer" aria-label="Open Pavel's GitHub profile"><svg viewBox="-1 -1 26 26" aria-hidden="true"><path d="M12 .297C5.373.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.73.083-.73 1.205.084 1.838 1.237 1.838 1.237 1.07 1.835 2.809 1.304 3.495.998.108-.776.418-1.305.762-1.605-2.665-.305-5.467-1.332-5.467-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.62-5.475 5.92.43.37.815 1.096.815 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297 24 5.67 18.627.297 12 .297Z"/></svg></a>
+    </div>
     <div class="credit-wash" aria-hidden="true"></div>
     <p class="site-credit">Copyright © 2026 Pavel. Визуальные эффекты вдохновлены <a href="https://yandex.ru/cup/" target="_blank" rel="noopener noreferrer">Yandex Cup</a>. Реализация выполнена независимо и расширена с использованием OpenAI Terra-medium. Код распространяется по лицензии MIT.</p>
     <p class="site-version">v1.0.1</p>
@@ -1058,6 +1058,7 @@ Fullstack Product Engineer</p>
         const menuPanel = document.getElementById('menu-panel');
         const detailPanel = document.getElementById('detail-panel');
         const backButton = document.getElementById('back-button');
+        statusBar.append(backButton);
         const scrollbarStates = new Map();
         let currentLanguage = 'en';
         let selectedSection = null;
