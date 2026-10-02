@@ -43,12 +43,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link id="favicon" rel="icon" type="image/svg+xml" href="assets/favicon/light-03-p-slash.svg">
+    <link rel="icon" type="image/png" sizes="180x180" media="(max-width: 600px)" href="apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <style>
         :root { --ink: #10141d; --muted: #919baa; --line: rgba(44, 62, 92, .14); --blue: #6d91ff; --surface: #edf5ff; --surface-highlight: rgba(255, 255, 255, .95); --surface-glow: rgba(153, 203, 255, .32); }
-        * { box-sizing: border-box; }
+        html { height: 100%; overflow: hidden; overscroll-behavior: none; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         main { position: relative; z-index: 1; }
         body {
-            margin: 0; min-width: 320px; min-height: 100vh; overflow: hidden; color: var(--ink);
+            margin: 0; width: 100%; min-width: 320px; min-height: 100vh; overflow: hidden; overscroll-behavior: none; color: var(--ink);
             font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
             background: radial-gradient(circle at 20% 18%, var(--surface-highlight), transparent 30rem), radial-gradient(circle at 82% 88%, var(--surface-glow), transparent 31rem), var(--surface);
             transition: color .5s ease;
@@ -58,6 +61,7 @@
         .credit-wash { display: none; }
         .site-credit { position: fixed; bottom: 18px; left: 24px; z-index: 5; margin: 0; color: var(--muted); font-size: .5rem; line-height: 1.45; letter-spacing: -.02em; pointer-events: none; white-space: nowrap; }
         .site-version { position: fixed; right: 24px; bottom: 18px; z-index: 5; margin: 0; color: var(--muted); font-size: .5rem; line-height: 1.45; letter-spacing: -.02em; pointer-events: none; }
+        body:not(.footer-ready) .site-credit, body:not(.footer-ready) .site-version { visibility: hidden; }
         .site-credit a { color: inherit; pointer-events: auto; text-decoration: underline dashed; text-decoration-color: currentColor; text-underline-offset: 2px; }
         .site-credit a:hover, .site-credit a:focus-visible { color: var(--ink); outline: none; }
         body:not(.ui-ready) .language-panel span,
@@ -84,15 +88,16 @@
         .menu-screen:not(.is-content-ready) #menu-title { visibility: hidden; }
         .status-bar { position: fixed; inset: 0; z-index: 10; pointer-events: none; }
         .status-bar > * { pointer-events: auto; }
-        .top-language-switch { position: absolute; top: 28px; left: 50%; display: flex; align-items: center; gap: 9px; max-width: 0; overflow: hidden; opacity: 0; pointer-events: none; transform: translateX(-50%); transition: max-width .55s ease, opacity .35s ease; }
-        .status-bar.is-menu-active .top-language-switch { max-width: 88px; opacity: 1; pointer-events: auto; }
+        .top-language-switch { position: absolute; top: 28px; left: 50%; display: flex; align-items: center; gap: 9px; max-width: 0; overflow: hidden; opacity: 0; pointer-events: none; transform: translateX(-50%); transition: max-width .55s ease, opacity .55s ease; }
+        .status-bar.is-ready.is-menu-active .top-language-switch { max-width: 88px; opacity: 1; pointer-events: auto; }
         .top-language-option { padding: 4px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: .78rem; font-weight: 600; letter-spacing: .05em; transition: color .25s ease; }
         .top-language-option:hover, .top-language-option:focus-visible, .top-language-option.is-active { color: var(--ink); outline: none; }
         .top-language-switch .divider { font-size: .8rem; }
-        .copy-route { position: absolute; top: 31px; right: calc(50% + 38px); width: 18px; height: 18px; padding: 0; border: 0; background: transparent; cursor: pointer; transition: right .55s ease; }
-        .status-bar.is-menu-active .copy-route { right: calc(50% + clamp(42px, 4.5vw, 51px)); }
+        .copy-route { position: absolute; top: 31px; right: calc(50% + 38px); width: 18px; height: 18px; padding: 0; border: 0; opacity: 0; background: transparent; cursor: pointer; transition: right .55s ease, opacity .55s ease; }
+        .status-bar.is-ready .copy-route { opacity: 1; }
+        .status-bar.is-ready.is-menu-active .copy-route { right: calc(50% + clamp(42px, 4.5vw, 51px)); }
         #copy-route-plain { right: calc(50% + 66px); }
-        .status-bar.is-menu-active #copy-route-plain { right: calc(50% + clamp(70px, 4.5vw, 79px)); }
+        .status-bar.is-ready.is-menu-active #copy-route-plain { right: calc(50% + clamp(70px, 4.5vw, 79px)); }
         .copy-route::before, .copy-route::after { content: ''; position: absolute; width: 9px; height: 9px; border: 2px solid var(--muted); transition: border-color .35s ease, opacity .35s ease; }
         .copy-route::before { top: 2px; right: 2px; opacity: .48; }
         .copy-route::after { top: 6px; right: 6px; border-color: var(--ink); background: var(--surface); }
@@ -101,15 +106,17 @@
         .copy-route:focus-visible { outline: none; }
         .copy-feedback { position: absolute; top: 57px; left: 50%; color: var(--ink); font-size: .62rem; font-weight: 600; letter-spacing: -.02em; opacity: 0; pointer-events: none; transform: translate(-50%, 4px); transition: opacity .35s ease, transform .35s ease; white-space: nowrap; }
         .copy-feedback.is-visible { opacity: 1; transform: translate(-50%, 0); }
-        .theme-toggle { position: absolute; top: 32px; left: calc(50% - 20px); width: 34px; height: 18px; padding: 0; border: 2px solid var(--muted); border-radius: 999px; background: transparent; cursor: pointer; transition: left .55s ease, border-color .35s ease; }
-        .status-bar.is-menu-active .theme-toggle { left: calc(50% + clamp(42px, 4.5vw, 51px)); }
+        .theme-toggle { position: absolute; top: 32px; left: calc(50% - 20px); width: 34px; height: 18px; padding: 0; border: 2px solid var(--muted); border-radius: 999px; opacity: 0; background: transparent; cursor: pointer; transition: left .55s ease, border-color .35s ease, opacity .55s ease; }
+        .status-bar.is-ready .theme-toggle { opacity: 1; }
+        .status-bar.is-ready.is-menu-active .theme-toggle { left: calc(50% + clamp(42px, 4.5vw, 51px)); }
         .theme-toggle::after { content: ''; position: absolute; top: 50%; left: 1px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); transform: translate(16px, -50%); transition: transform .35s ease, background-color .35s ease; }
         body[data-theme="dark"] .theme-toggle { border-color: var(--muted); background: transparent; }
         body[data-theme="dark"] .theme-toggle::after { background: var(--ink); transform: translateY(-50%); }
         .theme-toggle:hover, .theme-toggle:focus-visible { border-color: var(--ink); outline: none; }
         body[data-theme="dark"] .theme-toggle:hover, body[data-theme="dark"] .theme-toggle:focus-visible { border-color: var(--ink); }
-        .github-link { position: absolute; top: 32px; left: calc(50% + 30px); display: grid; width: 20px; height: 20px; place-items: center; color: var(--muted); text-decoration: none; transition: left .55s ease, color .35s ease; }
-        .status-bar.is-menu-active .github-link { left: calc(50% + clamp(42px, 4.5vw, 51px) + 50px); }
+        .github-link { position: absolute; top: 32px; left: calc(50% + 30px); display: grid; width: 20px; height: 20px; place-items: center; opacity: 0; color: var(--muted); text-decoration: none; transition: left .55s ease, color .35s ease, opacity .55s ease; }
+        .status-bar.is-ready .github-link { opacity: 1; }
+        .status-bar.is-ready.is-menu-active .github-link { left: calc(50% + clamp(42px, 4.5vw, 51px) + 50px); }
         .github-link svg { display: block; width: 18px; height: 18px; fill: currentColor; transform: translateY(-1px); }
         .github-link:hover, .github-link:focus-visible { color: var(--ink); outline: none; }
         .back-button { position: fixed; top: 50%; left: 20px; width: 22px; height: 28px; padding: 0; border: 0; opacity: 0; background: transparent; cursor: pointer; pointer-events: none; transform: translateY(-50%); }
@@ -190,7 +197,9 @@
         .personal-project-subtitle { margin: 4px 0 0; color: var(--muted); font-size: .65rem; line-height: 1.45; letter-spacing: -.025em; }
         .personal-project-description { margin: 11px 0 0; color: var(--muted); font-size: .67rem; line-height: 1.55; letter-spacing: -.025em; }
         .personal-project-stack-title { margin: 12px 0 0; color: var(--ink); font-size: .64rem; font-weight: 600; letter-spacing: -.02em; }
-        .personal-project-stack { margin: 4px 0 0; color: var(--muted); font-size: .64rem; line-height: 1.5; letter-spacing: -.02em; }
+        .personal-project-stack-list { margin: 4px 0 0; }
+        .personal-project-stack { margin: 0; color: var(--muted); font-size: .64rem; line-height: 1.5; letter-spacing: -.02em; white-space: nowrap; }
+        .personal-project-stack + .personal-project-stack { margin-top: 2px; }
         .personal-project-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .detail-contact { margin-top: 26px; padding-bottom: 4px; }
         .detail-project-contact { margin-top: 14px; }
@@ -238,7 +247,7 @@
         }
         @media (min-width: 601px) {
             #copy-route-plain { right: calc(50% + 78px); }
-            .status-bar.is-menu-active #copy-route-plain { right: calc(50% + clamp(82px, 4.5vw, 91px)); }
+            .status-bar.is-ready.is-menu-active #copy-route-plain { right: calc(50% + clamp(82px, 4.5vw, 91px)); }
         }
     </style>
 </head>
@@ -1040,6 +1049,8 @@ Fullstack Product Engineer</p>
         const themeToggle = document.getElementById('theme-toggle');
         let faviconLink = document.getElementById('favicon');
         const themeWash = document.getElementById('theme-wash');
+        const siteCredit = document.querySelector('.site-credit');
+        const siteVersion = document.querySelector('.site-version');
         const menu = document.getElementById('menu');
         const solutionList = document.getElementById('solution-list');
         const menuPanel = document.getElementById('menu-panel');
@@ -1833,12 +1844,14 @@ Fullstack Product Engineer</p>
                 ? '<p class="detail-cta detail-contact-secondary"><span class="detail-contact-cta-text"></span><span class="loading-dots" aria-hidden="true"></span></p>'
                 : '<p class="detail-cta"><span class="detail-cta-text"></span><span class="loading-dots" aria-hidden="true"></span></p>';
             detailPanel.innerHTML = `<div class="detail-current"><p class="detail-kicker"></p><h2 class="detail-title"></h2><div class="detail-timeline">${landing.milestones.map((milestone) => `<div><span class="timeline-value"></span><span class="timeline-caption${milestone.caption.includes('/') ? ' is-unit' : ''}"></span></div>`).join('')}</div><p class="detail-lead"></p><div class="detail-grid"><div class="detail-block"><p class="detail-package-title"></p><ul class="detail-package">${landing.package.items.map(renderPackageItem).join('')}</ul><p class="detail-extras-title"></p><ul class="detail-package detail-extras">${landing.package.extras.map(renderPackageItem).join('')}</ul></div></div></div><div class="detail-next" aria-live="polite"><h2 class="detail-title detail-result-title"></h2><p class="detail-result-lead"></p><p class="detail-effects-title"></p><ul class="detail-effects">${landing.outcome.effects.map(renderPackageItem).join('')}</ul>${projectCtaMarkup}${stackMarkup}<div class="detail-contact">${contactCtaMarkup}<a class="telegram-contact" href="https://t.me/pasha_iden" target="_blank" rel="noopener noreferrer"></a></div></div>`;
-            renderDetailStack(landing.outcome.stack);
-            requestAnimationFrame(refreshCustomScrollbars);
-            trackAnimation(revealLanding(landing, job).then((result) => {
-                requestAnimationFrame(refreshCustomScrollbars);
-                return result;
-            }));
+            requestAnimationFrame(() => {
+                renderDetailStack(landing.outcome.stack);
+                refreshCustomScrollbars();
+                trackAnimation(revealLanding(landing, job).then((result) => {
+                    requestAnimationFrame(refreshCustomScrollbars);
+                    return result;
+                }));
+            });
         }
         const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+-<>/';
         function scrambleText(element, text, job) {
@@ -1996,6 +2009,20 @@ Fullstack Product Engineer</p>
                 }, 90);
             });
         }
+        function revealFooter() {
+            const creditText = siteCredit.textContent;
+            const creditMarkup = siteCredit.innerHTML;
+            const versionText = siteVersion.textContent;
+            const creditAnimation = reverseRevealText(siteCredit, creditText, startTextAnimation(siteCredit));
+            const versionAnimation = scrambleText(siteVersion, versionText, startTextAnimation(siteVersion));
+            document.body.classList.add('footer-ready');
+            Promise.all([creditAnimation, versionAnimation]).then(([creditDone]) => {
+                if (creditDone) {
+                    siteCredit.innerHTML = creditMarkup;
+                    siteCredit.dataset.glitchText = creditText;
+                }
+            });
+        }
         function morphText(element, fromText, toText, job) {
             const from = Array.from(fromText);
             const to = Array.from(toText);
@@ -2053,7 +2080,7 @@ Fullstack Product Engineer</p>
             });
         }
         function usesDistributedReveal(element) {
-            return element.matches?.('.solution-subtitle, .competency-stack-line, .detail-lead, .detail-result-lead, .detail-package strong, .detail-package span, .detail-effects strong, .detail-effects span, .detail-stack');
+            return element.matches?.('.solution-subtitle, .competency-stack-line, .detail-lead, .detail-result-lead, .detail-package strong, .detail-package span, .detail-effects strong, .detail-effects span, .detail-stack, .personal-project-description, .personal-project-stack');
         }
         function revealSequence(items, job) {
             return Promise.all(items.map(([element, text, forceMorph = false]) => {
@@ -2073,12 +2100,11 @@ Fullstack Product Engineer</p>
                 .filter((element) => (element.dataset.glitchText || element.textContent).length)
                 .map((element) => [element, element.dataset.glitchText || element.textContent]);
         }
-        function renderDetailStack(stack) {
-            const list = detailPanel.querySelector('.detail-stack-list');
+        function renderStackLines(list, stack, lineClass) {
             if (!list || !stack) return;
-            const technologies = Array.isArray(stack) ? stack : stack.split(' · ');
+            const technologies = (Array.isArray(stack) ? stack : stack.split(/\s*·\s*/)).filter(Boolean);
             const probe = document.createElement('span');
-            probe.className = 'detail-stack';
+            probe.className = lineClass;
             probe.style.cssText = 'position:absolute; visibility:hidden; display:inline-block; width:auto; margin:0; white-space:nowrap;';
             list.append(probe);
             const availableWidth = list.getBoundingClientRect().width;
@@ -2097,22 +2123,30 @@ Fullstack Product Engineer</p>
             if (line) lines.push(line);
             list.replaceChildren(...lines.map((text) => {
                 const element = document.createElement('p');
-                element.className = 'detail-stack';
+                element.className = lineClass;
                 element.dataset.targetText = text;
                 return element;
             }));
         }
+        function renderDetailStack(stack) {
+            renderStackLines(detailPanel.querySelector('.detail-stack-list'), stack, 'detail-stack');
+        }
         function renderPersonalProjects(personal, job, preserveDetailContent = false) {
             if (!preserveDetailContent || !detailPanel.querySelector('.personal-project') || (personal.projects.some((project) => project.videoUrl) && !detailPanel.querySelector('.personal-project-video-link'))) {
-                const projectMarkup = (project) => `<article class="personal-project"><p class="personal-project-kicker"></p><h2 class="personal-project-title"></h2><p class="personal-project-subtitle"></p><p class="personal-project-description"></p><p class="personal-project-stack-title"></p><p class="personal-project-stack"></p><div class="personal-project-links"><a class="telegram-contact personal-project-link" href="${project.url}" target="_blank" rel="noopener noreferrer"></a>${project.videoUrl ? `<a class="telegram-contact personal-project-video-link" href="${project.videoUrl}" target="_blank" rel="noopener noreferrer"></a>` : ''}</div></article>`;
+                const projectMarkup = (project) => `<article class="personal-project"><p class="personal-project-kicker"></p><h2 class="personal-project-title"></h2><p class="personal-project-subtitle"></p><p class="personal-project-description"></p><p class="personal-project-stack-title"></p><div class="personal-project-stack-list"></div><div class="personal-project-links"><a class="telegram-contact personal-project-link" href="${project.url}" target="_blank" rel="noopener noreferrer"></a>${project.videoUrl ? `<a class="telegram-contact personal-project-video-link" href="${project.videoUrl}" target="_blank" rel="noopener noreferrer"></a>` : ''}</div></article>`;
                 const splitIndex = Math.ceil(personal.projects.length / 2);
                 detailPanel.innerHTML = `<div class="detail-current detail-personal-column">${personal.projects.slice(0, splitIndex).map(projectMarkup).join('')}</div><div class="detail-next detail-personal-column" aria-live="polite">${personal.projects.slice(splitIndex).map(projectMarkup).join('')}</div>`;
             }
-            requestAnimationFrame(refreshCustomScrollbars);
-            trackAnimation(revealPersonalProjects(personal, job).then((result) => {
-                requestAnimationFrame(refreshCustomScrollbars);
-                return result;
-            }));
+            requestAnimationFrame(() => {
+                detailPanel.querySelectorAll('.personal-project').forEach((element, index) => {
+                    renderStackLines(element.querySelector('.personal-project-stack-list'), personal.projects[index].stack, 'personal-project-stack');
+                });
+                refreshCustomScrollbars();
+                trackAnimation(revealPersonalProjects(personal, job).then((result) => {
+                    requestAnimationFrame(refreshCustomScrollbars);
+                    return result;
+                }));
+            });
         }
         function revealPersonalProjects(personal, job) {
             const items = [];
@@ -2124,9 +2158,9 @@ Fullstack Product Engineer</p>
                     [element.querySelector('.personal-project-subtitle'), project.subtitle],
                     [element.querySelector('.personal-project-description'), project.description],
                     [element.querySelector('.personal-project-stack-title'), currentLanguage === 'ru' ? 'Стек:' : 'Stack:'],
-                    [element.querySelector('.personal-project-stack'), project.stack],
                     [element.querySelector('.personal-project-link'), 'GitHub']
                 );
+                element.querySelectorAll('.personal-project-stack').forEach((stack) => items.push([stack, stack.dataset.targetText || '']));
                 if (project.videoUrl) items.push([element.querySelector('.personal-project-video-link'), 'YouTube']);
             });
             return revealSequence(items, job);
@@ -2415,8 +2449,15 @@ Fullstack Product Engineer</p>
             updateBackButton();
             refreshCustomScrollbars();
         }));
+        document.addEventListener('touchmove', (event) => {
+            if (!window.matchMedia('(pointer: coarse)').matches) return;
+            const scrollContainer = event.target.closest('.solution-list.is-scrollable, .detail-panel.is-open');
+            if (!scrollContainer) event.preventDefault();
+        }, { passive: false });
         window.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('ui-ready');
+            requestAnimationFrame(() => requestAnimationFrame(() => statusBar.classList.add('is-ready')));
+            revealFooter();
             const urlTheme = getThemeFromUrl();
             if (urlTheme) setTheme(urlTheme);
             const route = getRouteFromUrl();
