@@ -9,13 +9,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --ink: #10141d; --muted: #919baa; --line: rgba(44, 62, 92, .14); --blue: #6d91ff; }
+        :root { --ink: #10141d; --muted: #919baa; --line: rgba(44, 62, 92, .14); --blue: #6d91ff; --surface: #edf5ff; --surface-highlight: rgba(255, 255, 255, .95); --surface-glow: rgba(153, 203, 255, .32); }
         * { box-sizing: border-box; }
         body {
             margin: 0; min-width: 320px; min-height: 100vh; overflow: hidden; color: var(--ink);
             font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
-            background: radial-gradient(circle at 20% 18%, rgba(255, 255, 255, .95), transparent 30rem), radial-gradient(circle at 82% 88%, rgba(153, 203, 255, .32), transparent 31rem), #edf5ff;
+            background: radial-gradient(circle at 20% 18%, var(--surface-highlight), transparent 30rem), radial-gradient(circle at 82% 88%, var(--surface-glow), transparent 31rem), var(--surface);
+            transition: color .5s ease, background .5s ease;
         }
+        body[data-theme="dark"] { --ink: #e5ebf5; --muted: #8995a6; --line: rgba(163, 184, 221, .17); --blue: #91acff; --surface: #0b111a; --surface-highlight: rgba(91, 121, 178, .12); --surface-glow: rgba(57, 103, 181, .2); color-scheme: dark; }
         body:not(.ui-ready) .language-panel span,
         body:not(.ui-ready) .language-panel button { visibility: hidden; }
         button { font: inherit; }
@@ -40,6 +42,8 @@
         .top-language-option { padding: 4px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: .78rem; font-weight: 600; letter-spacing: .05em; transition: color .25s ease; }
         .top-language-option:hover, .top-language-option:focus-visible, .top-language-option.is-active { color: var(--ink); outline: none; }
         .top-language-switch .divider { font-size: .8rem; }
+        .theme-toggle { position: absolute; top: 28px; left: calc(50% + clamp(66px, 9vw, 102px)); padding: 4px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: .9rem; font-weight: 600; line-height: 1; transition: color .25s ease, transform .35s ease; }
+        .theme-toggle:hover, .theme-toggle:focus-visible { color: var(--ink); outline: none; transform: rotate(18deg); }
         .back-button { position: fixed; top: 50%; left: 20px; width: 22px; height: 28px; padding: 0; border: 0; opacity: 0; background: transparent; cursor: pointer; pointer-events: none; transform: translateY(-50%); }
         .back-button::before, .back-button::after { content: ''; position: absolute; left: 2px; width: 17px; height: 1.5px; background: var(--muted); transform-origin: left center; }
         .back-button::before { top: 13px; transform: rotate(45deg); }
@@ -148,6 +152,7 @@
             <div class="top-language-switch" aria-label="Language switcher">
                 <button class="top-language-option" type="button" data-language="en">EN</button><span class="divider" aria-hidden="true">|</span><button class="top-language-option" type="button" data-language="ru">RU</button>
             </div>
+            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Enable dark theme" aria-pressed="false">◐</button>
             <button class="back-button" id="back-button" type="button" aria-label="Back"></button>
             <div class="menu-panel" id="menu-panel"><p class="eyebrow" id="menu-eyebrow"></p><h1 id="menu-title"></h1><div class="menu-layout"><nav><ul class="menu" id="menu"></ul></nav><ul class="solution-list" id="solution-list" aria-live="polite"></ul><aside class="detail-panel" id="detail-panel" aria-live="polite"></aside></div></div>
         </section>
@@ -911,6 +916,7 @@
         const options = document.querySelectorAll('.language-option');
         const languageItems = Array.from(document.querySelectorAll('.language-panel span, .language-panel button')).map((element) => [element, element.textContent]);
         const topOptions = document.querySelectorAll('.top-language-option');
+        const themeToggle = document.getElementById('theme-toggle');
         const menu = document.getElementById('menu');
         const solutionList = document.getElementById('solution-list');
         const menuPanel = document.getElementById('menu-panel');
@@ -958,6 +964,16 @@
         function runInteraction(interaction) {
             interaction();
         }
+        function setTheme(theme, persist = true) {
+            const isDark = theme === 'dark';
+            document.body.dataset.theme = isDark ? 'dark' : 'light';
+            themeToggle.textContent = isDark ? '☼' : '◐';
+            themeToggle.setAttribute('aria-pressed', String(isDark));
+            themeToggle.setAttribute('aria-label', isDark ? 'Enable light theme' : 'Enable dark theme');
+            if (!persist) return;
+            try { localStorage.setItem('commerce-theme', isDark ? 'dark' : 'light'); } catch (_) {}
+        }
+        try { setTheme(localStorage.getItem('commerce-theme') === 'dark' ? 'dark' : 'light', false); } catch (_) { setTheme('light', false); }
         function setHighlight(language) {
             panel.classList.toggle('is-hovering', Boolean(language));
             document.querySelectorAll('[data-language]').forEach((element) => element.classList.toggle('is-highlighted', element.dataset.language === language));
@@ -1862,6 +1878,7 @@
             option.addEventListener('click', () => runInteraction(() => openMenu(option.dataset.language)));
         });
         topOptions.forEach((option) => option.addEventListener('click', () => runInteraction(() => setMenuLanguage(option.dataset.language))));
+        themeToggle.addEventListener('click', () => setTheme(document.body.dataset.theme === 'dark' ? 'light' : 'dark'));
         solutionList.addEventListener('transitionend', (event) => {
             if (event.target === solutionList && (event.propertyName === 'top' || event.propertyName === 'height')) {
                 logSuboptionsState(`transition-end:${event.propertyName}`);
