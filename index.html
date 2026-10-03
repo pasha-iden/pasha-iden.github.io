@@ -2044,8 +2044,8 @@ Fullstack Product Engineer</p>
                     ['Localization, themes and sharing', [
                         ['Full RU/EN localization', 'Language changes all content without reload; document.documentElement.lang changes too.'],
                         ['Light / Dark', 'Two color schemes based on CSS variables; the selected theme is preserved in the URL and integrated into the visual language of transitions.'],
-                        ['Link copying', 'In the normal flow, two controls are available: a clean link without the current section state and a link with the current interface parameters. With a valid to parameter, a third control appears: a link that preserves the recipient context.'],
-                        ['Contextual cover letter', 'The to parameter loads the corresponding JSON file and adds a personalized letter screen to navigation.']
+                        ['Link copying', 'In the normal flow, two controls are available: a clean link without the current section state and a link with the current interface parameters. With a valid to parameter, a third control appears: a link that preserves the cover-letter recipient context.'],
+                        ['Contextual cover letter', 'The to parameter loads the corresponding JSON file and adds a page with the addressed letter and a button that opens it to navigation. A 404 response is provided for a letter page with an invalid parameter.']
                     ]],
                     ['Easter eggs', [
                         ['Generation tracking', 'Each copy increments g (generation) by one: the parameter represents the depth (generation) of a particular link-sharing chain.'],
@@ -2091,8 +2091,8 @@ Fullstack Product Engineer</p>
                     ['Локализация, темы и sharing', [
                         ['Полная RU/EN локализация', 'Язык меняет весь контент без reload; меняется и document.documentElement.lang.'],
                         ['Light / Dark', 'Две цветовые схемы на CSS variables; выбранная тема сохраняется в URL и встроена в визуальный язык переходов.'],
-                        ['Копирование ссылок', 'В обычном сценарии доступны две кнопки: чистая ссылка без состояния текущего раздела и ссылка с параметрами текущего интерфейса. При валидном параметре to появляется третья — ссылка, сохраняющая контекст получателя.'],
-                        ['Контекстное сопроводительное письмо', 'Параметр to загружает соответствующий JSON-файл и добавляет в навигацию персонализированный экран письма.']
+                        ['Копирование ссылок', 'В обычном сценарии доступны две кнопки: чистая ссылка без состояния текущего раздела и ссылка с параметрами текущего интерфейса. При валидном параметре to появляется третья — ссылка, сохраняющая контекст получателя сопроводительного письма.'],
+                        ['Контекстное сопроводительное письмо', 'Параметр to загружает соответствующий JSON-файл и добавляет страницу с текстом адресного письма и открывающую его кнопку в навигацию. Для страницы письма с невалидным параметром предусмотрен ответ 404.']
                     ]],
                     ['Пасхалки', [
                         ['Generation tracking', 'Каждое копирование увеличивает g (generation) на единицу: параметр отражает глубину (поколение) конкретной цепочки распространения ссылки.'],
@@ -2133,6 +2133,11 @@ Fullstack Product Engineer</p>
         function getVersionScreenText() {
             return getTextItems('.version-kicker, .version-heading, .version-item strong, .version-item span, .version-stack-title, .version-stack', versionScreen);
         }
+        function setVersionBackgroundInert(isInert) {
+            [languageScreen, menuScreen, easterScreen, coverScreen].forEach((screen) => {
+                screen.inert = isInert;
+            });
+        }
         function openVersionNotes() {
             if (versionClosing) return;
             if (versionOpen) {
@@ -2156,6 +2161,7 @@ Fullstack Product Engineer</p>
                     return;
                 }
                 versionOpen = true;
+                setVersionBackgroundInert(true);
                 versionScreen.classList.add('is-visible');
                 versionScreen.setAttribute('aria-hidden', 'false');
                 refreshCustomScrollbars();
@@ -2179,6 +2185,7 @@ Fullstack Product Engineer</p>
                 versionOpen = false;
                 versionScreen.classList.remove('is-visible');
                 versionScreen.setAttribute('aria-hidden', 'true');
+                setVersionBackgroundInert(false);
                 refreshCustomScrollbars();
                 if (versionOrigin === 'language' && generationNote.dataset.state === 'terminal') {
                     renderGenerationTerminal();
