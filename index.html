@@ -2037,6 +2037,7 @@ Fullstack Product Engineer</p>
             if (versionOrigin === 'language' && generationNote.dataset.state === 'terminal') {
                 generationNote.classList.add('is-suspended');
             }
+            if (versionOrigin === 'detail') detailPanel.querySelector('.detail-contact')?.classList.remove('is-cta-ready');
             const job = ++animationJob;
             const originItems = versionOrigin === 'easter' ? getEasterScreenText() : getEasterOriginText(versionOrigin);
             trackAnimation(reverseSequence(originItems, job)).then((completed) => {
