@@ -169,10 +169,11 @@
         .menu button { display: block; width: 100%; padding: 10px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; text-align: left; transition: color .35s ease; }
         .menu button:hover, .menu button:focus-visible, .menu button.is-selected { color: var(--ink); outline: none; }
         .menu button.menu-telegram { display: flex; flex-direction: column; align-items: flex-start; width: auto; margin-top: 12px; padding: 0; border: 0; color: var(--muted); font-size: .68rem; letter-spacing: -.02em; }
+        .menu button.menu-telegram:not(:has(.menu-title.is-outline-ready)) { cursor: default; pointer-events: none; }
         .menu button.menu-telegram .menu-title { min-height: 31px; padding: 6px 11px; border: 1px solid transparent; transition: color .35s ease, border-color .35s ease; }
         .menu button.menu-telegram .menu-title.is-outline-ready { border-color: var(--muted); }
         .menu button.menu-telegram .menu-subtitle { order: -1; margin: 0 0 8px; color: var(--ink); font-size: clamp(.67rem, 1vw, .8rem); font-weight: 600; line-height: 1.55; cursor: default; }
-        .menu button.menu-telegram:hover .menu-title, .menu button.menu-telegram:focus-visible .menu-title { border-color: var(--ink); color: var(--ink); }
+        .menu button.menu-telegram:hover .menu-title.is-outline-ready, .menu button.menu-telegram:focus-visible .menu-title.is-outline-ready { border-color: var(--ink); color: var(--ink); }
         .menu-layout { --column-gap: clamp(32px, 8vw, 112px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--column-gap); align-items: start; }
         .menu-layout > nav { grid-column: 1; grid-row: 1; min-width: 0; transition: opacity .35s ease, transform .5s ease; }
         .solution-list { position: fixed; top: 50%; left: calc(50% + var(--column-gap) / 2); width: calc((min(980px, 100vw - 48px) - var(--column-gap)) / 2); height: var(--solution-list-height, auto); max-height: calc(100vh - 192px); min-width: 0; margin: 0; padding: 0; overflow: visible; overscroll-behavior: contain; list-style: none; opacity: 0; pointer-events: none; transform: translateY(-50%); scrollbar-width: thin; scrollbar-color: var(--muted) transparent; transition: height .45s ease; }
@@ -245,8 +246,9 @@
         .loading-dots { display: inline-block; width: 1.7em; color: var(--ink); opacity: 0; }
         .detail-contact.is-cta-ready .loading-dots { opacity: 1; }
         .telegram-contact { display: inline-flex; align-items: center; min-height: 31px; padding: 6px 11px; border: 1px solid transparent; color: var(--muted); background: transparent; cursor: pointer; font-size: .68rem; letter-spacing: -.02em; text-decoration: none; white-space: pre-wrap; transition: color .35s ease, border-color .35s ease; }
+        .telegram-contact:not(.is-outline-ready) { cursor: default; pointer-events: none; }
         .telegram-contact.is-outline-ready { border-color: var(--muted); }
-        .telegram-contact:hover, .telegram-contact:focus-visible { border-color: var(--ink); color: var(--ink); outline: none; }
+        .telegram-contact.is-outline-ready:hover, .telegram-contact.is-outline-ready:focus-visible { border-color: var(--ink); color: var(--ink); outline: none; }
         .solution-title, .menu-title { display: block; }
         .menu-subtitle { display: block; margin-top: 2px; font-size: clamp(.62rem, 1vw, .76rem); font-weight: 400; line-height: 1.45; letter-spacing: -.025em; }
         @media (orientation: portrait) {
