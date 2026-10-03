@@ -106,11 +106,19 @@
         .status-bar.is-ready .copy-route { opacity: 1; }
         .status-bar.is-ready.is-menu-active .copy-route { right: calc(50% + clamp(42px, 4.5vw, 51px)); }
         #copy-route-plain { right: calc(50% + 66px); }
-        .status-bar.is-ready.is-menu-active #copy-route-plain { right: calc(50% + clamp(70px, 4.5vw, 79px)); }
+        #copy-route-to { right: calc(50% + 66px); opacity: 0; pointer-events: none; }
+        .status-bar.has-recipient-link #copy-route-plain { right: calc(50% + 94px); }
+        .status-bar.is-ready.has-recipient-link #copy-route-to { opacity: 1; pointer-events: auto; }
+        .status-bar.is-ready.is-menu-active #copy-route-plain { right: calc(50% + clamp(42px, 4.5vw, 51px) + 28px); }
+        .status-bar.is-ready.is-menu-active.has-recipient-link #copy-route-plain { right: calc(50% + clamp(42px, 4.5vw, 51px) + 56px); }
+        .status-bar.is-ready.is-menu-active #copy-route-to { right: calc(50% + clamp(42px, 4.5vw, 51px) + 28px); }
         .copy-route::before, .copy-route::after { content: ''; position: absolute; width: 9px; height: 9px; border: 2px solid var(--muted); transition: border-color .35s ease, opacity .35s ease; }
         .copy-route::before { top: 2px; right: 2px; opacity: .48; }
         .copy-route::after { top: 6px; right: 6px; border-color: var(--ink); background: var(--surface); }
         #copy-route::after { content: '+'; display: grid; place-items: center; color: var(--ink); font-size: 9px; font-weight: 700; line-height: 1; }
+        #copy-route-to::after { top: 6px; content: ''; background: var(--surface); z-index: 0; }
+        .copy-route-check { position: absolute; top: 7px; right: 7px; z-index: 1; width: 9px; height: 9px; pointer-events: none; }
+        .copy-route-check path { fill: none; stroke: var(--ink); stroke-width: 1.15; stroke-linecap: butt; stroke-linejoin: miter; }
         .copy-route:hover::before, .copy-route:hover::after, .copy-route:focus-visible::before, .copy-route:focus-visible::after, .copy-route.is-copied::before, .copy-route.is-copied::after { border-color: var(--ink); }
         .copy-route:focus-visible { outline: none; }
         .copy-feedback { position: absolute; top: 57px; left: 50%; color: var(--ink); font-size: .62rem; font-weight: 600; letter-spacing: -.02em; opacity: 0; pointer-events: none; transform: translate(-50%, 4px); transition: opacity .35s ease, transform .35s ease; white-space: nowrap; }
@@ -302,7 +310,11 @@
         }
         @media (min-width: 601px) {
             #copy-route-plain { right: calc(50% + 78px); }
-            .status-bar.is-ready.is-menu-active #copy-route-plain { right: calc(50% + clamp(82px, 4.5vw, 91px)); }
+            #copy-route-to { right: calc(50% + 78px); }
+            .status-bar.has-recipient-link #copy-route-plain { right: calc(50% + 118px); }
+            .status-bar.is-ready.is-menu-active #copy-route-plain { right: calc(50% + clamp(42px, 4.5vw, 51px) + 40px); }
+            .status-bar.is-ready.is-menu-active.has-recipient-link #copy-route-plain { right: calc(50% + clamp(42px, 4.5vw, 51px) + 80px); }
+            .status-bar.is-ready.is-menu-active #copy-route-to { right: calc(50% + clamp(42px, 4.5vw, 51px) + 40px); }
         }
     </style>
 </head>
@@ -344,6 +356,7 @@ Fullstack Product Engineer</p>
             <button class="top-language-option" type="button" data-language="en">EN</button><span class="divider" aria-hidden="true">|</span><button class="top-language-option" type="button" data-language="ru">RU</button>
         </div>
         <button class="copy-route" id="copy-route-plain" type="button" aria-label="Copy page link"></button>
+        <button class="copy-route" id="copy-route-to" type="button" aria-label="Copy cover-letter link"><svg class="copy-route-check" viewBox="0 0 9 9" aria-hidden="true"><path d="M1.25 4.55 3.45 6.75 7.8 2.1"></path></svg></button>
         <button class="copy-route" id="copy-route" type="button" aria-label="Copy current link"></button>
         <span class="copy-feedback" id="copy-feedback" aria-live="polite"></span>
         <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Enable dark theme" aria-pressed="false"></button>
@@ -1122,6 +1135,7 @@ Fullstack Product Engineer</p>
         const generationContinueButton = document.getElementById('generation-continue');
         const topOptions = document.querySelectorAll('.top-language-option');
         const copyPlainRouteButton = document.getElementById('copy-route-plain');
+        const copyToRouteButton = document.getElementById('copy-route-to');
         const copyRouteButton = document.getElementById('copy-route');
         const copyFeedback = document.getElementById('copy-feedback');
         const themeToggle = document.getElementById('theme-toggle');
@@ -1484,10 +1498,14 @@ Fullstack Product Engineer</p>
                 sessionStorage.setItem(generationEggStorageKey, 'true');
             } catch (_) {}
         }
-        async function copyRoute(withParameters, button) {
-            if (withParameters) syncRoute();
+        async function copyRoute(mode, button) {
+            if (mode === 'current') syncRoute();
             const url = new URL(window.location.href);
-            if (!withParameters) url.search = '';
+            if (mode !== 'current') {
+                const recipient = getCoverLetterKey();
+                url.search = '';
+                if (mode === 'recipient' && recipient) url.searchParams.set('to', recipient);
+            }
             url.searchParams.delete('egg');
             url.searchParams.set('g', String(getLinkGeneration() + 1));
             try {
@@ -1503,10 +1521,10 @@ Fullstack Product Engineer</p>
                     field.remove();
                 }
                 button.classList.add('is-copied');
-                copyFeedback.classList.toggle('is-plain-copy', !withParameters);
+                copyFeedback.classList.toggle('is-plain-copy', mode === 'plain');
                 copyFeedback.textContent = currentLanguage === 'ru'
-                    ? (withParameters ? 'Ссылка с параметрами скопирована' : 'Ссылка скопирована')
-                    : (withParameters ? 'Link with parameters copied' : 'Link copied');
+                    ? (mode === 'current' ? 'Ссылка с параметрами скопирована' : mode === 'recipient' ? 'Ссылка с сопроводительным письмом скопирована' : 'Ссылка скопирована')
+                    : (mode === 'current' ? 'Link with parameters copied' : mode === 'recipient' ? 'Cover-letter link copied' : 'Link copied');
                 copyFeedback.classList.add('is-visible');
                 window.clearTimeout(copyFeedbackTimer);
                 copyFeedbackTimer = window.setTimeout(() => copyFeedback.classList.remove('is-visible'), 1300);
@@ -3397,8 +3415,9 @@ Fullstack Product Engineer</p>
             }
             setMenuLanguage(option.dataset.language);
         })));
-        copyPlainRouteButton.addEventListener('click', () => copyRoute(false, copyPlainRouteButton));
-        copyRouteButton.addEventListener('click', () => copyRoute(true, copyRouteButton));
+        copyPlainRouteButton.addEventListener('click', () => copyRoute('plain', copyPlainRouteButton));
+        copyToRouteButton.addEventListener('click', () => copyRoute('recipient', copyToRouteButton));
+        copyRouteButton.addEventListener('click', () => copyRoute('current', copyRouteButton));
         generationContinueButton.addEventListener('click', () => runInteraction(continueGenerationGate));
         siteVersion.addEventListener('click', () => runInteraction(openVersionNotes));
         themeToggle.addEventListener('click', () => transitionTheme(document.body.dataset.theme === 'dark' ? 'light' : 'dark'));
@@ -3519,6 +3538,7 @@ Fullstack Product Engineer</p>
                     screen: 'cover', section: null, solution: null, case: null, cover: true
                 };
             }
+            statusBar.classList.toggle('has-recipient-link', Boolean(coverLetter && !coverLetterFallback));
             setFooterLanguage(route?.language || currentLanguage);
             revealFooter();
             if (route) {
