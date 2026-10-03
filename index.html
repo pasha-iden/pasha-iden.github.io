@@ -60,7 +60,8 @@
         .theme-wash { position: fixed; inset: 0; z-index: 0; opacity: 0; pointer-events: none; transition: opacity 1.5s ease; }
         .credit-wash { display: none; }
         .site-credit { position: fixed; bottom: 18px; left: 24px; z-index: 5; margin: 0; color: var(--muted); font-size: .5rem; line-height: 1.45; letter-spacing: -.02em; pointer-events: none; white-space: nowrap; }
-        .site-version { position: fixed; right: 24px; bottom: 18px; z-index: 5; margin: 0; color: var(--muted); font-size: .5rem; line-height: 1.45; letter-spacing: -.02em; pointer-events: none; }
+        .site-version { position: fixed; right: 24px; bottom: 18px; z-index: 5; margin: 0; padding: 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: .5rem; line-height: 1.45; letter-spacing: -.02em; transition: color .35s ease; }
+        .site-version:hover, .site-version:focus-visible { color: var(--ink); outline: none; }
         body:not(.footer-ready) .site-credit, body:not(.footer-ready) .site-version { visibility: hidden; }
         .site-credit a { color: inherit; pointer-events: auto; text-decoration: underline dashed; text-decoration-color: currentColor; text-underline-offset: 2px; }
         .site-credit a:hover, .site-credit a:focus-visible { color: var(--ink); outline: none; }
@@ -136,7 +137,7 @@
         .back-button:hover::before, .back-button:hover::after { background: var(--ink); }
         .easter-trigger { position: absolute; top: 31px; left: calc(50% + 65px); display: grid; width: 20px; height: 20px; padding: 0; place-items: center; border: 0; opacity: 0; color: var(--muted); background: transparent; cursor: pointer; pointer-events: none; transition: left .55s ease, color .35s ease, opacity .55s ease; }
         .status-bar.is-ready.is-menu-active .easter-trigger { left: calc(50% + clamp(42px, 4.5vw, 51px) + 85px); }
-        .easter-trigger.is-available { opacity: 1; pointer-events: auto; }
+        .status-bar.is-menu-active .easter-trigger.is-available { opacity: 1; pointer-events: auto; }
         .easter-trigger:hover, .easter-trigger:focus-visible { color: var(--ink); outline: none; }
         .mail-icon { display: block; width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-linecap: square; stroke-linejoin: miter; stroke-width: 1.6; }
         .mail-notification { position: absolute; top: 1px; right: -1px; width: 5px; height: 5px; border-radius: 50%; background: var(--blue); transition: opacity .35s ease; }
@@ -149,6 +150,19 @@
         .easter-line:nth-child(-n + 2) { color: var(--muted); }
         .easter-line:nth-child(3) { margin-top: 16px; color: var(--ink); }
         .easter-contact { margin: 0; }
+        .version-screen { z-index: 2; visibility: hidden; pointer-events: none; background: transparent; }
+        .version-screen.is-visible { visibility: visible; pointer-events: auto; }
+        .version-panel { width: min(980px, 100%); max-height: calc(100dvh - 116px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(32px, 8vw, 112px); padding: 4px 16px 46px 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+        .version-panel::-webkit-scrollbar { display: none; width: 0; height: 0; }
+        .version-column { min-width: 0; }
+        .version-column:nth-child(2) { padding-top: 32px; }
+        .version-section + .version-section { margin-top: 28px; }
+        .version-kicker { margin: 0 0 22px; color: var(--blue); font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+        .version-heading, .version-stack-title { margin: 0 0 8px; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
+        .version-item { margin: 0 0 9px; color: var(--muted); font-size: clamp(.64rem, .95vw, .73rem); line-height: 1.55; letter-spacing: -.025em; }
+        .version-item strong { color: var(--ink); font-weight: 600; }
+        .version-separator { color: var(--muted); }
+        .version-stack { margin: 5px 0 0; color: var(--muted); font-size: .68rem; line-height: 1.55; letter-spacing: -.02em; }
         .menu-panel { position: relative; width: min(980px, 100%); }
         .eyebrow { margin: 0 0 12px; color: var(--blue); font-size: .72rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
         h1 { margin: 0 0 30px; font-size: clamp(.9rem, 2vw, 1.8rem); font-weight: 650; line-height: 1; letter-spacing: -.055em; }
@@ -237,6 +251,8 @@
         .solution-title, .menu-title { display: block; }
         .menu-subtitle { display: block; margin-top: 2px; font-size: clamp(.62rem, 1vw, .76rem); font-weight: 400; line-height: 1.45; letter-spacing: -.025em; }
         @media (orientation: portrait) {
+            .version-panel { grid-template-columns: 1fr; max-height: calc(100dvh - 132px); padding-bottom: 96px; }
+            .version-column:nth-child(2) { padding-top: 0; }
             .menu-panel { width: min(640px, 100%); }
             .menu-layout { display: block; }
             .back-button { top: 29px; left: 19px; width: 18px; height: 24px; z-index: 11; transform: none; }
@@ -303,6 +319,9 @@ Fullstack Product Engineer</p>
                 <p class="easter-contact"><a class="telegram-contact" id="easter-telegram" href="https://t.me/pasha_iden" target="_blank" rel="noopener noreferrer"></a></p>
             </div>
         </section>
+        <section class="screen version-screen" id="version-screen" aria-label="Version notes" aria-hidden="true">
+            <div class="version-panel" id="version-panel"></div>
+        </section>
     </main>
     <div class="status-bar" id="status-bar">
         <div class="top-language-switch" aria-label="Language switcher">
@@ -317,7 +336,7 @@ Fullstack Product Engineer</p>
     </div>
     <div class="credit-wash" aria-hidden="true"></div>
     <p class="site-credit">Copyright © 2026 Pavel. Визуальные эффекты вдохновлены <a href="https://yandex.ru/cup/" target="_blank" rel="noopener noreferrer">Yandex Cup</a>. Реализация выполнена независимо и расширена с использованием OpenAI Terra-medium. Код распространяется по лицензии MIT.</p>
-    <p class="site-version">v1.0.2</p>
+    <button class="site-version" id="site-version" type="button" aria-label="Open version notes">v1.0.2</button>
     <div class="theme-wash" id="theme-wash" aria-hidden="true"></div>
     <script>
         const footerCopy = {
@@ -1094,7 +1113,7 @@ Fullstack Product Engineer</p>
         let faviconLink = document.getElementById('favicon');
         const themeWash = document.getElementById('theme-wash');
         const siteCredit = document.querySelector('.site-credit');
-        const siteVersion = document.querySelector('.site-version');
+        const siteVersion = document.getElementById('site-version');
         const menu = document.getElementById('menu');
         const solutionList = document.getElementById('solution-list');
         const menuPanel = document.getElementById('menu-panel');
@@ -1110,6 +1129,8 @@ Fullstack Product Engineer</p>
         ];
         const easterTelegram = document.getElementById('easter-telegram');
         const easterTrigger = document.getElementById('easter-trigger');
+        const versionScreen = document.getElementById('version-screen');
+        const versionPanel = document.getElementById('version-panel');
         const scrollbarStates = new Map();
         let currentLanguage = 'en';
         let selectedSection = null;
@@ -1131,8 +1152,13 @@ Fullstack Product Engineer</p>
         let easterEggAvailable = false;
         let easterEggOpen = false;
         let easterEggTransitionActive = false;
+        let easterEggClosing = false;
         let easterEggContentReady = false;
         let easterEggOrigin = 'language';
+        let versionOpen = false;
+        let versionTransitionActive = false;
+        let versionClosing = false;
+        let versionOrigin = 'language';
         let generationGateShown = false;
         let generationGateActive = false;
         const generationEggStorageKey = 'pavel-product-engineer:generation-egg-seen';
@@ -1147,7 +1173,16 @@ Fullstack Product Engineer</p>
             textAnimationJobs.set(element, job);
             glitchAnimationJobs.set(element, (glitchAnimationJobs.get(element) || 0) + 1);
             delete element.dataset.glitching;
-            if (element.matches?.('.telegram-contact, .menu button.menu-telegram .menu-title')) element.classList.remove('is-outline-ready');
+            if (element.matches?.('.telegram-contact, .menu button.menu-telegram .menu-title')) {
+                if (element.dataset.deferOutlineExit === 'true') {
+                    delete element.dataset.deferOutlineExit;
+                    window.setTimeout(() => {
+                        if (isCurrentTextAnimation(element, job)) element.classList.remove('is-outline-ready');
+                    }, 180);
+                } else {
+                    element.classList.remove('is-outline-ready');
+                }
+            }
             return job;
         }
         function isCurrentTextAnimation(element, job) {
@@ -1260,7 +1295,7 @@ Fullstack Product Engineer</p>
             currentLanguage = language;
             setFooterLanguage(language, true);
             easterTrigger.setAttribute('aria-label', language === 'ru' ? 'Открыть следующий этап' : 'Open next step');
-            if (easterEggOpen) {
+            if (easterEggOpen && (!versionOpen || versionOrigin !== 'easter')) {
                 const lines = getEasterLines();
                 easterEggContentReady = false;
                 const job = ++animationJob;
@@ -1271,6 +1306,31 @@ Fullstack Product Engineer</p>
                     easterEggContentReady = completed;
                     updateEasterTimeLine();
                 });
+                document.documentElement.lang = language;
+                topOptions.forEach((option) => {
+                    const isActive = option.dataset.language === language;
+                    option.classList.toggle('is-active', isActive);
+                    option.setAttribute('aria-pressed', String(isActive));
+                });
+                syncRoute();
+                return;
+            }
+            if (versionOpen || versionTransitionActive) {
+                if (!versionOpen) return;
+                if (easterEggOpen && versionOrigin === 'easter') {
+                    const lines = getEasterLines();
+                    easterLines.forEach((element, index) => {
+                        element.textContent = '';
+                        element.dataset.glitchText = lines[index];
+                    });
+                    const contact = language === 'ru' ? 'Написать в Telegram' : 'Write on Telegram';
+                    easterTelegram.textContent = '';
+                    easterTelegram.dataset.glitchText = contact;
+                }
+                const elements = Array.from(versionPanel.querySelectorAll('[data-target-text]'));
+                const targets = getVersionTargets(language);
+                const job = ++animationJob;
+                trackAnimation(revealSequence(elements.map((element, index) => [element, targets[index], true]), job));
                 document.documentElement.lang = language;
                 topOptions.forEach((option) => {
                     const isActive = option.dataset.language === language;
@@ -1436,7 +1496,11 @@ Fullstack Product Engineer</p>
             }));
         }
         function setGenerationGateLanguage(language) {
-            if (!generationGateActive || language === currentLanguage) return;
+            if (!generationGateActive) return;
+            if (language === currentLanguage) {
+                previewCurrentLanguageRepaint();
+                return;
+            }
             currentLanguage = language;
             document.documentElement.lang = language;
             setFooterLanguage(language, true);
@@ -1449,12 +1513,10 @@ Fullstack Product Engineer</p>
         function continueGenerationGate() {
             if (!generationGateActive || languageScreen.dataset.closing === 'true') return;
             languageScreen.dataset.closing = 'true';
+            generationContinueButton.blur();
+            generationContinueButton.dataset.deferOutlineExit = 'true';
             const job = ++animationJob;
-            const gateItems = [
-                ...languageItems,
-                [generationMessage, generationMessage.dataset.glitchText || generationMessage.textContent],
-                [generationContinueButton, generationContinueButton.dataset.glitchText || generationContinueButton.textContent]
-            ];
+            const gateItems = getLanguageScreenText();
             trackAnimation(reverseSequence(gateItems, job)).then((completed) => {
                 if (!completed) return;
                 generationGateActive = false;
@@ -1576,7 +1638,7 @@ Fullstack Product Engineer</p>
         }
         function updateBackButton() {
             const canReturnToLanguage = menuScreen.classList.contains('is-visible') && !getActiveDetail() && !isPortraitSuboptionsOpen();
-            backButton.classList.toggle('is-visible', easterEggOpen || Boolean(getActiveDetail()) || isPortraitSuboptionsOpen() || canReturnToLanguage);
+            backButton.classList.toggle('is-visible', versionOpen || easterEggOpen || Boolean(getActiveDetail()) || isPortraitSuboptionsOpen() || canReturnToLanguage);
         }
         function getVisibleTime() {
             return visibleTimeElapsed + (visibleTimeStartedAt === null ? 0 : performance.now() - visibleTimeStartedAt);
@@ -1619,25 +1681,40 @@ Fullstack Product Engineer</p>
             easterLines[1].dataset.glitchText = text;
         }
         function updateEasterTimer() {
-            if (!easterEggAvailable && getVisibleTime() >= 5 * 60 * 1000) {
+            if (!easterEggAvailable && menuScreen.classList.contains('is-visible') && getVisibleTime() >= 2 * 1000) {
                 easterEggAvailable = true;
                 easterTrigger.classList.add('is-available');
             }
             updateEasterTimeLine();
         }
         function getEasterOrigin() {
+            if (versionOpen) return 'version';
             if (getActiveDetail()) return 'detail';
             if (menuScreen.classList.contains('is-visible')) return 'menu';
             return 'language';
         }
         function getEasterOriginText(origin) {
+            if (origin === 'version') return getVersionScreenText();
             if (origin === 'detail') return getDetailScreenText();
             if (origin === 'menu') return getOptionsScreenText();
             return getLanguageScreenText();
         }
+        function getEasterScreenText() {
+            return [
+                ...easterLines.map((element) => [element, element.dataset.glitchText || element.textContent]),
+                [easterTelegram, easterTelegram.dataset.glitchText || easterTelegram.textContent]
+            ];
+        }
         function getLanguageScreenText() {
             const items = [...languageItems];
             if (!generationNote.classList.contains('is-visible')) return items;
+            if (generationGateActive) {
+                items.push([generationMessage, generationGateMessage()]);
+                if (!generationContinueButton.hidden) {
+                    items.push([generationContinueButton, currentLanguage === 'ru' ? 'Продолжить' : 'Continue']);
+                }
+                return items;
+            }
             if (generationNote.dataset.state === 'terminal') return items;
             const message = generationMessage.dataset.glitchText || generationMessage.textContent;
             const continueText = generationContinueButton.dataset.glitchText || generationContinueButton.textContent;
@@ -1647,12 +1724,24 @@ Fullstack Product Engineer</p>
         }
         function revealEasterOrigin(origin) {
             const job = ++animationJob;
+            if (origin === 'version') {
+                const scrollTop = versionPanel.scrollTop;
+                renderVersionNotes();
+                const items = getVersionText();
+                items.forEach(([element]) => { element.textContent = ''; });
+                versionPanel.scrollTop = scrollTop;
+                requestAnimationFrame(refreshCustomScrollbars);
+                trackAnimation(revealSequence(items, job));
+                return;
+            }
             if (origin === 'detail') {
                 prepareTextForReveal(getDetailScreenText());
                 updateDetail(job, true);
                 return;
             }
             if (origin === 'menu') {
+                renderMenu(false);
+                renderSolutionsList(selectedSection);
                 prepareTextForReveal(getOptionsScreenText());
                 if (!isPortraitSuboptionsOpen()) trackAnimation(revealMenu(job));
                 trackAnimation(revealSolutions(job));
@@ -1663,7 +1752,7 @@ Fullstack Product Engineer</p>
             trackAnimation(revealSequence(languageText, job));
         }
         function openEasterEgg() {
-            if (!easterEggAvailable || easterEggTransitionActive) return;
+            if (!easterEggAvailable || easterEggClosing || (easterEggTransitionActive && !easterEggOpen)) return;
             if (easterEggOpen) {
                 previewCurrentLanguageRepaint();
                 return;
@@ -1690,6 +1779,7 @@ Fullstack Product Engineer</p>
                 easterLines.forEach((element) => { element.textContent = ''; });
                 easterTelegram.textContent = '';
                 updateBackButton();
+                requestAnimationFrame(refreshCustomScrollbars);
                 const revealJob = ++animationJob;
                 trackAnimation(revealSequence([
                     ...easterLines.map((element, index) => [element, lines[index]]),
@@ -1702,8 +1792,9 @@ Fullstack Product Engineer</p>
             });
         }
         function closeEasterEgg() {
-            if (!easterEggOpen || easterEggTransitionActive) return;
+            if (!easterEggOpen || easterEggClosing) return;
             easterEggTransitionActive = true;
+            easterEggClosing = true;
             easterEggContentReady = false;
             const job = ++animationJob;
             const items = [
@@ -1715,12 +1806,199 @@ Fullstack Product Engineer</p>
                 easterEggContentReady = false;
                 easterScreen.classList.remove('is-visible');
                 easterScreen.setAttribute('aria-hidden', 'true');
+                requestAnimationFrame(refreshCustomScrollbars);
                 if (easterEggOrigin === 'language' && generationNote.dataset.state === 'terminal') {
                     renderGenerationTerminal();
                 }
                 revealEasterOrigin(easterEggOrigin);
                 updateBackButton();
                 easterEggTransitionActive = false;
+                easterEggClosing = false;
+            });
+        }
+        const versionContent = {
+            en: {
+                kicker: 'THIS WEBSITE', stackTitle: 'Stack:', stack: 'HTML · CSS · JS · SPA · GitHub',
+                columns: [[
+                    ['Interface architecture', [
+                        ['State-driven UI', 'The interface is a system of managed screens and states without a frontend framework or external router: language, section, solution, case, competency, detail views and transition states.'],
+                        ['SPA navigation', 'The start screen, menu, submenus, detailed materials and hidden screens change without reloading the document.'],
+                        ['URL as application state', 'Screen, language, theme and required context are restored from the URL, so a link can open the relevant state directly.'],
+                        ['Logical Back', 'Custom return logic restores the previous interface level instead of merely switching HTML blocks.'],
+                        ['Conflict-safe transitions', 'Animation jobs and transition identifiers prevent an outdated animation from overwriting a newer UI state.']
+                    ]],
+                    ['Text animation system', [
+                        ['Reveal / typing', 'Content progressively appears when screens and elements open.'],
+                        ['Reverse reveal', 'Current content is visually dismantled before a state changes.'],
+                        ['Scramble and morph', 'Characters pass through intermediate symbols; one text state can transform into another rather than being replaced instantly.'],
+                        ['Local glitch', 'Random characters in rendered text briefly run through three glitch frames and return to the original.'],
+                        ['Composed sequences', 'Headers, content and CTA are revealed in an intentional sequence; interactive outlines appear as the final reveal stage.']
+                    ]],
+                    ['Interface transitions', [
+                        ['Language repaint', 'RU/EN changes use the same text transition system; re-selecting the active language triggers a short repaint-and-return response.'],
+                        ['Theme and status bar', 'Light/dark changes use a dedicated theme wash, while status-bar controls adapt their position and visibility to the active screen.'],
+                        ['Contextual scrolling', 'Competency stacks expand as nested states; custom scrollbars appear only where a content area actually overflows.']
+                    ]]
+                ], [
+                    ['Dynamic favicon', [
+                        ['Favicon as interface', 'The favicon is part of the visual language rather than a static asset.'],
+                        ['Glyph sequence', 'It rotates through >_, />, P/, P> and P# with short flickers and longer scramble sequences.'],
+                        ['Theme-aware variants', 'The active favicon changes together with the light or dark visual system.']
+                    ]],
+                    ['Adaptive interface', [
+                        ['Layout as navigation', 'Desktop uses parallel columns; portrait mode turns the same journey into sequential screens: menu, options, detail.'],
+                        ['Mobile-specific UI', 'Status bar, Back control, footer, scroll areas and safe-area spacing are adapted independently.']
+                    ]],
+                    ['Localization and sharing', [
+                        ['Full RU/EN localization', 'Content, CTA, service messages, footer and hidden screens change without reload; document language changes with the selected locale.'],
+                        ['Shareable state', 'One control copies a clean link, another preserves the current interface context; Clipboard API has a fallback.'],
+                        ['Generation tracking', 'Each copied link increments g, representing the depth of its particular sharing chain.']
+                    ]],
+                    ['Hidden scenarios and discovery', [
+                        ['Generation and attention Easter eggs', 'A session-aware generation screen, a developer preview mode, and a visibility-aware five-minute timer unlock contextual hidden interactions.'],
+                        ['Metadata and LLM discovery', 'Semantic metadata, canonical URL, Open Graph, Twitter Card, JSON-LD and llms.txt make the page understandable beyond its visible UI.'],
+                        ['Zero-framework frontend', 'Routing, state management, animation, localization, themes, responsive behaviour and hidden scenarios are implemented with vanilla HTML, CSS and JavaScript.']
+                    ]]
+                ]]
+            },
+            ru: {
+                kicker: 'ЭТОТ ВЕБ-САЙТ', stackTitle: 'Стек:', stack: 'HTML · CSS · JS · SPA · GitHub',
+                columns: [[
+                    ['Архитектура интерфейса', [
+                        ['State-driven UI', 'Интерфейс построен как набор управляемых экранов и состояний без frontend-фреймворка и внешнего router: язык, раздел, решение, кейс, компетенция, detail-экраны и состояния переходов.'],
+                        ['SPA-навигация', 'Стартовый экран, меню, подменю, подробные материалы и скрытые экраны меняются без перезагрузки документа.'],
+                        ['URL как состояние приложения', 'Экран, язык, тема и необходимый контекст восстанавливаются из URL — ссылка сразу открывает нужное состояние.'],
+                        ['Логика Back', 'Собственный возврат восстанавливает предыдущий логический уровень интерфейса, а не просто переключает HTML-блоки.'],
+                        ['Защита переходов', 'Animation jobs и transition identifiers не позволяют устаревшей анимации перезаписать более новое состояние UI.']
+                    ]],
+                    ['Система текстовых анимаций', [
+                        ['Reveal / печать', 'Контент последовательно появляется при открытии экранов и элементов.'],
+                        ['Reverse reveal', 'Перед сменой состояния текущий контент визуально демонтируется.'],
+                        ['Scramble и morph', 'Символы проходят промежуточные состояния; один текст может перейти в другой без мгновенной подмены.'],
+                        ['Локальный glitch', 'Случайные символы готового текста кратко проходят три glitch-кадра и возвращаются к исходному виду.'],
+                        ['Композиция последовательностей', 'Заголовки, содержание и CTA раскрываются управляемо; контур интерактивного элемента появляется завершающей стадией.']
+                    ]],
+                    ['Переходы интерфейса', [
+                        ['Repaint языка', 'Смена RU/EN использует общую систему текстовых переходов; повторный выбор активного языка вызывает короткий сценарий перерисовки и отката.'],
+                        ['Тема и status bar', 'Light/dark переключается через отдельный theme wash, а элементы status bar меняют положение и видимость по состоянию интерфейса.'],
+                        ['Контекстная прокрутка', 'Стек компетенций раскрывается как вложенное состояние; custom scrollbar появляется только при реальном переполнении контента.']
+                    ]]
+                ], [
+                    ['Dynamic favicon', [
+                        ['Favicon как часть интерфейса', 'Favicon участвует в визуальном языке страницы, а не является статичным ассетом.'],
+                        ['Последовательность глифов', 'Используются >_, />, P/, P> и P# — с короткими мерцаниями и сериями перебора.'],
+                        ['Синхронизация с темой', 'Активный favicon меняется вместе со светлой или тёмной визуальной системой.']
+                    ]],
+                    ['Адаптивный интерфейс', [
+                        ['Верстка как навигация', 'На десктопе работают параллельные колонки; в portrait-режиме тот же путь становится последовательностью экранов: меню, варианты, detail.'],
+                        ['Mobile-specific UI', 'Status bar, Back, футер, области прокрутки и safe-area отступы адаптированы отдельно.']
+                    ]],
+                    ['Локализация и sharing', [
+                        ['Полная RU/EN локализация', 'Контент, CTA, служебные сообщения, футер и скрытые экраны меняются без reload; lang документа соответствует выбранному языку.'],
+                        ['Ссылки с состоянием', 'Одна кнопка копирует чистую ссылку, другая сохраняет контекст интерфейса; для Clipboard API предусмотрен fallback.'],
+                        ['Поколение ссылки', 'Каждое копирование увеличивает g — глубину конкретной цепочки распространения.']
+                    ]],
+                    ['Скрытые сценарии и discovery', [
+                        ['Пасхалки поколения и внимания', 'Session-aware экран поколения, developer preview и visibility-aware таймер на пять минут открывают контекстные скрытые взаимодействия.'],
+                        ['Метаданные и LLM discovery', 'Semantic metadata, canonical URL, Open Graph, Twitter Card, JSON-LD и llms.txt делают страницу понятной за пределами видимого UI.'],
+                        ['Zero-framework frontend', 'Routing, управление состоянием, анимации, локализация, темы, адаптивность и скрытые сценарии реализованы на vanilla HTML, CSS и JavaScript.']
+                    ]]
+                ]]
+            }
+        };
+        function renderVersionNotes() {
+            const content = versionContent[currentLanguage];
+            const itemMarkup = ([title, text]) => `<p class="version-item"><strong data-target-text="${title}"></strong><span class="version-separator" data-target-text=" — "></span><span class="version-description" data-target-text="${text}"></span></p>`;
+            const sectionMarkup = ([title, items]) => `<section class="version-section"><h2 class="version-heading" data-target-text="${title}"></h2>${items.map(itemMarkup).join('')}</section>`;
+            versionPanel.innerHTML = content.columns.map((column, index) => `<div class="version-column">${index === 0 ? `<p class="version-kicker" data-target-text="${content.kicker}"></p>` : ''}${column.map(sectionMarkup).join('')}</div>`).join('');
+            versionPanel.lastElementChild.insertAdjacentHTML('beforeend', `<section class="version-section"><p class="version-stack-title" data-target-text="${content.stackTitle}"></p><p class="version-stack" data-target-text="${content.stack}"></p></section>`);
+        }
+        function getVersionTargets(language = currentLanguage) {
+            const content = versionContent[language];
+            const targets = [];
+            content.columns.forEach((column, columnIndex) => {
+                if (columnIndex === 0) targets.push(content.kicker);
+                column.forEach(([title, items]) => {
+                    targets.push(title);
+                    items.forEach(([itemTitle, itemText]) => targets.push(itemTitle, ' — ', itemText));
+                });
+            });
+            targets.push(content.stackTitle, content.stack);
+            return targets;
+        }
+        function getVersionText() {
+            return Array.from(versionPanel.querySelectorAll('[data-target-text]')).map((element) => [element, element.dataset.targetText]);
+        }
+        function getVersionScreenText() {
+            return getTextItems('.version-kicker, .version-heading, .version-item strong, .version-item span, .version-stack-title, .version-stack', versionScreen);
+        }
+        function openVersionNotes() {
+            if (versionClosing) return;
+            if (versionOpen) {
+                previewCurrentLanguageRepaint();
+                return;
+            }
+            if (versionTransitionActive || (easterEggTransitionActive && !easterEggOpen)) return;
+            versionTransitionActive = true;
+            versionOrigin = easterEggOpen ? 'easter' : getEasterOrigin();
+            if (versionOrigin === 'easter') easterEggContentReady = false;
+            if (versionOrigin === 'language' && generationNote.dataset.state === 'terminal') {
+                generationNote.classList.add('is-suspended');
+            }
+            const job = ++animationJob;
+            const originItems = versionOrigin === 'easter' ? getEasterScreenText() : getEasterOriginText(versionOrigin);
+            trackAnimation(reverseSequence(originItems, job)).then((completed) => {
+                if (!completed) {
+                    generationNote.classList.remove('is-suspended');
+                    versionTransitionActive = false;
+                    return;
+                }
+                versionOpen = true;
+                versionScreen.classList.add('is-visible');
+                versionScreen.setAttribute('aria-hidden', 'false');
+                renderVersionNotes();
+                const versionItems = getVersionText();
+                versionItems.forEach(([element]) => { element.textContent = ''; });
+                updateBackButton();
+                requestAnimationFrame(refreshCustomScrollbars);
+                const revealJob = ++animationJob;
+                trackAnimation(revealSequence(versionItems, revealJob)).then(() => {
+                    versionTransitionActive = false;
+                });
+            });
+        }
+        function closeVersionNotes() {
+            if (!versionOpen || versionClosing) return;
+            versionTransitionActive = true;
+            versionClosing = true;
+            const job = ++animationJob;
+            trackAnimation(reverseSequence(getVersionScreenText(), job)).then(() => {
+                versionOpen = false;
+                versionScreen.classList.remove('is-visible');
+                versionScreen.setAttribute('aria-hidden', 'true');
+                refreshCustomScrollbars();
+                if (versionOrigin === 'language' && generationNote.dataset.state === 'terminal') {
+                    renderGenerationTerminal();
+                }
+                if (versionOrigin === 'easter') {
+                    easterEggContentReady = false;
+                    const lines = getEasterLines();
+                    const items = [
+                        ...easterLines.map((element, index) => [element, lines[index]]),
+                        [easterTelegram, currentLanguage === 'ru' ? 'Написать в Telegram' : 'Write on Telegram']
+                    ];
+                    prepareTextForReveal(items);
+                    const revealJob = ++animationJob;
+                    trackAnimation(revealSequence(items, revealJob)).then((completed) => {
+                        easterEggContentReady = completed;
+                        updateEasterTimeLine();
+                    });
+                } else {
+                    revealEasterOrigin(versionOrigin);
+                }
+                updateBackButton();
+                versionTransitionActive = false;
+                versionClosing = false;
             });
         }
         function syncLanguageRoute() {
@@ -2034,8 +2312,10 @@ Fullstack Product Engineer</p>
             const track = getScrollbarTrack(element);
             const { rect } = track;
             const isSolutionList = element === solutionList;
+            const isVersionPanel = element === versionPanel;
             const isVisible = document.body.contains(element) && rect.width > 0 && rect.height > 0 &&
-                (!isSolutionList || (element.classList.contains('is-open') && element.classList.contains('is-scrollable')));
+                (!isSolutionList || (element.classList.contains('is-open') && element.classList.contains('is-scrollable'))) &&
+                (!isVersionPanel || (versionScreen.classList.contains('is-visible') && (!easterEggOpen || versionOrigin === 'easter')));
             const maxScroll = element.scrollHeight - element.clientHeight;
             if (!isVisible || maxScroll <= 1) {
                 thumb.classList.remove('is-visible');
@@ -2051,7 +2331,7 @@ Fullstack Product Engineer</p>
             thumb.classList.add('is-visible');
         }
         function refreshCustomScrollbars() {
-            const targets = new Set(document.querySelectorAll('.solution-list, .detail-panel, .detail-current, .detail-next'));
+            const targets = new Set(document.querySelectorAll('.solution-list, .detail-panel, .detail-current, .detail-next, .version-panel'));
             scrollbarStates.forEach(({ thumb }, target) => {
                 if (!targets.has(target)) thumb.classList.remove('is-visible');
             });
@@ -2462,7 +2742,7 @@ Fullstack Product Engineer</p>
             });
         }
         function usesDistributedReveal(element) {
-            return element.matches?.('.solution-subtitle, .competency-stack-line, .detail-lead, .detail-result-lead, .detail-package strong, .detail-package span, .detail-effects strong, .detail-effects span, .detail-stack, .personal-project-description, .personal-project-stack, .easter-line, .generation-message');
+            return element.matches?.('.solution-subtitle, .competency-stack-line, .detail-lead, .detail-result-lead, .detail-package strong, .detail-package span, .detail-effects strong, .detail-effects span, .detail-stack, .personal-project-description, .personal-project-stack, .easter-line, .generation-message, .version-description, .version-stack');
         }
         function revealSequence(items, job) {
             return Promise.all(items.map(([element, text, forceMorph = false]) => {
@@ -2743,7 +3023,13 @@ Fullstack Product Engineer</p>
             }, 700);
         }
         function previewCurrentLanguageRepaint() {
-            const sourceItems = easterEggOpen
+            const isVersionOnTop = versionOpen && (!easterEggOpen || versionOrigin === 'easter');
+            const isGenerationGateOnTop = generationGateActive && !languageScreen.classList.contains('is-leaving');
+            const sourceItems = isGenerationGateOnTop
+                ? getLanguageScreenText()
+                : isVersionOnTop
+                ? getVersionScreenText()
+                : easterEggOpen
                 ? [...easterLines.map((element) => [element, element.dataset.glitchText || element.textContent]), [easterTelegram, easterTelegram.dataset.glitchText || easterTelegram.textContent]]
                 : (getActiveDetail() ? getDetailScreenText() : getOptionsScreenText());
             const items = sourceItems
@@ -2818,6 +3104,7 @@ Fullstack Product Engineer</p>
         copyPlainRouteButton.addEventListener('click', () => copyRoute(false, copyPlainRouteButton));
         copyRouteButton.addEventListener('click', () => copyRoute(true, copyRouteButton));
         generationContinueButton.addEventListener('click', () => runInteraction(continueGenerationGate));
+        siteVersion.addEventListener('click', () => runInteraction(openVersionNotes));
         themeToggle.addEventListener('click', () => transitionTheme(document.body.dataset.theme === 'dark' ? 'light' : 'dark'));
         easterTrigger.addEventListener('click', () => runInteraction(openEasterEgg));
         solutionList.addEventListener('transitionend', (event) => {
@@ -2851,8 +3138,16 @@ Fullstack Product Engineer</p>
             if (approachButton) runInteraction(() => selectApproach(Number(approachButton.dataset.approach)));
         });
         backButton.addEventListener('click', () => runInteraction(() => {
+            if (versionOpen && versionOrigin === 'easter') {
+                closeVersionNotes();
+                return;
+            }
             if (easterEggOpen) {
                 closeEasterEgg();
+                return;
+            }
+            if (versionOpen) {
+                closeVersionNotes();
                 return;
             }
             if (!getActiveDetail() && isPortraitSuboptionsOpen()) {
