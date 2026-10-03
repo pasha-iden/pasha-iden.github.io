@@ -102,16 +102,12 @@
         .top-language-option { padding: 4px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: .78rem; font-weight: 600; letter-spacing: .05em; transition: color .25s ease; }
         .top-language-option:hover, .top-language-option:focus-visible, .top-language-option.is-active { color: var(--ink); outline: none; }
         .top-language-switch .divider { font-size: .8rem; }
-        .copy-route { position: absolute; top: 31px; right: calc(50% + 38px); width: 18px; height: 18px; padding: 0; border: 0; opacity: 0; background: transparent; cursor: pointer; transition: right .55s ease, opacity .55s ease; }
-        .status-bar.is-ready .copy-route { opacity: 1; }
-        .status-bar.is-ready.is-menu-active .copy-route { right: calc(50% + clamp(42px, 4.5vw, 51px)); }
-        #copy-route-plain { right: calc(50% + 66px); }
-        #copy-route-to { right: calc(50% + 66px); opacity: 0; pointer-events: none; }
-        .status-bar.has-recipient-link #copy-route-plain { right: calc(50% + 94px); }
-        .status-bar.is-ready.has-recipient-link #copy-route-to { opacity: 1; pointer-events: auto; }
-        .status-bar.is-ready.is-menu-active #copy-route-plain { right: calc(50% + clamp(42px, 4.5vw, 51px) + 28px); }
-        .status-bar.is-ready.is-menu-active.has-recipient-link #copy-route-plain { right: calc(50% + clamp(42px, 4.5vw, 51px) + 56px); }
-        .status-bar.is-ready.is-menu-active #copy-route-to { right: calc(50% + clamp(42px, 4.5vw, 51px) + 28px); }
+        .copy-routes { position: absolute; top: 31px; right: calc(50% + 38px); display: flex; gap: 10px; opacity: 0; pointer-events: none; transform: translateX(0); transition: transform .55s ease, opacity .55s ease; }
+        .status-bar.is-ready .copy-routes { opacity: 1; pointer-events: auto; }
+        .status-bar.is-ready.is-menu-active .copy-routes { transform: translateX(calc(38px - clamp(42px, 4.5vw, 51px))); }
+        .copy-route { position: relative; width: 18px; height: 18px; padding: 0; border: 0; background: transparent; cursor: pointer; }
+        #copy-route-to { display: none; }
+        .status-bar.has-recipient-link #copy-route-to { display: block; }
         .copy-route::before, .copy-route::after { content: ''; position: absolute; width: 9px; height: 9px; border: 2px solid var(--muted); transition: border-color .35s ease, opacity .35s ease; }
         .copy-route::before { top: 2px; right: 2px; opacity: .48; }
         .copy-route::after { top: 6px; right: 6px; border-color: var(--ink); background: var(--surface); }
@@ -309,12 +305,7 @@
             .site-version { right: 18px; bottom: calc(21px + env(safe-area-inset-bottom)); }
         }
         @media (min-width: 601px) {
-            #copy-route-plain { right: calc(50% + 78px); }
-            #copy-route-to { right: calc(50% + 78px); }
-            .status-bar.has-recipient-link #copy-route-plain { right: calc(50% + 118px); }
-            .status-bar.is-ready.is-menu-active #copy-route-plain { right: calc(50% + clamp(42px, 4.5vw, 51px) + 40px); }
-            .status-bar.is-ready.is-menu-active.has-recipient-link #copy-route-plain { right: calc(50% + clamp(42px, 4.5vw, 51px) + 80px); }
-            .status-bar.is-ready.is-menu-active #copy-route-to { right: calc(50% + clamp(42px, 4.5vw, 51px) + 40px); }
+            .copy-routes { gap: 22px; }
         }
     </style>
 </head>
@@ -355,9 +346,11 @@ Fullstack Product Engineer</p>
         <div class="top-language-switch" aria-label="Language switcher">
             <button class="top-language-option" type="button" data-language="en">EN</button><span class="divider" aria-hidden="true">|</span><button class="top-language-option" type="button" data-language="ru">RU</button>
         </div>
-        <button class="copy-route" id="copy-route-plain" type="button" aria-label="Copy page link"></button>
-        <button class="copy-route" id="copy-route-to" type="button" aria-label="Copy cover-letter link"><svg class="copy-route-check" viewBox="0 0 9 9" aria-hidden="true"><path d="M1.25 4.55 3.45 6.75 7.8 2.1"></path></svg></button>
-        <button class="copy-route" id="copy-route" type="button" aria-label="Copy current link"></button>
+        <div class="copy-routes" aria-label="Share links">
+            <button class="copy-route" id="copy-route-plain" type="button" aria-label="Copy page link"></button>
+            <button class="copy-route" id="copy-route-to" type="button" aria-label="Copy cover-letter link"><svg class="copy-route-check" viewBox="0 0 9 9" aria-hidden="true"><path d="M1.25 4.55 3.45 6.75 7.15 2.8"></path></svg></button>
+            <button class="copy-route" id="copy-route" type="button" aria-label="Copy current link"></button>
+        </div>
         <span class="copy-feedback" id="copy-feedback" aria-live="polite"></span>
         <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Enable dark theme" aria-pressed="false"></button>
         <a class="github-link" href="https://github.com/pasha-iden" target="_blank" rel="noopener noreferrer" aria-label="Open Pavel's GitHub profile"><svg viewBox="-1 -1 26 26" aria-hidden="true"><path d="M12 .297C5.373.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.73.083-.73 1.205.084 1.838 1.237 1.838 1.237 1.07 1.835 2.809 1.304 3.495.998.108-.776.418-1.305.762-1.605-2.665-.305-5.467-1.332-5.467-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.62-5.475 5.92.43.37.815 1.096.815 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297 24 5.67 18.627.297 12 .297Z"/></svg></a>
@@ -3522,7 +3515,6 @@ Fullstack Product Engineer</p>
         }, { passive: false });
         window.addEventListener('DOMContentLoaded', async () => {
             document.body.classList.add('ui-ready');
-            requestAnimationFrame(() => requestAnimationFrame(() => statusBar.classList.add('is-ready')));
             const urlTheme = getThemeFromUrl();
             if (urlTheme) setTheme(urlTheme);
             let route = getRouteFromUrl();
@@ -3550,6 +3542,7 @@ Fullstack Product Engineer</p>
                 ], job));
                 renderGenerationTerminal();
             }
+            requestAnimationFrame(() => requestAnimationFrame(() => statusBar.classList.add('is-ready')));
             document.fonts?.ready.then(() => positionSolutionsList());
             startGlitchLoop();
             updateEasterTimer();
