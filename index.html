@@ -1902,6 +1902,52 @@ Fullstack Product Engineer</p>
             }
         };
         const fullVersionContent = {
+            en: {
+                kicker: 'THIS WEBSITE', stackTitle: 'Stack:', stack: 'HTML · CSS · JS · SPA · GitHub',
+                columns: [[
+                    ['Interface architecture', [
+                        ['State-driven UI', 'The interface is built as a set of managed states and screens without a frontend framework or external router. State includes the selected language, section, solution, case, competency, open description screens, and transition service states.'],
+                        ['SPA navigation', 'Transitions between the landing screen, menu, submenus, detailed materials, and hidden screens happen without a document reload.'],
+                        ['URL as application state', 'The selected screen, language, theme, and other required parameters can be restored from the URL. This makes it possible to open a link directly in the required context rather than only on the home screen.'],
+                        ['Return logic', 'Custom Back restores the previous logical level of the interface without switching HTML pages.'],
+                        ['Concurrent UI states', 'Transitions are protected from conflicting user actions through animation job / transition identifiers; an outdated animation cannot overwrite a newer UI state.']
+                    ]],
+                    ['Text animation system', [
+                        ['Reveal / text typing', 'Sequential appearance of content when screens and elements open.'],
+                        ['Reverse reveal / erasure', 'Reverse text animation before leaving the current state; used as part of transitions between screens.'],
+                        ['Scramble / character cycling', 'Characters pass through intermediate states before the final text is fixed.'],
+                        ['Glitch / local flicker', 'Individual characters in already rendered text are periodically replaced by a sequence of random glyphs and return to their original state. Each selected character goes through three glitch frames.'],
+                        ['Morph between states', 'A visual transition from one text state to another instead of an instantaneous content swap.'],
+                        ['Loading dots', 'A separate looping animation: . → .. → ... → empty state for CTA and waiting.'],
+                        ['Repaint / rollback when selecting the active language', 'A visual response to choosing the active language: the interface begins a transition, recognizes that there is no state to change, and returns the original text.']
+                    ]],
+                    ['Interface transitions', [
+                        ['Screen transition animation', 'The old state is first visually dismantled, then the new one is revealed.'],
+                        ['Language switching animation', 'RU/EN switching runs through the same text-transition system.'],
+                        ['Status bar animation', 'Elements change position and visibility depending on the primary interface state.'],
+                        ['Animated custom scrollbar', 'A custom scrollbar appears only where content genuinely needs scrolling instead of a persistent browser scrollbar.']
+                    ]]
+                ], [
+                    ['Dynamic favicon', [
+                        ['Favicon as part of the interface', 'The dynamic favicon echoes the interface glitch motif by substituting glyphs in the image.'],
+                        ['Favicon glyph cycling', 'Sequences >_, />, P/, P>, and P# are used; the favicon moves through multiple states.'],
+                        ['Favicon flicker', 'Short changes between states create the same unstable-text character as the main animation system.'],
+                        ['Theme synchronization', 'The favicon has visual variants matching the page design: changing the theme changes the favicon set.']
+                    ]],
+                    ['Localization, themes and sharing', [
+                        ['Full RU/EN localization', 'Language changes all content without reload; document.documentElement.lang changes too.'],
+                        ['Light / Dark', 'Two color schemes based on CSS variables; the selected theme is preserved in the URL and integrated into the visual language of transitions.'],
+                        ['Link copying', 'One control creates a clean link without the current section state, while the other preserves the current interface parameters.']
+                    ]],
+                    ['Easter eggs', [
+                        ['Generation tracking', 'Each copy increments g (generation) by one: the parameter represents the depth (generation) of a particular link-sharing chain.'],
+                        ['Link generation', 'At g ≥ 5, the landing screen gets an additional hidden state: before language selection, a terminal >_; after selection, a localized message and “Continue”.'],
+                        ['Session and developer state', 'After it is shown, this fact is stored in sessionStorage so the message can be seen only once; ?egg=1 forces the preview regardless of sessionStorage and is not passed on when copying.'],
+                        ['Long-viewing Easter egg', 'Time is counted only while the tab is visible through document.visibilityState. After five minutes, a letter appears in the status bar; time keeps updating in the text, and return preserves the originating context.'],
+                        ['Technical implementation', 'A detailed description of the technical implementation opens by clicking the deliberately unobtrusive page-version note.']
+                    ]]
+                ]]
+            },
             ru: {
                 kicker: 'ЭТОТ ВЕБ-САЙТ', stackTitle: 'Стек:', stack: 'HTML · CSS · JS · SPA · GitHub',
                 columns: [[
