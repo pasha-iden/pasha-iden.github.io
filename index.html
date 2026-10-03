@@ -357,7 +357,7 @@ Fullstack Product Engineer</p>
         <button class="easter-trigger" id="easter-trigger" type="button" aria-label="Open next step"><svg class="mail-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.4"></rect><path d="m3 6 9 7 9-7"></path></svg><span class="mail-notification" aria-hidden="true"></span></button>
     </div>
     <p class="site-credit">Copyright © 2026 Pavel. Визуальные эффекты вдохновлены <a href="https://yandex.ru/cup/" target="_blank" rel="noopener noreferrer">Yandex Cup</a>. Реализация выполнена независимо и расширена с использованием OpenAI Terra-medium. Код распространяется по лицензии MIT.</p>
-    <button class="site-version" id="site-version" type="button" aria-label="Open version notes">v1.0.2</button>
+    <button class="site-version" id="site-version" type="button" aria-label="Open version notes">v1.0.3</button>
     <div class="theme-wash" id="theme-wash" aria-hidden="true"></div>
     <script>
         const footerCopy = {
@@ -1654,9 +1654,8 @@ Fullstack Product Engineer</p>
             const content = copy[currentLanguage];
             const menuTargets = content.menu.map((title, index) => ({ title, subtitle: index === 4 ? (currentLanguage === 'ru' ? 'Напишите, и мы обсудим интересующие вас вопросы.' : 'Write to me and we will discuss what matters to you.') : '', action: index === 4 ? 'telegram' : 'section', index }));
             if (coverLetter && !coverLetterFallback) {
-                const company = typeof coverLetter.company === 'string' ? coverLetter.company : (coverLetter.company[currentLanguage] || coverLetter.company.en);
                 menuTargets.splice(4, 0, {
-                    title: currentLanguage === 'ru' ? `Сопроводительное письмо в ${company}` : `Cover letter for ${company}`,
+                    title: getCoverContent(currentLanguage)?.title || (currentLanguage === 'ru' ? 'Сопроводительное письмо' : 'Cover letter'),
                     subtitle: '', action: 'cover', index: 4
                 });
             }
@@ -1778,7 +1777,7 @@ Fullstack Product Engineer</p>
             easterLines[1].dataset.glitchText = text;
         }
         function updateEasterTimer() {
-            if (!easterEggAvailable && menuScreen.classList.contains('is-visible') && getVisibleTime() >= 3 * 1000) {
+            if (!easterEggAvailable && menuScreen.classList.contains('is-visible') && getVisibleTime() >= 5 * 60 * 1000) {
                 easterEggAvailable = true;
                 easterTrigger.classList.add('is-available');
             }
@@ -2045,7 +2044,8 @@ Fullstack Product Engineer</p>
                     ['Localization, themes and sharing', [
                         ['Full RU/EN localization', 'Language changes all content without reload; document.documentElement.lang changes too.'],
                         ['Light / Dark', 'Two color schemes based on CSS variables; the selected theme is preserved in the URL and integrated into the visual language of transitions.'],
-                        ['Link copying', 'One control creates a clean link without the current section state, while the other preserves the current interface parameters.']
+                        ['Link copying', 'In the normal flow, two controls are available: a clean link without the current section state and a link with the current interface parameters. With a valid to parameter, a third control appears: a link that preserves the recipient context.'],
+                        ['Contextual cover letter', 'The to parameter loads the corresponding JSON file and adds a personalized letter screen to navigation.']
                     ]],
                     ['Easter eggs', [
                         ['Generation tracking', 'Each copy increments g (generation) by one: the parameter represents the depth (generation) of a particular link-sharing chain.'],
@@ -2091,7 +2091,8 @@ Fullstack Product Engineer</p>
                     ['Локализация, темы и sharing', [
                         ['Полная RU/EN локализация', 'Язык меняет весь контент без reload; меняется и document.documentElement.lang.'],
                         ['Light / Dark', 'Две цветовые схемы на CSS variables; выбранная тема сохраняется в URL и встроена в визуальный язык переходов.'],
-                        ['Копирование ссылок', 'Отдельная кнопка создаёт чистую ссылку без состояния текущего раздела, вторая сохраняет параметры текущего интерфейса.']
+                        ['Копирование ссылок', 'В обычном сценарии доступны две кнопки: чистая ссылка без состояния текущего раздела и ссылка с параметрами текущего интерфейса. При валидном параметре to появляется третья — ссылка, сохраняющая контекст получателя.'],
+                        ['Контекстное сопроводительное письмо', 'Параметр to загружает соответствующий JSON-файл и добавляет в навигацию персонализированный экран письма.']
                     ]],
                     ['Пасхалки', [
                         ['Generation tracking', 'Каждое копирование увеличивает g (generation) на единицу: параметр отражает глубину (поколение) конкретной цепочки распространения ссылки.'],
