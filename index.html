@@ -272,6 +272,9 @@
             .menu-panel.is-detail-open .detail-panel { display: block; width: 100%; max-height: calc(100vh - 116px); padding-right: 10px; overflow-x: hidden; overflow-y: auto; }
             .detail-current, .detail-next { max-height: none; overflow: visible; }
             .detail-next { margin-top: 32px; padding: 0 0 clamp(126px, 20vh, 196px) !important; }
+            .detail-timeline > div { min-width: 0; }
+            .detail-timeline .timeline-value,
+            .detail-timeline .timeline-caption { white-space: normal; overflow-wrap: anywhere; }
         }
         @media (max-width: 600px) {
             .menu-layout { grid-template-columns: 1fr; gap: 18px; }
