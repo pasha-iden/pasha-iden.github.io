@@ -1,0 +1,41 @@
+{
+  "company": "Lorem Ipsum",
+  "ru": {
+    "title": "Сопроводительное письмо в Lorem Ipsum",
+    "lead": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Это тестовый материал для отдельного сопроводительного экрана.",
+    "blocks": [
+      [
+        "Контекст",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      ],
+      [
+        "Чем могу быть полезен",
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      ],
+      [
+        "Следующий шаг",
+        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+      ]
+    ],
+    "contact": "Написать в Telegram"
+  },
+  "en": {
+    "title": "Cover letter for Lorem Ipsum",
+    "lead": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. This is placeholder material for a dedicated cover-letter screen.",
+    "blocks": [
+      [
+        "Context",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      ],
+      [
+        "How I can help",
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      ],
+      [
+        "Next step",
+        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+      ]
+    ],
+    "contact": "Write on Telegram"
+  }
+}

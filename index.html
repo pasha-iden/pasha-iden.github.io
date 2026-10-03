@@ -153,6 +153,16 @@
         .version-screen.is-visible { visibility: visible; pointer-events: auto; }
         .version-panel { width: min(980px, 100%); max-height: calc(100dvh - 116px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(32px, 8vw, 112px); padding: 4px 16px 46px 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
         .version-panel::-webkit-scrollbar { display: none; width: 0; height: 0; }
+        .cover-screen { z-index: 2; visibility: hidden; pointer-events: none; background: transparent; }
+        .cover-screen.is-visible { visibility: visible; pointer-events: auto; }
+        .cover-panel { width: min(680px, 100%); max-height: calc(100dvh - 116px); padding: 4px 16px 46px 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+        .cover-panel::-webkit-scrollbar { display: none; width: 0; height: 0; }
+        .cover-kicker { margin: 0 0 8px; color: var(--blue); font-size: .65rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+        .cover-title { margin: 0 0 14px; color: var(--ink); font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 500; letter-spacing: -.035em; }
+        .cover-lead, .cover-item { margin: 0; color: var(--muted); font-size: clamp(.67rem, 1vw, .8rem); line-height: 1.55; letter-spacing: -.025em; }
+        .cover-section { margin-top: 22px; }
+        .cover-section-title { margin: 0 0 5px; color: var(--ink); font-size: .68rem; font-weight: 600; letter-spacing: -.02em; }
+        .cover-contact { margin-top: 26px; padding-bottom: 4px; }
         .version-column { min-width: 0; }
         .version-column:nth-child(2) { padding-top: 32px; }
         .version-section + .version-section { margin-top: 28px; }
@@ -170,6 +180,7 @@
         .menu button:hover, .menu button:focus-visible, .menu button.is-selected { color: var(--ink); outline: none; }
         .menu button.menu-telegram { display: flex; flex-direction: column; align-items: flex-start; width: auto; margin-top: 12px; padding: 0; border: 0; color: var(--muted); font-size: .68rem; letter-spacing: -.02em; }
         .menu button.menu-telegram:not(:has(.menu-title.is-outline-ready)) { cursor: default; pointer-events: none; }
+        .menu button.menu-cover-letter { margin-top: 20px; }
         .menu button.menu-telegram .menu-title { min-height: 31px; padding: 6px 11px; border: 1px solid transparent; transition: color .35s ease, border-color .35s ease; }
         .menu button.menu-telegram .menu-title.is-outline-ready { border-color: var(--muted); }
         .menu button.menu-telegram .menu-subtitle { order: -1; margin: 0 0 8px; color: var(--ink); font-size: clamp(.67rem, 1vw, .8rem); font-weight: 600; line-height: 1.55; cursor: default; }
@@ -253,6 +264,7 @@
         .menu-subtitle { display: block; margin-top: 2px; font-size: clamp(.62rem, 1vw, .76rem); font-weight: 400; line-height: 1.45; letter-spacing: -.025em; }
         @media (orientation: portrait) {
             .version-panel { grid-template-columns: 1fr; max-height: calc(100dvh - 132px); padding-bottom: 96px; }
+            .cover-panel { max-height: calc(100dvh - 152px - env(safe-area-inset-bottom)); padding-bottom: 96px; }
             .version-column:nth-child(2) { padding-top: 0; }
             .menu-panel { width: min(640px, 100%); }
             .menu-layout { display: block; }
@@ -322,6 +334,9 @@ Fullstack Product Engineer</p>
         </section>
         <section class="screen version-screen" id="version-screen" aria-label="Version notes" aria-hidden="true">
             <div class="version-panel" id="version-panel"></div>
+        </section>
+        <section class="screen cover-screen" id="cover-screen" aria-label="Cover letter" aria-hidden="true">
+            <div class="cover-panel" id="cover-panel"></div>
         </section>
     </main>
     <div class="status-bar" id="status-bar">
@@ -1131,6 +1146,8 @@ Fullstack Product Engineer</p>
         const easterTrigger = document.getElementById('easter-trigger');
         const versionScreen = document.getElementById('version-screen');
         const versionPanel = document.getElementById('version-panel');
+        const coverScreen = document.getElementById('cover-screen');
+        const coverPanel = document.getElementById('cover-panel');
         const scrollbarStates = new Map();
         let currentLanguage = 'en';
         let selectedSection = null;
@@ -1159,6 +1176,10 @@ Fullstack Product Engineer</p>
         let versionTransitionActive = false;
         let versionClosing = false;
         let versionOrigin = 'language';
+        let coverLetter = null;
+        let coverLetterOpen = false;
+        let coverLetterTransitionActive = false;
+        let coverLetterClosing = false;
         let generationGateShown = false;
         let generationGateActive = false;
         const generationEggStorageKey = 'pavel-product-engineer:generation-egg-seen';
@@ -1315,6 +1336,17 @@ Fullstack Product Engineer</p>
                 syncRoute();
                 return;
             }
+            if (coverLetterOpen && !versionOpen && !versionTransitionActive) {
+                trackAnimation(repaintCoverLetter(language));
+                document.documentElement.lang = language;
+                topOptions.forEach((option) => {
+                    const isActive = option.dataset.language === language;
+                    option.classList.toggle('is-active', isActive);
+                    option.setAttribute('aria-pressed', String(isActive));
+                });
+                syncRoute();
+                return;
+            }
             if (versionOpen || versionTransitionActive) {
                 if (!versionOpen) return;
                 if (easterEggOpen && versionOrigin === 'easter') {
@@ -1370,10 +1402,30 @@ Fullstack Product Engineer</p>
             const sectionIndex = sectionKeys.indexOf(params.get('section'));
             const solutionIndex = solutionKeys.indexOf(params.get('solution'));
             const caseIndex = caseKeys.indexOf(params.get('case'));
+            const coverLetterKey = getCoverLetterKey();
             if (screen === 'solution' && solutionIndex >= 0) return { language, theme, screen, section: 0, solution: solutionIndex };
             if (screen === 'case' && caseIndex >= 0) return { language, theme, screen, section: 1, solution: null, case: caseIndex };
+            if (screen === 'cover' && coverLetterKey) return { language, theme, screen, section: null, solution: null, case: null, cover: true };
             if (screen === 'menu') return { language, theme, screen, section: sectionIndex >= 0 ? sectionIndex : null, solution: null, case: null };
             return null;
+        }
+        function getCoverLetterKey() {
+            const value = new URLSearchParams(window.location.search).get('to');
+            return value && /^[A-Za-z0-9_-]+$/.test(value) ? value : null;
+        }
+        async function loadCoverLetter() {
+            const key = getCoverLetterKey();
+            if (!key) return null;
+            try {
+                const response = await fetch(`letters/${encodeURIComponent(key)}.json`, { cache: 'no-cache' });
+                if (!response.ok) return null;
+                const data = await response.json();
+                if (!data?.company || !data?.ru?.title || !data?.en?.title || !Array.isArray(data.ru.blocks) || !Array.isArray(data.en.blocks)) return null;
+                coverLetter = data;
+                return data;
+            } catch (_) {
+                return null;
+            }
         }
         function getThemeFromUrl() {
             const theme = new URLSearchParams(window.location.search).get('theme');
@@ -1385,7 +1437,7 @@ Fullstack Product Engineer</p>
             const hasCaseDetail = selectedSection === 'section-1' && Boolean(getCaseDetail(selectedCase));
             params.set('lang', currentLanguage);
             params.set('theme', document.body.dataset.theme === 'dark' ? 'dark' : 'light');
-            params.set('screen', hasSolutionDetail ? 'solution' : hasCaseDetail ? 'case' : 'menu');
+            params.set('screen', coverLetterOpen ? 'cover' : hasSolutionDetail ? 'solution' : hasCaseDetail ? 'case' : 'menu');
             if (selectedSection !== null) params.set('section', sectionKeys[Number(selectedSection.split('-')[1])]);
             else params.delete('section');
             if (hasSolutionDetail) params.set('solution', solutionKeys[selectedSolution]);
@@ -1542,6 +1594,7 @@ Fullstack Product Engineer</p>
             setMenuLanguage(route.language);
             menuScreen.classList.add('is-visible');
             menuScreen.setAttribute('aria-hidden', 'false');
+            if (route.cover && coverLetter) openCoverLetter(true);
             updateBackButton();
         }
         function openMenu(language) {
@@ -1569,9 +1622,17 @@ Fullstack Product Engineer</p>
         }
         function renderMenu(showSolutions = false) {
             const content = copy[currentLanguage];
+            const menuTargets = content.menu.map((title, index) => ({ title, subtitle: index === 4 ? (currentLanguage === 'ru' ? 'Напишите, и мы обсудим интересующие вас вопросы.' : 'Write to me and we will discuss what matters to you.') : '', action: index === 4 ? 'telegram' : 'section', index }));
+            if (coverLetter) {
+                const company = typeof coverLetter.company === 'string' ? coverLetter.company : (coverLetter.company[currentLanguage] || coverLetter.company.en);
+                menuTargets.splice(4, 0, {
+                    title: currentLanguage === 'ru' ? `Сопроводительное письмо в ${company}` : `Cover letter for ${company}`,
+                    subtitle: '', action: 'cover', index: 4
+                });
+            }
             const targets = showSolutions
                 ? content.solutions.map((item, index) => ({ title: item.title, subtitle: item.subtitle, action: 'solution', index }))
-                : content.menu.map((title, index) => ({ title, subtitle: index === 4 ? (currentLanguage === 'ru' ? 'Напишите, и мы обсудим интересующие вас вопросы.' : 'Write to me and we will discuss what matters to you.') : '', action: index === 4 ? 'telegram' : 'section', index }));
+                : menuTargets;
             const rows = Array.from(menu.children);
             const allRows = Math.max(rows.length, targets.length);
             for (let index = 0; index < allRows; index += 1) {
@@ -1597,9 +1658,11 @@ Fullstack Product Engineer</p>
                 const target = targets[index];
                 button.classList.remove('is-selected');
                 button.classList.remove('menu-telegram');
+                button.classList.remove('menu-cover-letter');
                 button.removeAttribute('data-section');
                 button.removeAttribute('data-menu-solution');
                 button.removeAttribute('data-telegram');
+                button.removeAttribute('data-cover-letter');
                 delete button.dataset.removeAfterMorph;
                 if (!target) {
                     button.disabled = true;
@@ -1611,6 +1674,10 @@ Fullstack Product Engineer</p>
                 button.disabled = false;
                 if (target.action === 'section') button.dataset.section = `section-${target.index}`;
                 else if (target.action === 'solution') button.dataset.menuSolution = String(target.index);
+                else if (target.action === 'cover') {
+                    button.dataset.coverLetter = 'true';
+                    button.classList.add('menu-cover-letter');
+                }
                 else {
                     button.dataset.telegram = 'true';
                     button.classList.add('menu-telegram');
@@ -1638,7 +1705,7 @@ Fullstack Product Engineer</p>
         }
         function updateBackButton() {
             const canReturnToLanguage = menuScreen.classList.contains('is-visible') && !getActiveDetail() && !isPortraitSuboptionsOpen();
-            backButton.classList.toggle('is-visible', versionOpen || easterEggOpen || Boolean(getActiveDetail()) || isPortraitSuboptionsOpen() || canReturnToLanguage);
+            backButton.classList.toggle('is-visible', versionOpen || easterEggOpen || coverLetterOpen || Boolean(getActiveDetail()) || isPortraitSuboptionsOpen() || canReturnToLanguage);
         }
         function getVisibleTime() {
             return visibleTimeElapsed + (visibleTimeStartedAt === null ? 0 : performance.now() - visibleTimeStartedAt);
@@ -1681,7 +1748,7 @@ Fullstack Product Engineer</p>
             easterLines[1].dataset.glitchText = text;
         }
         function updateEasterTimer() {
-            if (!easterEggAvailable && menuScreen.classList.contains('is-visible') && getVisibleTime() >= 5 * 60 * 1000) {
+            if (!easterEggAvailable && menuScreen.classList.contains('is-visible') && getVisibleTime() >= 3 * 1000) {
                 easterEggAvailable = true;
                 easterTrigger.classList.add('is-available');
             }
@@ -1689,12 +1756,14 @@ Fullstack Product Engineer</p>
         }
         function getEasterOrigin() {
             if (versionOpen) return 'version';
+            if (coverLetterOpen) return 'cover';
             if (getActiveDetail()) return 'detail';
             if (menuScreen.classList.contains('is-visible')) return 'menu';
             return 'language';
         }
         function getEasterOriginText(origin) {
             if (origin === 'version') return getVersionScreenText();
+            if (origin === 'cover') return getCoverScreenText();
             if (origin === 'detail') return getDetailScreenText();
             if (origin === 'menu') return getOptionsScreenText();
             return getLanguageScreenText();
@@ -1731,6 +1800,13 @@ Fullstack Product Engineer</p>
                 items.forEach(([element]) => { element.textContent = ''; });
                 versionPanel.scrollTop = scrollTop;
                 requestAnimationFrame(refreshCustomScrollbars);
+                trackAnimation(revealSequence(items, job));
+                return;
+            }
+            if (origin === 'cover') {
+                renderCoverLetter();
+                const items = getCoverScreenText(true);
+                items.forEach(([element]) => { element.textContent = ''; });
                 trackAnimation(revealSequence(items, job));
                 return;
             }
@@ -2097,9 +2173,105 @@ Fullstack Product Engineer</p>
                 versionClosing = false;
             });
         }
+        function getCoverContent(language = currentLanguage) {
+            return coverLetter?.[language] || coverLetter?.en || null;
+        }
+        function getCoverTargets(language = currentLanguage) {
+            const content = getCoverContent(language);
+            if (!content) return [];
+            const company = typeof coverLetter.company === 'string' ? coverLetter.company : (coverLetter.company[language] || coverLetter.company.en);
+            const contact = content.contact || (language === 'ru' ? 'Написать в Telegram' : 'Write on Telegram');
+            return [company, content.title, content.lead || '', ...content.blocks.flatMap(([title, text]) => [title, text]), contact];
+        }
+        function renderCoverLetter() {
+            const content = getCoverContent();
+            if (!content) return;
+            const company = typeof coverLetter.company === 'string' ? coverLetter.company : (coverLetter.company[currentLanguage] || coverLetter.company.en);
+            const blocks = content.blocks.map(([title, text]) => `<section class="cover-section"><h2 class="cover-section-title" data-target-text="${title}"></h2><p class="cover-item" data-target-text="${text}"></p></section>`).join('');
+            const contact = content.contact || (currentLanguage === 'ru' ? 'Написать в Telegram' : 'Write on Telegram');
+            coverPanel.innerHTML = `<p class="cover-kicker" data-target-text="${company}"></p><h1 class="cover-title" data-target-text="${content.title}"></h1><p class="cover-lead" data-target-text="${content.lead || ''}"></p>${blocks}<p class="cover-contact"><a class="telegram-contact" data-target-text="${contact}" href="https://t.me/pasha_iden" target="_blank" rel="noopener noreferrer"></a></p>`;
+        }
+        function getCoverScreenText(useTargets = false) {
+            return Array.from(coverScreen.querySelectorAll('.cover-kicker, .cover-title, .cover-lead, .cover-section-title, .cover-item, .telegram-contact'))
+                .map((element) => [element, useTargets ? element.dataset.targetText : (element.dataset.glitchText || element.textContent || element.dataset.targetText)])
+                .filter(([, text]) => text.length);
+        }
+        function repaintCoverLetter(language = currentLanguage) {
+            const elements = Array.from(coverScreen.querySelectorAll('.cover-kicker, .cover-title, .cover-lead, .cover-section-title, .cover-item, .telegram-contact'));
+            const targets = getCoverTargets(language);
+            if (elements.length !== targets.length) {
+                renderCoverLetter();
+                const items = getCoverScreenText(true);
+                items.forEach(([element]) => { element.textContent = ''; });
+                return revealSequence(items, ++animationJob);
+            }
+            return Promise.all(elements.map((element, index) => {
+                const target = targets[index];
+                const previous = element.dataset.glitchText || element.textContent;
+                element.dataset.targetText = target;
+                const job = startTextAnimation(element);
+                return morphText(element, previous, target, job);
+            })).then((results) => results.every(Boolean));
+        }
+        function openCoverLetter(fromRoute = false) {
+            if (!coverLetter || coverLetterOpen || coverLetterTransitionActive) return;
+            coverLetterTransitionActive = true;
+            coverLetterClosing = false;
+            const reveal = () => {
+                if (fromRoute) clearMenuForFreshReveal();
+                coverLetterOpen = true;
+                coverScreen.classList.add('is-visible');
+                coverScreen.setAttribute('aria-hidden', 'false');
+                renderCoverLetter();
+                const items = getCoverScreenText(true);
+                items.forEach(([element]) => { element.textContent = ''; });
+                updateBackButton();
+                syncRoute();
+                requestAnimationFrame(refreshCustomScrollbars);
+                const revealJob = ++animationJob;
+                trackAnimation(revealSequence(items, revealJob)).then(() => {
+                    if (!coverLetterClosing) coverLetterTransitionActive = false;
+                });
+            };
+            if (fromRoute) {
+                reveal();
+                return;
+            }
+            const job = ++animationJob;
+            trackAnimation(reverseSequence(getOptionsScreenText(), job)).then((completed) => {
+                if (!completed) {
+                    coverLetterTransitionActive = false;
+                    return;
+                }
+                reveal();
+            });
+        }
+        function closeCoverLetter() {
+            if (!coverLetterOpen || coverLetterClosing) return;
+            coverLetterTransitionActive = true;
+            coverLetterClosing = true;
+            const job = ++animationJob;
+            trackAnimation(reverseSequence(getCoverScreenText(), job)).then(() => {
+                coverLetterOpen = false;
+                coverScreen.classList.remove('is-visible');
+                coverScreen.setAttribute('aria-hidden', 'true');
+                renderMenu(false);
+                renderSolutionsList(selectedSection);
+                prepareTextForReveal(getOptionsScreenText());
+                if (!isPortraitSuboptionsOpen()) trackAnimation(revealMenu(job));
+                trackAnimation(revealSolutions(job));
+                syncRoute();
+                updateBackButton();
+                requestAnimationFrame(refreshCustomScrollbars);
+                coverLetterTransitionActive = false;
+                coverLetterClosing = false;
+            });
+        }
         function syncLanguageRoute() {
             const params = new URLSearchParams();
             params.set('theme', document.body.dataset.theme === 'dark' ? 'dark' : 'light');
+            const coverLetterKey = getCoverLetterKey();
+            if (coverLetterKey) params.set('to', coverLetterKey);
             const generation = getLinkGeneration();
             if (generation > 0) params.set('g', generation);
             if (isEggPreview()) params.set('egg', '1');
@@ -2409,14 +2581,17 @@ Fullstack Product Engineer</p>
             const { rect } = track;
             const isSolutionList = element === solutionList;
             const isVersionPanel = element === versionPanel;
+            const isCoverPanel = element === coverPanel;
             const isDetailScroll = element === detailPanel || detailPanel.contains(element);
             const isDetailScreenActive = menuScreen.classList.contains('is-visible') &&
                 !easterScreen.classList.contains('is-visible') &&
-                !versionScreen.classList.contains('is-visible');
+                !versionScreen.classList.contains('is-visible') &&
+                !coverScreen.classList.contains('is-visible');
             const isVisible = document.body.contains(element) && rect.width > 0 && rect.height > 0 &&
                 (!isSolutionList || (element.classList.contains('is-open') && element.classList.contains('is-scrollable'))) &&
                 (!isDetailScroll || isDetailScreenActive) &&
-                (!isVersionPanel || (versionScreen.classList.contains('is-visible') && (!easterEggOpen || versionOrigin === 'easter')));
+                (!isVersionPanel || (versionScreen.classList.contains('is-visible') && (!easterEggOpen || versionOrigin === 'easter'))) &&
+                (!isCoverPanel || (coverScreen.classList.contains('is-visible') && !easterEggOpen && !versionOpen));
             const maxScroll = element.scrollHeight - element.clientHeight;
             if (!isVisible || maxScroll <= 1) {
                 thumb.classList.remove('is-visible');
@@ -2432,7 +2607,7 @@ Fullstack Product Engineer</p>
             thumb.classList.add('is-visible');
         }
         function refreshCustomScrollbars() {
-            const targets = new Set(document.querySelectorAll('.solution-list, .detail-panel, .detail-current, .detail-next, .version-panel'));
+            const targets = new Set(document.querySelectorAll('.solution-list, .detail-panel, .detail-current, .detail-next, .version-panel, .cover-panel'));
             scrollbarStates.forEach(({ thumb }, target) => {
                 if (!targets.has(target)) thumb.classList.remove('is-visible');
             });
@@ -2843,7 +3018,7 @@ Fullstack Product Engineer</p>
             });
         }
         function usesDistributedReveal(element) {
-            return element.matches?.('.solution-subtitle, .competency-stack-line, .detail-lead, .detail-result-lead, .detail-package strong, .detail-package span, .detail-effects strong, .detail-effects span, .detail-stack, .personal-project-description, .personal-project-stack, .easter-line, .generation-message, .version-description, .version-stack');
+            return element.matches?.('.solution-subtitle, .competency-stack-line, .detail-lead, .detail-result-lead, .detail-package strong, .detail-package span, .detail-effects strong, .detail-effects span, .detail-stack, .personal-project-description, .personal-project-stack, .easter-line, .generation-message, .version-description, .version-stack, .cover-lead, .cover-item');
         }
         function revealSequence(items, job) {
             return Promise.all(items.map(([element, text, forceMorph = false]) => {
@@ -3132,6 +3307,8 @@ Fullstack Product Engineer</p>
                 ? getVersionScreenText()
                 : easterEggOpen
                 ? [...easterLines.map((element) => [element, element.dataset.glitchText || element.textContent]), [easterTelegram, easterTelegram.dataset.glitchText || easterTelegram.textContent]]
+                : coverLetterOpen
+                ? getCoverScreenText()
                 : (getActiveDetail() ? getDetailScreenText() : getOptionsScreenText());
             const items = sourceItems
                 .filter(([element, text]) => text && element.dataset.isLeaving !== 'true' && element.textContent === text);
@@ -3218,6 +3395,8 @@ Fullstack Product Engineer</p>
             if (solutionButton) runInteraction(() => selectSolution(Number(solutionButton.dataset.menuSolution)));
             const button = event.target.closest('button[data-section]');
             if (button) runInteraction(() => selectSection(button.dataset.section));
+            const coverButton = event.target.closest('button[data-cover-letter]');
+            if (coverButton) runInteraction(() => openCoverLetter());
             const telegramButton = event.target.closest('button[data-telegram]');
             if (telegramButton && event.target.closest('.menu-subtitle')) return;
             if (telegramButton) window.open('https://t.me/pasha_iden', '_blank', 'noopener');
@@ -3249,6 +3428,10 @@ Fullstack Product Engineer</p>
             }
             if (versionOpen) {
                 closeVersionNotes();
+                return;
+            }
+            if (coverLetterOpen) {
+                closeCoverLetter();
                 return;
             }
             if (!getActiveDetail() && isPortraitSuboptionsOpen()) {
@@ -3297,15 +3480,16 @@ Fullstack Product Engineer</p>
         });
         document.addEventListener('touchmove', (event) => {
             if (!window.matchMedia('(pointer: coarse)').matches) return;
-            const scrollContainer = event.target.closest('.solution-list.is-scrollable, .detail-panel.is-open, .version-panel');
+            const scrollContainer = event.target.closest('.solution-list.is-scrollable, .detail-panel.is-open, .version-panel, .cover-panel');
             if (!scrollContainer) event.preventDefault();
         }, { passive: false });
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', async () => {
             document.body.classList.add('ui-ready');
             requestAnimationFrame(() => requestAnimationFrame(() => statusBar.classList.add('is-ready')));
             const urlTheme = getThemeFromUrl();
             if (urlTheme) setTheme(urlTheme);
             const route = getRouteFromUrl();
+            await loadCoverLetter();
             setFooterLanguage(route?.language || currentLanguage);
             revealFooter();
             if (route) {
