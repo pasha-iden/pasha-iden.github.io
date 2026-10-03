@@ -1177,6 +1177,7 @@ Fullstack Product Engineer</p>
         let versionClosing = false;
         let versionOrigin = 'language';
         let coverLetter = null;
+        let coverLetterFallback = false;
         let coverLetterOpen = false;
         let coverLetterTransitionActive = false;
         let coverLetterClosing = false;
@@ -1427,6 +1428,23 @@ Fullstack Product Engineer</p>
                 return null;
             }
         }
+        function createMissingCoverLetter() {
+            return {
+                company: '',
+                ru: {
+                    title: '404',
+                    lead: 'Похоже, у меня нет такого сопроводительного письма, но вы можете изучить материалы этой страницы и написать мне по интересующим вас вопросам.',
+                    blocks: [],
+                    contact: 'Написать в Telegram'
+                },
+                en: {
+                    title: '404',
+                    lead: 'It looks like I do not have this cover letter, but you can explore the materials on this page and message me with any questions.',
+                    blocks: [],
+                    contact: 'Write on Telegram'
+                }
+            };
+        }
         function getThemeFromUrl() {
             const theme = new URLSearchParams(window.location.search).get('theme');
             return ['light', 'dark'].includes(theme) ? theme : null;
@@ -1623,7 +1641,7 @@ Fullstack Product Engineer</p>
         function renderMenu(showSolutions = false) {
             const content = copy[currentLanguage];
             const menuTargets = content.menu.map((title, index) => ({ title, subtitle: index === 4 ? (currentLanguage === 'ru' ? 'Напишите, и мы обсудим интересующие вас вопросы.' : 'Write to me and we will discuss what matters to you.') : '', action: index === 4 ? 'telegram' : 'section', index }));
-            if (coverLetter) {
+            if (coverLetter && !coverLetterFallback) {
                 const company = typeof coverLetter.company === 'string' ? coverLetter.company : (coverLetter.company[currentLanguage] || coverLetter.company.en);
                 menuTargets.splice(4, 0, {
                     title: currentLanguage === 'ru' ? `Сопроводительное письмо в ${company}` : `Cover letter for ${company}`,
@@ -3488,8 +3506,19 @@ Fullstack Product Engineer</p>
             requestAnimationFrame(() => requestAnimationFrame(() => statusBar.classList.add('is-ready')));
             const urlTheme = getThemeFromUrl();
             if (urlTheme) setTheme(urlTheme);
-            const route = getRouteFromUrl();
+            let route = getRouteFromUrl();
+            const initialParams = new URLSearchParams(window.location.search);
+            const requestedCover = initialParams.get('screen') === 'cover';
             await loadCoverLetter();
+            if (requestedCover && !coverLetter) {
+                coverLetter = createMissingCoverLetter();
+                coverLetterFallback = true;
+                route = route || {
+                    language: ['ru', 'en'].includes(initialParams.get('lang')) ? initialParams.get('lang') : 'en',
+                    theme: ['light', 'dark'].includes(initialParams.get('theme')) ? initialParams.get('theme') : null,
+                    screen: 'cover', section: null, solution: null, case: null, cover: true
+                };
+            }
             setFooterLanguage(route?.language || currentLanguage);
             revealFooter();
             if (route) {
