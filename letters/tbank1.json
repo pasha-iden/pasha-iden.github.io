@@ -1,0 +1,21 @@
+{
+  "company": "Т-Банк",
+  "ru": {
+    "title": "Сопроводительное письмо в Т-Банк",
+    "paragraphs": [
+      "Решил написать вам после того, как заметил, что PWA-версия продукта, похоже, перестала работать. Не знаю, планируете ли вы её восстанавливать или развивать это направление дальше, но именно это наблюдение показалось мне хорошим поводом познакомиться.",
+      "У меня есть практический опыт разработки PWA и построения web-интерфейсов, которые по скорости и характеру взаимодействия сравнимы с нативным приложением. В частности, я работал с Service Worker, SPA-архитектурой, управлением кешированием, обновлением клиентских ресурсов и Web Push. SPA-подход при этом позволяет обеспечить быстрые переходы между экранами и состояниями без полной перезагрузки страницы, и я вижу здесь потенциал сделать web-продукт заметно отзывчивее и удобнее для постоянного использования.",
+      "Мой основной профиль — backend и проектирование систем. В последнем проекте я самостоятельно отвечал за продукт целиком: архитектуру, backend, web-интерфейс, инфраструктуру, CI/CD, эксплуатацию и SEO-оптимизацию.",
+      "Если развитие web/PWA-направления для вас сейчас актуально, буду рад обсудить, где мой опыт мог бы оказаться полезен. Остальная часть этого сайта — моё актуальное резюме: здесь можно подробнее посмотреть мои работы и технические компетенции."
+    ]
+  },
+  "en": {
+    "title": "Cover Letter for T-Bank",
+    "paragraphs": [
+      "I decided to write after noticing that the product's PWA version appears to no longer be working. I do not know whether you plan to restore it or develop this direction further, but the observation felt like a good reason to get acquainted.",
+      "I have hands-on experience building PWAs and web interfaces that match native applications in responsiveness and interaction. In particular, I have worked with Service Workers, SPA architecture, cache management, client-resource updates, and Web Push. An SPA approach enables fast transitions between screens and states without full page reloads, and I see an opportunity here to make the web product noticeably more responsive and convenient for regular use.",
+      "My core profile is backend engineering and system design. In my latest project, I independently took responsibility for the whole product: architecture, backend, web interface, infrastructure, CI/CD, operations, and SEO optimisation.",
+      "If developing the web/PWA direction is currently relevant for you, I would be glad to discuss where my experience could be useful. The rest of this website is my current résumé, where you can explore my work and technical competencies in more detail."
+    ]
+  }
+}
