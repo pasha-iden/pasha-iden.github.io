@@ -1775,6 +1775,7 @@ Fullstack Product Engineer</p>
                 easterEggContentReady = false;
                 easterScreen.classList.add('is-visible');
                 easterScreen.setAttribute('aria-hidden', 'false');
+                refreshCustomScrollbars();
                 const lines = getEasterLines();
                 easterLines.forEach((element) => { element.textContent = ''; });
                 easterTelegram.textContent = '';
@@ -2003,6 +2004,7 @@ Fullstack Product Engineer</p>
                 versionOpen = true;
                 versionScreen.classList.add('is-visible');
                 versionScreen.setAttribute('aria-hidden', 'false');
+                refreshCustomScrollbars();
                 renderVersionNotes();
                 const versionItems = getVersionText();
                 versionItems.forEach(([element]) => { element.textContent = ''; });
@@ -2360,8 +2362,13 @@ Fullstack Product Engineer</p>
             const { rect } = track;
             const isSolutionList = element === solutionList;
             const isVersionPanel = element === versionPanel;
+            const isDetailScroll = element === detailPanel || detailPanel.contains(element);
+            const isDetailScreenActive = menuScreen.classList.contains('is-visible') &&
+                !easterScreen.classList.contains('is-visible') &&
+                !versionScreen.classList.contains('is-visible');
             const isVisible = document.body.contains(element) && rect.width > 0 && rect.height > 0 &&
                 (!isSolutionList || (element.classList.contains('is-open') && element.classList.contains('is-scrollable'))) &&
+                (!isDetailScroll || isDetailScreenActive) &&
                 (!isVersionPanel || (versionScreen.classList.contains('is-visible') && (!easterEggOpen || versionOrigin === 'easter')));
             const maxScroll = element.scrollHeight - element.clientHeight;
             if (!isVisible || maxScroll <= 1) {
@@ -3243,7 +3250,7 @@ Fullstack Product Engineer</p>
         });
         document.addEventListener('touchmove', (event) => {
             if (!window.matchMedia('(pointer: coarse)').matches) return;
-            const scrollContainer = event.target.closest('.solution-list.is-scrollable, .detail-panel.is-open');
+            const scrollContainer = event.target.closest('.solution-list.is-scrollable, .detail-panel.is-open, .version-panel');
             if (!scrollContainer) event.preventDefault();
         }, { passive: false });
         window.addEventListener('DOMContentLoaded', () => {
