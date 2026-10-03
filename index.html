@@ -1824,7 +1824,7 @@ Fullstack Product Engineer</p>
                         ['State-driven UI', 'The interface is a system of managed screens and states without a frontend framework or external router: language, section, solution, case, competency, detail views and transition states.'],
                         ['SPA navigation', 'The start screen, menu, submenus, detailed materials and hidden screens change without reloading the document.'],
                         ['URL as application state', 'Screen, language, theme and required context are restored from the URL, so a link can open the relevant state directly.'],
-                        ['Logical Back', 'Custom return logic restores the previous interface level instead of merely switching HTML blocks.'],
+                        ['Return logic', 'Custom return restores the previous logical interface level without switching the HTML page.'],
                         ['Conflict-safe transitions', 'Animation jobs and transition identifiers prevent an outdated animation from overwriting a newer UI state.']
                     ]],
                     ['Text animation system', [
@@ -1832,12 +1832,10 @@ Fullstack Product Engineer</p>
                         ['Reverse reveal', 'Current content is visually dismantled before a state changes.'],
                         ['Scramble and morph', 'Characters pass through intermediate symbols; one text state can transform into another rather than being replaced instantly.'],
                         ['Local glitch', 'Random characters in rendered text briefly run through three glitch frames and return to the original.'],
-                        ['Composed sequences', 'Headers, content and CTA are revealed in an intentional sequence; interactive outlines appear as the final reveal stage.']
+                        ['Repaint / rollback on repeated language selection', 'A visual response to selecting the active language: the interface starts a transition, recognises that there is no state to change, and returns the original text.']
                     ]],
                     ['Interface transitions', [
-                        ['Language repaint', 'RU/EN changes use the same text transition system; re-selecting the active language triggers a short repaint-and-return response.'],
-                        ['Theme and status bar', 'Light/dark changes use a dedicated theme wash, while status-bar controls adapt their position and visibility to the active screen.'],
-                        ['Contextual scrolling', 'Competency stacks expand as nested states; custom scrollbars appear only where a content area actually overflows.']
+                        ['Theme and status bar', 'Light/dark changes use a dedicated theme wash, while status-bar controls adapt their position and visibility to the active screen.']
                     ]]
                 ], [
                     ['Dynamic favicon', [
@@ -1868,7 +1866,7 @@ Fullstack Product Engineer</p>
                         ['State-driven UI', 'Интерфейс построен как набор управляемых экранов и состояний без frontend-фреймворка и внешнего router: язык, раздел, решение, кейс, компетенция, detail-экраны и состояния переходов.'],
                         ['SPA-навигация', 'Стартовый экран, меню, подменю, подробные материалы и скрытые экраны меняются без перезагрузки документа.'],
                         ['URL как состояние приложения', 'Экран, язык, тема и необходимый контекст восстанавливаются из URL — ссылка сразу открывает нужное состояние.'],
-                        ['Логика Back', 'Собственный возврат восстанавливает предыдущий логический уровень интерфейса, а не просто переключает HTML-блоки.'],
+                        ['Логика возвратов', 'Собственный возврат восстанавливает предыдущий логический уровень интерфейса, не переключая html страницы.'],
                         ['Защита переходов', 'Animation jobs и transition identifiers не позволяют устаревшей анимации перезаписать более новое состояние UI.']
                     ]],
                     ['Система текстовых анимаций', [
@@ -1876,12 +1874,10 @@ Fullstack Product Engineer</p>
                         ['Reverse reveal', 'Перед сменой состояния текущий контент визуально демонтируется.'],
                         ['Scramble и morph', 'Символы проходят промежуточные состояния; один текст может перейти в другой без мгновенной подмены.'],
                         ['Локальный glitch', 'Случайные символы готового текста кратко проходят три glitch-кадра и возвращаются к исходному виду.'],
-                        ['Композиция последовательностей', 'Заголовки, содержание и CTA раскрываются управляемо; контур интерактивного элемента появляется завершающей стадией.']
+                        ['Repaint / откат при повторном выборе языка', 'Визуальная реакция на выбор уже активного языка: интерфейс начинает переход, «понимает», что состояние менять некуда, и возвращает исходный текст.']
                     ]],
                     ['Переходы интерфейса', [
-                        ['Repaint языка', 'Смена RU/EN использует общую систему текстовых переходов; повторный выбор активного языка вызывает короткий сценарий перерисовки и отката.'],
-                        ['Тема и status bar', 'Light/dark переключается через отдельный theme wash, а элементы status bar меняют положение и видимость по состоянию интерфейса.'],
-                        ['Контекстная прокрутка', 'Стек компетенций раскрывается как вложенное состояние; custom scrollbar появляется только при реальном переполнении контента.']
+                        ['Тема и status bar', 'Light/dark переключается через отдельный theme wash, а элементы status bar меняют положение и видимость по состоянию интерфейса.']
                     ]]
                 ], [
                     ['Dynamic favicon', [
@@ -1906,15 +1902,66 @@ Fullstack Product Engineer</p>
                 ]]
             }
         };
+        const fullVersionContent = {
+            ru: {
+                kicker: 'ЭТОТ ВЕБ-САЙТ', stackTitle: 'Стек:', stack: 'HTML · CSS · JS · SPA · GitHub',
+                columns: [[
+                    ['Архитектура интерфейса', [
+                        ['State-driven UI', 'Интерфейс построен как набор управляемых состояний и экранов без frontend-фреймворка и внешнего router. Состояние включает выбранный язык, раздел, решение, кейс, компетенцию, открытые экраны описаний и служебные состояния переходов.'],
+                        ['SPA-навигация', 'Переходы между стартовым экраном, меню, подменю, подробными материалами и скрытыми экранами происходят без перезагрузки документа.'],
+                        ['URL как состояние приложения', 'Выбранный экран, язык, тема и другие необходимые параметры могут быть восстановлены из URL. Это позволяет открывать ссылку сразу в нужном контексте, а не только на главной.'],
+                        ['Логика возвратов', 'Собственный возврат восстанавливает предыдущий логический уровень интерфейса, не переключая html страницы.'],
+                        ['Конкурентные состояния UI', 'Переходы защищены от конфликтующих пользовательских действий через идентификаторы animation jobs / transitions; устаревшая анимация не должна перезаписывать более новое состояние.']
+                    ]],
+                    ['Система текстовых анимаций', [
+                        ['Reveal / печать текста', 'Последовательное появление контента при открытии экранов и элементов.'],
+                        ['Reverse reveal / стирание', 'Обратная анимация текста перед уходом с текущего состояния; используется как часть перехода между экранами.'],
+                        ['Scramble / перебор символов', 'Символы проходят через промежуточные состояния перед фиксацией итогового текста.'],
+                        ['Glitch / локальное мерцание', 'Отдельные символы уже отображённого текста периодически заменяются последовательностью случайных знаков и возвращаются к исходному состоянию. Каждый выбранный символ проходит три glitch-кадра.'],
+                        ['Morph между состояниями', 'Визуальный переход одного текстового состояния в другое вместо обычной мгновенной замены содержимого.'],
+                        ['Loading dots', 'Отдельная циклическая анимация . → .. → ... → пустое состояние для CTA и ожидания.'],
+                        ['Repaint / откат при повторном выборе языка', 'Визуальная реакция на выбор уже активного языка: интерфейс начинает переход, «понимает», что состояние менять некуда, и возвращает исходный текст.']
+                    ]],
+                    ['Переходы интерфейса', [
+                        ['Анимация смены экранов', 'Старое состояние сначала полностью демонтируется визуально, после чего раскрывается новое.'],
+                        ['Анимация смены языка', 'Переключение RU/EN проходит через ту же систему текстовых переходов.'],
+                        ['Анимация status bar', 'Элементы меняют положение и видимость в зависимости от состояния основного интерфейса.'],
+                        ['Анимированный custom scrollbar', 'Собственный scrollbar появляется только там, где контент действительно требует прокрутки, вместо постоянного browser scrollbar.']
+                    ]]
+                ], [
+                    ['Dynamic favicon', [
+                        ['Favicon как часть интерфейса', 'Динамический favicon перекликается с мотивом глитчей интерфейса, подменяя символы в изображении.'],
+                        ['Перебор favicon-глифов', 'Используются последовательности >_, />, P/, P>, P#; favicon проходит через несколько состояний.'],
+                        ['Мерцание favicon', 'Короткие изменения между состояниями создают тот же характер нестабильного текста, что и основная animation system.'],
+                        ['Синхронизация с темой', 'Favicon имеет визуальные варианты, соответствующие оформлению страницы: смена темы меняет набор favicon.']
+                    ]],
+                    ['Локализация, темы и sharing', [
+                        ['Полная RU/EN локализация', 'Язык меняет весь контент без reload; меняется и document.documentElement.lang.'],
+                        ['Light / Dark', 'Две цветовые схемы на CSS variables; выбранная тема сохраняется в URL и встроена в визуальный язык переходов.'],
+                        ['Копирование ссылок', 'Отдельная кнопка создаёт чистую ссылку без состояния текущего раздела, вторая сохраняет параметры текущего интерфейса.']
+                    ]],
+                    ['Пасхалки', [
+                        ['Generation tracking', 'Каждое копирование увеличивает g (generation) на единицу: параметр отражает глубину (поколение) конкретной цепочки распространения ссылки.'],
+                        ['Поколение ссылки', 'При g ≥ 5 стартовый экран получает дополнительное скрытое состояние: до выбора языка — терминальное >_; после выбора — локализованное сообщение и «Продолжить».'],
+                        ['Session и developer state', 'После показа факт хранится в sessionStorage, чтобы увидеть сообщение можно было лишь раз; ?egg=1 принудительно включает preview независимо от sessionStorage и не передаётся при копировании.'],
+                        ['Пасхалка длительного просмотра', 'Время считается только когда вкладка видима через document.visibilityState. После пяти минут в status bar появляется письмо; время продолжает обновляться внутри текста, а возврат сохраняет исходный контекст.'],
+                        ['Техническая реализация', 'Развернутое описание технической реализации открывается по клику на едва примечательную сноску о версии страницы.']
+                    ]]
+                ]]
+            }
+        };
+        function getVersionContent(language = currentLanguage) {
+            return fullVersionContent[language] || versionContent[language];
+        }
         function renderVersionNotes() {
-            const content = versionContent[currentLanguage];
+            const content = getVersionContent();
             const itemMarkup = ([title, text]) => `<p class="version-item"><strong data-target-text="${title}"></strong><span class="version-separator" data-target-text=" — "></span><span class="version-description" data-target-text="${text}"></span></p>`;
             const sectionMarkup = ([title, items]) => `<section class="version-section"><h2 class="version-heading" data-target-text="${title}"></h2>${items.map(itemMarkup).join('')}</section>`;
             versionPanel.innerHTML = content.columns.map((column, index) => `<div class="version-column">${index === 0 ? `<p class="version-kicker" data-target-text="${content.kicker}"></p>` : ''}${column.map(sectionMarkup).join('')}</div>`).join('');
             versionPanel.lastElementChild.insertAdjacentHTML('beforeend', `<section class="version-section"><p class="version-stack-title" data-target-text="${content.stackTitle}"></p><p class="version-stack" data-target-text="${content.stack}"></p></section>`);
         }
         function getVersionTargets(language = currentLanguage) {
-            const content = versionContent[language];
+            const content = getVersionContent(language);
             const targets = [];
             content.columns.forEach((column, columnIndex) => {
                 if (columnIndex === 0) targets.push(content.kicker);
