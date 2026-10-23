@@ -357,7 +357,7 @@ Fullstack Product Engineer</p>
         <button class="easter-trigger" id="easter-trigger" type="button" aria-label="Open next step"><svg class="mail-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.4"></rect><path d="m3 6 9 7 9-7"></path></svg><span class="mail-notification" aria-hidden="true"></span></button>
     </div>
     <p class="site-credit">Copyright © 2026 Pasha Iden. Визуальные эффекты вдохновлены <a href="https://yandex.ru/cup/" target="_blank" rel="noopener noreferrer">Yandex Cup</a>. Реализация выполнена независимо и расширена с использованием OpenAI Terra-medium. Код распространяется по лицензии MIT.</p>
-    <button class="site-version" id="site-version" type="button" aria-label="Open version notes">v1.0.3</button>
+    <button class="site-version" id="site-version" type="button" aria-label="Open version notes">v1.0.4</button>
     <div class="theme-wash" id="theme-wash" aria-hidden="true"></div>
     <script>
         const footerCopy = {
@@ -2017,7 +2017,8 @@ Fullstack Product Engineer</p>
                         ['SPA navigation', 'Transitions between the landing screen, menu, submenus, detailed materials, and hidden screens happen without a document reload.'],
                         ['URL as application state', 'The selected screen, language, theme, and other required parameters can be restored from the URL. This makes it possible to open a link directly in the required context rather than only on the home screen.'],
                         ['Return logic', 'Custom Back restores the previous logical level of the interface without switching HTML pages.'],
-                        ['Concurrent UI states', 'Transitions are protected from conflicting user actions through animation job / transition identifiers; an outdated animation cannot overwrite a newer UI state.']
+                        ['Concurrent UI states', 'Transitions are protected from conflicting user actions through animation job / transition identifiers; an outdated animation cannot overwrite a newer UI state.'],
+                        ['404 page', 'A standalone localized error screen preserves the theme and valid route parameters, then returns the visitor to the corresponding application state through the shared transition language.']
                     ]],
                     ['Text animation system', [
                         ['Reveal / text typing', 'Sequential appearance of content when screens and elements open.'],
@@ -2064,7 +2065,8 @@ Fullstack Product Engineer</p>
                         ['SPA-навигация', 'Переходы между стартовым экраном, меню, подменю, подробными материалами и скрытыми экранами происходят без перезагрузки документа.'],
                         ['URL как состояние приложения', 'Выбранный экран, язык, тема и другие необходимые параметры могут быть восстановлены из URL. Это позволяет открывать ссылку сразу в нужном контексте, а не только на главной.'],
                         ['Логика возвратов', 'Собственный возврат восстанавливает предыдущий логический уровень интерфейса, не переключая html страницы.'],
-                        ['Конкурентные состояния UI', 'Переходы защищены от конфликтующих пользовательских действий через идентификаторы animation jobs / transitions; устаревшая анимация не должна перезаписывать более новое состояние.']
+                        ['Конкурентные состояния UI', 'Переходы защищены от конфликтующих пользовательских действий через идентификаторы animation jobs / transitions; устаревшая анимация не должна перезаписывать более новое состояние.'],
+                        ['Страница 404', 'Отдельный локализованный экран ошибки сохраняет тему и валидные параметры маршрута, затем возвращает пользователя в соответствующее состояние приложения через общий визуальный язык переходов.']
                     ]],
                     ['Система текстовых анимаций', [
                         ['Reveal / печать текста', 'Последовательное появление контента при открытии экранов и элементов.'],

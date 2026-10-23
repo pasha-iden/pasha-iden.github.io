@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>404 — Pasha Iden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link id="favicon" rel="icon" type="image/svg+xml" href="assets/favicon/light-03-p-slash.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <style>
+        :root { --ink: #10141d; --muted: #919baa; --blue: #6d91ff; --surface: #edf5ff; --surface-highlight: rgba(255,255,255,.95); --surface-glow: rgba(153,203,255,.32); }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { min-width: 320px; min-height: 100%; margin: 0; overscroll-behavior: none; }
+        body { min-height: 100dvh; overflow: hidden; color: var(--ink); font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace; background: radial-gradient(circle at 20% 18%, var(--surface-highlight), transparent 30rem), radial-gradient(circle at 82% 88%, var(--surface-glow), transparent 31rem), var(--surface); transition: color .5s ease; }
+        body[data-theme="dark"] { --ink: #eee9e0; --muted: #ada69b; --blue: #d9a46a; --surface: #161718; --surface-highlight: rgba(69,72,76,.48); --surface-glow: rgba(128,74,40,.22); color-scheme: dark; }
+        button { font: inherit; }
+        main { position: fixed; inset: 0; display: grid; place-items: center; padding: 24px; }
+        .not-found { width: min(580px, 100%); }
+        .not-found-kicker { min-height: 1em; margin: 0 0 14px; color: var(--blue); font-size: .68rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+        .not-found-code { min-height: 1em; margin: 0 0 14px; color: var(--ink); font-size: clamp(2rem, 7vw, 4.5rem); font-weight: 600; line-height: 1; letter-spacing: -.08em; }
+        .not-found-copy { min-height: 3.1em; max-width: 480px; margin: 0; color: var(--muted); font-size: clamp(.7rem, 1.1vw, .84rem); line-height: 1.55; letter-spacing: -.025em; white-space: pre-line; }
+        .return-button { min-height: 31px; margin-top: 24px; padding: 6px 11px; border: 1px solid transparent; color: var(--muted); background: transparent; cursor: pointer; font-size: .68rem; letter-spacing: -.02em; opacity: 0; pointer-events: none; transition: border-color .35s ease, color .35s ease, opacity .35s ease; }
+        .return-button.is-ready { border-color: var(--muted); opacity: 1; pointer-events: auto; }
+        .return-button.is-ready:hover, .return-button.is-ready:focus-visible { border-color: var(--ink); color: var(--ink); outline: none; }
+        .status-bar { position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: 0; transition: opacity .55s ease; }
+        .status-bar.is-ready { opacity: 1; }
+        .status-bar.is-leaving { opacity: 0; pointer-events: none; }
+        .status-bar > * { pointer-events: auto; }
+        .top-language-switch { position: absolute; top: 28px; left: 50%; display: flex; align-items: center; gap: 9px; transform: translateX(-50%); }
+        .top-language-option { padding: 4px 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: .78rem; font-weight: 600; letter-spacing: .05em; transition: color .25s ease; }
+        .top-language-option:hover, .top-language-option:focus-visible, .top-language-option.is-active { color: var(--ink); outline: none; }
+        .divider { color: var(--ink); font-size: .8rem; font-weight: 300; line-height: 1; }
+        .copy-route { position: absolute; top: 31px; right: calc(50% + clamp(42px, 4.5vw, 51px)); width: 18px; height: 18px; padding: 0; border: 0; background: transparent; cursor: pointer; }
+        .copy-route::before, .copy-route::after { content: ''; position: absolute; width: 9px; height: 9px; border: 2px solid var(--muted); transition: border-color .35s ease; }
+        .copy-route::before { top: 2px; right: 2px; opacity: .48; }
+        .copy-route::after { top: 6px; right: 6px; border-color: var(--ink); background: var(--surface); }
+        .copy-route:hover::before, .copy-route:hover::after, .copy-route:focus-visible::before, .copy-route:focus-visible::after, .copy-route.is-copied::before, .copy-route.is-copied::after { border-color: var(--ink); }
+        .copy-route:focus-visible { outline: none; }
+        .copy-feedback { position: absolute; top: 57px; left: 50%; color: var(--ink); font-size: .62rem; font-weight: 600; letter-spacing: -.02em; opacity: 0; pointer-events: none; transform: translate(-50%, 4px); transition: opacity .35s ease, transform .35s ease; white-space: nowrap; }
+        .copy-feedback.is-visible { opacity: 1; transform: translate(-50%, 0); }
+        .theme-toggle { position: absolute; top: 32px; left: calc(50% + clamp(42px, 4.5vw, 51px)); width: 34px; height: 18px; padding: 0; border: 2px solid var(--muted); border-radius: 999px; background: transparent; cursor: pointer; transition: border-color .35s ease; }
+        .theme-toggle::after { content: ''; position: absolute; top: 50%; left: 1px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); transform: translate(16px, -50%); transition: transform .35s ease, background-color .35s ease; }
+        body[data-theme="dark"] .theme-toggle::after { transform: translateY(-50%); }
+        .theme-toggle:hover, .theme-toggle:focus-visible { border-color: var(--ink); outline: none; }
+        .github-link { position: absolute; top: 32px; left: calc(50% + clamp(42px, 4.5vw, 51px) + 50px); display: grid; width: 20px; height: 20px; place-items: center; color: var(--muted); text-decoration: none; transition: color .35s ease; }
+        .github-link svg { display: block; width: 18px; height: 18px; fill: currentColor; transform: translateY(-1px); }
+        .github-link:hover, .github-link:focus-visible { color: var(--ink); outline: none; }
+        .theme-wash { position: fixed; inset: 0; z-index: 4; opacity: 0; pointer-events: none; }
+        @media (orientation: portrait) { .not-found { margin-top: 48px; } }
+    </style>
+</head>
+<body>
+    <main>
+        <section class="not-found" aria-live="polite">
+            <p class="not-found-kicker" id="not-found-kicker"></p>
+            <h1 class="not-found-code" id="not-found-code"></h1>
+            <p class="not-found-copy" id="not-found-copy"></p>
+            <button class="return-button" id="return-button" type="button"></button>
+        </section>
+    </main>
+    <div class="status-bar" id="status-bar">
+        <div class="top-language-switch" aria-label="Language switcher">
+            <button class="top-language-option" type="button" data-language="en">EN</button><span class="divider" aria-hidden="true">|</span><button class="top-language-option" type="button" data-language="ru">RU</button>
+        </div>
+        <button class="copy-route" id="copy-route" type="button" aria-label="Copy page link"></button>
+        <span class="copy-feedback" id="copy-feedback" aria-live="polite"></span>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Enable dark theme" aria-pressed="false"></button>
+        <a class="github-link" href="https://github.com/pasha-iden" target="_blank" rel="noopener noreferrer" aria-label="Open Pasha Iden's GitHub profile"><svg viewBox="-1 -1 26 26" aria-hidden="true"><path d="M12 .297C5.373.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.73.083-.73 1.205.084 1.838 1.237 1.838 1.237 1.07 1.835 2.809 1.304 3.495.998.108-.776.418-1.305.762-1.605-2.665-.305-5.467-1.332-5.467-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 1.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.62-5.475 5.92.43.37.815 1.096.815 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297 24 5.67 18.627.297 12 .297Z"/></svg></a>
+    </div>
+    <div class="theme-wash" id="theme-wash" aria-hidden="true"></div>
+    <script>
+        const copy = {
+            en: { kicker: 'ROUTE NOT FOUND', code: '404', text: 'This route does not exist or the link has become outdated.', back: 'Return to the page', copied: 'Link copied' },
+            ru: { kicker: 'МАРШРУТ НЕ НАЙДЕН', code: '404', text: 'Такой страницы не существует или ссылка успела устареть.', back: 'Вернуться на страницу', copied: 'Ссылка скопирована' }
+        };
+        const validLanguages = new Set(['ru', 'en']);
+        const validThemes = new Set(['light', 'dark']);
+        const validSections = new Set(['solutions', 'cases', 'skills', 'about', 'contact']);
+        const validSolutions = new Set(['landing', 'saas', 'messenger', 'ai', 'team']);
+        const validCases = new Set(['dreamcar', 'booker', 'adventure', 'personal']);
+        const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+-<>/'.split('');
+        const faviconGlyphs = [['>', '_'], ['/', '>'], ['P', '/'], ['P', '>'], ['P', '#']];
+        const params = new URLSearchParams(location.search);
+        const hasSelectedLanguage = validLanguages.has(params.get('lang'));
+        let currentLanguage = hasSelectedLanguage ? params.get('lang') : 'en';
+        let faviconFrame = 2;
+        let faviconRevision = 0;
+        let copyTimer = 0;
+        let leaving = false;
+        const textAnimationJobs = new WeakMap();
+        const faviconLink = document.getElementById('favicon');
+        const statusBar = document.getElementById('status-bar');
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeWash = document.getElementById('theme-wash');
+        const copyRouteButton = document.getElementById('copy-route');
+        const copyFeedback = document.getElementById('copy-feedback');
+        const returnButton = document.getElementById('return-button');
+        const textElements = [
+            document.getElementById('not-found-kicker'),
+            document.getElementById('not-found-code'),
+            document.getElementById('not-found-copy'),
+            returnButton
+        ];
+        const randomGlyph = () => glyphs[Math.floor(Math.random() * glyphs.length)];
+        function setFaviconFrame(frame) {
+            faviconFrame = frame;
+            const colors = document.body.dataset.theme === 'dark'
+                ? { background: '#161718', ink: '#EEE9E0', accent: '#D9A46A' }
+                : { background: '#EDF5FF', ink: '#10141D', accent: '#6D91FF' };
+            const escapeGlyph = (glyph) => glyph === '>' ? '&gt;' : glyph;
+            const [first, second] = faviconGlyphs[frame];
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="${colors.background}"/><text x="7" y="43" fill="${colors.ink}" font-family="JetBrains Mono,monospace" font-size="34" font-weight="700">${escapeGlyph(first)}</text><text x="31" y="43" fill="${colors.accent}" font-family="JetBrains Mono,monospace" font-size="34" font-weight="700">${escapeGlyph(second)}</text></svg>`;
+            faviconLink.href = `data:image/svg+xml,${encodeURIComponent(svg)}#${++faviconRevision}`;
+        }
+        function scheduleFaviconAnimation() {
+            const delay = 1500 + Math.floor(Math.random() * 1200);
+            window.setTimeout(() => {
+                const stable = faviconFrame;
+                if (Math.random() < .38) {
+                    let index = 0;
+                    const cycle = () => {
+                        setFaviconFrame([0, 1, 2, 3, 4][index++]);
+                        if (index < 5) return window.setTimeout(cycle, 85);
+                        window.setTimeout(() => { setFaviconFrame([2, 3, 4][Math.floor(Math.random() * 3)]); scheduleFaviconAnimation(); }, 85);
+                    };
+                    cycle();
+                } else {
+                    const next = [0, 1, 2, 3, 4].filter((item) => item !== stable);
+                    setFaviconFrame(next[Math.floor(Math.random() * next.length)]);
+                    window.setTimeout(() => { setFaviconFrame(stable); scheduleFaviconAnimation(); }, 85);
+                }
+            }, delay);
+        }
+        function setTheme(theme, persist = true) {
+            document.body.dataset.theme = theme === 'dark' ? 'dark' : 'light';
+            themeToggle.setAttribute('aria-pressed', String(theme === 'dark'));
+            themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Enable light theme' : 'Enable dark theme');
+            setFaviconFrame(faviconFrame);
+            if (persist) { try { localStorage.setItem('commerce-theme', theme); } catch (_) {} }
+        }
+        function transitionTheme(theme) {
+            if (document.body.dataset.theme === theme) return;
+            themeWash.style.transition = 'none';
+            themeWash.style.background = getComputedStyle(document.body).background;
+            themeWash.style.opacity = '1';
+            void themeWash.offsetWidth;
+            setTheme(theme);
+            requestAnimationFrame(() => { themeWash.style.transition = 'opacity 1.5s ease'; themeWash.style.opacity = '0'; });
+        }
+        function textFor(language) { return copy[language] || copy.en; }
+        function startTextAnimation(element) {
+            const job = (textAnimationJobs.get(element) || 0) + 1;
+            textAnimationJobs.set(element, job);
+            return job;
+        }
+        function isCurrentTextAnimation(element, job) { return textAnimationJobs.get(element) === job; }
+        function scrambleText(element, text, job) {
+            const characters = Array.from(text);
+            element.textContent = '';
+            element.style.opacity = '1';
+            if (!characters.length) return Promise.resolve(true);
+            const states = characters.map((character, index) => {
+                const span = document.createElement('span');
+                span.textContent = character;
+                span.style.opacity = '0';
+                element.append(span);
+                return { character, span, startDelay: /\s/.test(character) ? 0 : (index === 0 ? 0 : Math.floor((index * 28) / 90) + Math.floor(Math.random() * 4)), substitutions: /\s/.test(character) ? 0 : 4 + Math.floor(Math.random() * 5) };
+            });
+            const totalPasses = Math.max(...states.map((state) => state.startDelay + state.substitutions));
+            let pass = 0;
+            return new Promise((resolve) => {
+                const timer = setInterval(() => {
+                    if (!isCurrentTextAnimation(element, job)) { clearInterval(timer); return resolve(false); }
+                    states.forEach((state) => {
+                        if (/\s/.test(state.character)) { state.span.style.opacity = '1'; return; }
+                        if (pass < state.startDelay) return;
+                        state.span.style.opacity = '1';
+                        state.span.textContent = pass < state.startDelay + state.substitutions ? randomGlyph() : state.character;
+                    });
+                    if (pass > totalPasses) { element.textContent = text; element.dataset.glitchText = text; clearInterval(timer); return resolve(true); }
+                    pass += 1;
+                }, 90);
+            });
+        }
+        function reverseRevealText(element, text, job) {
+            const characters = Array.from(text);
+            element.textContent = '';
+            element.style.opacity = '1';
+            if (!characters.length) return Promise.resolve(true);
+            const states = characters.map((character) => {
+                const span = document.createElement('span');
+                span.textContent = character;
+                span.style.opacity = '0';
+                element.append(span);
+                return { character, span, startDelay: /\s/.test(character) ? 0 : 1 + Math.floor(Math.random() * 4), substitutions: /\s/.test(character) ? 0 : 4 + Math.floor(Math.random() * 5) };
+            });
+            const totalPasses = Math.max(...states.map((state) => state.startDelay + state.substitutions));
+            states.forEach((state) => { state.revealStartDelay = /\s/.test(state.character) ? 0 : totalPasses - (state.startDelay + state.substitutions); });
+            let pass = 0;
+            return new Promise((resolve) => {
+                const timer = setInterval(() => {
+                    if (!isCurrentTextAnimation(element, job)) { clearInterval(timer); return resolve(false); }
+                    states.forEach((state) => {
+                        if (/\s/.test(state.character)) { state.span.style.opacity = '1'; return; }
+                        if (pass < state.revealStartDelay) return;
+                        state.span.style.opacity = '1';
+                        state.span.textContent = pass < state.revealStartDelay + state.substitutions ? randomGlyph() : state.character;
+                    });
+                    if (pass > totalPasses) { element.textContent = text; element.dataset.glitchText = text; clearInterval(timer); return resolve(true); }
+                    pass += 1;
+                }, 90);
+            });
+        }
+        function reverseScrambleText(element, text, job) {
+            const characters = Array.from(text);
+            element.textContent = '';
+            element.style.opacity = '1';
+            if (!characters.length) return Promise.resolve(true);
+            const states = characters.map((character) => {
+                const span = document.createElement('span');
+                span.textContent = character;
+                element.append(span);
+                return { character, span, startDelay: /\s/.test(character) ? 0 : 1 + Math.floor(Math.random() * 4), substitutions: /\s/.test(character) ? 0 : 4 + Math.floor(Math.random() * 5) };
+            });
+            const totalPasses = Math.max(...states.map((state) => state.startDelay + state.substitutions));
+            let pass = 0;
+            return new Promise((resolve) => {
+                const timer = setInterval(() => {
+                    if (!isCurrentTextAnimation(element, job)) { clearInterval(timer); return resolve(false); }
+                    if (pass > totalPasses) { clearInterval(timer); return resolve(true); }
+                    states.forEach((state) => {
+                        if (/\s/.test(state.character) || pass < state.startDelay) return;
+                        if (pass < state.startDelay + state.substitutions) state.span.textContent = randomGlyph();
+                        else state.span.style.opacity = '0';
+                    });
+                    pass += 1;
+                }, 90);
+            });
+        }
+        function morphText(element, fromText, toText, job) {
+            const from = Array.from(fromText);
+            const to = Array.from(toText);
+            const length = Math.max(from.length, to.length);
+            element.textContent = '';
+            element.style.opacity = '1';
+            if (!length) return Promise.resolve(true);
+            const states = Array.from({ length }, (_, index) => {
+                const span = document.createElement('span');
+                const oldCharacter = from[index] || '';
+                const newCharacter = to[index] || '';
+                span.textContent = oldCharacter;
+                span.style.opacity = oldCharacter ? '1' : '0';
+                element.append(span);
+                return { oldCharacter, newCharacter, span, startDelay: index === 0 ? 0 : Math.floor(Math.random() * 4), substitutions: 4 + Math.floor(Math.random() * 5) };
+            });
+            const totalPasses = Math.max(...states.map((state) => state.startDelay + state.substitutions));
+            let pass = 0;
+            return new Promise((resolve) => {
+                const timer = setInterval(() => {
+                    if (!isCurrentTextAnimation(element, job)) { clearInterval(timer); return resolve(false); }
+                    states.forEach((state) => {
+                        if (pass < state.startDelay) return;
+                        if (pass < state.startDelay + state.substitutions) { state.span.textContent = randomGlyph(); state.span.style.opacity = '1'; }
+                        else { state.span.textContent = state.newCharacter; state.span.style.opacity = state.newCharacter ? '1' : '0'; }
+                    });
+                    if (pass > totalPasses) { element.textContent = toText; element.dataset.glitchText = toText; clearInterval(timer); return resolve(true); }
+                    pass += 1;
+                }, 90);
+            });
+        }
+        function renderLanguage(language, initial = false) {
+            currentLanguage = language;
+            document.documentElement.lang = language;
+            const content = textFor(language);
+            const targets = [content.kicker, content.code, content.text, content.back];
+            document.querySelectorAll('.top-language-option').forEach((option) => option.classList.toggle('is-active', option.dataset.language === language));
+            if (initial) {
+                const animations = textElements.map((element, index) => {
+                    const job = startTextAnimation(element);
+                    return index === 2 ? reverseRevealText(element, targets[index], job) : scrambleText(element, targets[index], job);
+                });
+                animations[3].then((completed) => { if (completed && !leaving) returnButton.classList.add('is-ready'); });
+                return Promise.all(animations);
+            }
+            returnButton.classList.remove('is-ready');
+            params.set('lang', language);
+            history.replaceState(null, '', `${location.pathname}?${params.toString()}${location.hash}`);
+            const animations = textElements.map((element, index) => morphText(element, element.dataset.glitchText || element.textContent, targets[index], startTextAnimation(element)));
+            animations[3].then((completed) => { if (completed && !leaving) returnButton.classList.add('is-ready'); });
+            return Promise.all(animations);
+        }
+        function getReturnUrl() {
+            const output = new URL('/index.html', location.origin);
+            const source = new URLSearchParams(location.search);
+            const language = source.get('lang');
+            const theme = source.get('theme');
+            const screen = source.get('screen');
+            const section = source.get('section');
+            const solution = source.get('solution');
+            const caseKey = source.get('case');
+            const to = source.get('to');
+            const generation = Number.parseInt(source.get('g'), 10);
+            if (validThemes.has(theme)) output.searchParams.set('theme', theme);
+            const hasValidCoverKey = Boolean(to && /^[A-Za-z0-9_-]+$/.test(to));
+            if (hasValidCoverKey) output.searchParams.set('to', to);
+            if (validLanguages.has(language)) {
+                output.searchParams.set('lang', language);
+                if (screen === 'solution' && validSolutions.has(solution)) { output.searchParams.set('screen', 'solution'); output.searchParams.set('section', 'solutions'); output.searchParams.set('solution', solution); }
+                else if (screen === 'case' && validCases.has(caseKey)) { output.searchParams.set('screen', 'case'); output.searchParams.set('section', 'cases'); output.searchParams.set('case', caseKey); }
+                else if (screen === 'cover' && hasValidCoverKey) output.searchParams.set('screen', 'cover');
+                else if (screen === 'menu') { output.searchParams.set('screen', 'menu'); if (validSections.has(section)) output.searchParams.set('section', section); }
+                else output.searchParams.set('screen', 'menu');
+            }
+            if (Number.isFinite(generation) && generation > 0) output.searchParams.set('g', String(generation));
+            if (source.get('egg') === '1') output.searchParams.set('egg', '1');
+            return output.href;
+        }
+        async function copyCleanLink() {
+            const output = new URL('/index.html', location.origin);
+            const generation = Number.parseInt(params.get('g'), 10);
+            output.searchParams.set('g', String(Number.isFinite(generation) && generation > 0 ? generation + 1 : 1));
+            try {
+                await navigator.clipboard.writeText(output.href);
+                copyRouteButton.classList.add('is-copied');
+                copyFeedback.textContent = textFor(currentLanguage).copied;
+                copyFeedback.classList.add('is-visible');
+                clearTimeout(copyTimer);
+                copyTimer = setTimeout(() => copyFeedback.classList.remove('is-visible'), 1300);
+                setTimeout(() => copyRouteButton.classList.remove('is-copied'), 700);
+            } catch (_) {}
+        }
+        function startGlitchLoop() {
+            window.setTimeout(() => {
+                if (!leaving) {
+                    const element = textElements[Math.floor(Math.random() * 3)];
+                    const source = element.textContent;
+                    const position = Math.floor(Math.random() * Math.max(1, source.length));
+                    if (source[position] && source[position] !== ' ') {
+                        let tick = 0;
+                        const glitch = () => {
+                            const chars = Array.from(source);
+                            chars[position] = tick < 3 ? randomGlyph() : source[position];
+                            element.textContent = chars.join('');
+                            tick += 1;
+                            if (tick <= 3) return setTimeout(glitch, 85);
+                        };
+                        glitch();
+                    }
+                }
+                startGlitchLoop();
+            }, 1100 + Math.random() * 1700);
+        }
+        returnButton.addEventListener('click', () => {
+            if (leaving) return;
+            leaving = true;
+            returnButton.classList.remove('is-ready');
+            statusBar.classList.add('is-leaving');
+            Promise.all(textElements.map((element) => reverseScrambleText(element, element.dataset.glitchText || element.textContent, startTextAnimation(element)))).then(() => { location.assign(getReturnUrl()); });
+        });
+        document.querySelectorAll('.top-language-option').forEach((option) => option.addEventListener('click', () => {
+            if (!leaving) renderLanguage(option.dataset.language);
+        }));
+        themeToggle.addEventListener('click', () => transitionTheme(document.body.dataset.theme === 'dark' ? 'light' : 'dark'));
+        copyRouteButton.addEventListener('click', copyCleanLink);
+        const requestedTheme = params.get('theme');
+        let storedTheme = 'light';
+        try { storedTheme = localStorage.getItem('commerce-theme') === 'dark' ? 'dark' : 'light'; } catch (_) {}
+        function playEntrance() {
+            leaving = false;
+            returnButton.classList.remove('is-ready');
+            textElements.forEach((element) => { element.textContent = ''; element.style.opacity = '1'; delete element.dataset.glitchText; });
+            statusBar.classList.remove('is-leaving');
+            requestAnimationFrame(() => requestAnimationFrame(() => statusBar.classList.add('is-ready')));
+            return renderLanguage(currentLanguage, true);
+        }
+        setTheme(validThemes.has(requestedTheme) ? requestedTheme : storedTheme, false);
+        setFaviconFrame(2);
+        playEntrance();
+        scheduleFaviconAnimation();
+        startGlitchLoop();
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) playEntrance();
+        });
+    </script>
+</body>
+</html>
