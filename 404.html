@@ -293,7 +293,7 @@
             return Promise.all(animations);
         }
         function getReturnUrl() {
-            const output = new URL('/index.html', location.origin);
+            const output = getApplicationUrl();
             const source = new URLSearchParams(location.search);
             const language = source.get('lang');
             const theme = source.get('theme');
@@ -319,7 +319,7 @@
             return output.href;
         }
         async function copyCleanLink() {
-            const output = new URL('/index.html', location.origin);
+            const output = getApplicationUrl();
             const generation = Number.parseInt(params.get('g'), 10);
             output.searchParams.set('g', String(Number.isFinite(generation) && generation > 0 ? generation + 1 : 1));
             try {
@@ -331,6 +331,10 @@
                 copyTimer = setTimeout(() => copyFeedback.classList.remove('is-visible'), 1300);
                 setTimeout(() => copyRouteButton.classList.remove('is-copied'), 700);
             } catch (_) {}
+        }
+        function getApplicationUrl() {
+            if (location.hostname === 'pasha-iden.github.io') return new URL('/', location.origin);
+            return new URL('index.html', new URL('.', location.href));
         }
         function startGlitchLoop() {
             window.setTimeout(() => {
