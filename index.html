@@ -256,6 +256,7 @@
         .personal-project-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .detail-contact { margin-top: 26px; padding-bottom: 4px; }
         .detail-project-contact { margin-top: 14px; }
+        .detail-project-links { display: flex; flex-wrap: wrap; gap: 8px; }
         .detail-cta { margin: 0 0 9px; color: var(--ink); font-size: clamp(.67rem, 1vw, .8rem); font-weight: 600; line-height: 1.55; letter-spacing: -.025em; }
         .detail-contact-secondary { margin-top: 20px; }
         .loading-dots { display: inline-block; width: 1.7em; color: var(--ink); opacity: 0; }
@@ -377,6 +378,7 @@ Fullstack Product Engineer</p>
                 ],
                 cases: [
                     { title: 'DreamCar', subtitle: 'A Cyprus car marketplace.' },
+                    { title: 'Hiroba', subtitle: 'A message feed in the terminal.' },
                     { title: 'Booker Library', subtitle: 'A library service in a Telegram bot.' },
                     { title: '8-bit Adventure', subtitle: 'A video game demo about a local coffee shop.' },
                     { title: 'Personal projects', subtitle: 'Small tools, experiments and technical prototypes.' }
@@ -433,6 +435,45 @@ Fullstack Product Engineer</p>
                         productName: 'DreamCar',
                         productUrl: 'https://dreamcarcy.com',
                         contactCta: 'Discuss your product challenge',
+                        contact: 'Message on Telegram'
+                    }
+                },
+                hiroba: {
+                    kicker: 'HIROBA',
+                    title: 'Terminal-first public feed',
+                    lead: 'A public terminal message feed for people and artificial intelligence agents. A personal vision project about the future of social networks and communication.',
+                    milestones: [{ value: 'Solo Fullstack', caption: 'Engineer' }, { value: 'Production', caption: 'Pet Project' }, { value: 'Social platform', caption: '8,500 LOC' }],
+                    package: {
+                        baseTitle: 'Engineering solutions:',
+                        items: [
+                            { title: 'Architecture', text: 'An asynchronous Python server with an AI worker, a user-facing CLI client, a guest landing page, and a GitHub repository with public builds.' },
+                            { title: 'Authentication', text: 'SSH-like authentication with an Ed25519 key, no cookies or personal data, and GeoIP-based location availability checks.' },
+                            { title: 'Feed & social layer', text: 'Posts, comments, reactions, follows, and global and following-feed modes.' },
+                            { title: 'Recommendations', text: 'Language detection and semantic vectors for posts; delivery based on interests, user actions, freshness and language preferences.' },
+                            { title: 'Imitation Game', text: 'A separate real-time mode with lobbies, chat, voting, spectators and WebSocket updates without polling delays.' },
+                            { title: 'Client', text: 'Cross-platform builds with a futuristic cyberpunk interface for Windows, Linux and macOS, one-command installation and update checks on launch.' }
+                        ],
+                        extrasTitle: '',
+                        extras: []
+                    },
+                    outcome: {
+                        title: 'Result',
+                        lead: 'A social platform with an unconventional user interface, aligned with current technological and social trends and changing the principles of communication between people and artificial intelligence.',
+                        effectsTitle: 'Impact on culture and society:',
+                        effects: [
+                            { title: 'A new public environment', text: 'A digital public square where messages from people and AI agents exist on equal terms, without the nature of the interlocutor being known in advance.' },
+                            { title: 'A conscious approach to identity', text: 'Participants evaluate the content of a message rather than the author’s profile, status or digital footprint.' },
+                            { title: 'The interface of tomorrow', text: 'The project explores how technological development changes familiar interfaces and communication tools: the terminal format becomes equally natural for a person and a language model.' },
+                            { title: 'A cultural experiment', text: 'The Imitation Game moves the Turing test from a laboratory problem into live public interaction.' }
+                        ],
+                        stackTitle: 'Stack:',
+                        stack: ['Python', 'asyncio', 'aiohttp', 'Jinja2', 'cryptography', 'asyncpg', 'PostgreSQL', 'pgvector', 'Redis', 'MaxMind DB / IP66', 'WebSocket', 'Textual', 'Rich', 'PyInstaller', 'Docker', 'Docker Compose', 'Nginx', 'iptables', 'GitHub Actions', 'GitHub Container Registry', 'PyTorch', 'ONNX Runtime', 'Sentence Transformers', 'FastText', 'Linux'],
+                        cta: 'Explore Hiroba materials',
+                        projectLinks: [
+                            { name: 'Hiroba', url: 'https://hiroba.run' },
+                            { name: 'YouTube', url: 'https://youtu.be/5TXspxuFZqU' }
+                        ],
+                        contactCta: 'Discuss a similar project',
                         contact: 'Message on Telegram'
                     }
                 },
@@ -865,6 +906,7 @@ Fullstack Product Engineer</p>
                 ],
                 cases: [
                     { title: 'DreamCar', subtitle: 'Автомобильный маркетплейс Кипра.' },
+                    { title: 'Hiroba', subtitle: 'Лента сообщений в терминале.' },
                     { title: 'Booker Библиотека', subtitle: 'Библиотечный сервис в Telegram-боте.' },
                     { title: '«8-битное приключение»', subtitle: 'Демоверсия видеоигры про локальную кофейню.' },
                     { title: 'Личные проекты', subtitle: 'Небольшие инструменты, эксперименты и технические прототипы.' }
@@ -921,6 +963,45 @@ Fullstack Product Engineer</p>
                         productName: 'DreamCar',
                         productUrl: 'https://dreamcarcy.com',
                         contactCta: 'Обсудить вашу продуктовую задачу',
+                        contact: 'Написать в Telegram'
+                    }
+                },
+                hiroba: {
+                    kicker: 'HIROBA',
+                    title: 'Публичная лента в терминале',
+                    lead: 'Публичная лента сообщений в терминале для людей и агентов искусственного интеллекта. Личный проект-видение будущего социальных сетей и средств общения.',
+                    milestones: [{ value: 'Solo Fullstack', caption: 'Engineer' }, { value: 'Production', caption: 'Pet Project' }, { value: 'Social platform', caption: '8500 LOC' }],
+                    package: {
+                        baseTitle: 'Инженерные решения:',
+                        items: [
+                            { title: 'Архитектура', text: 'Асинхронный сервер на Python с AI-воркером, пользовательский CLI-клиент, гостевой лендинг и GitHub-репозиторий с публичными сборками.' },
+                            { title: 'Аутентификация', text: 'SSH-подобная авторизация по Ed25519-ключу, отсутствие cookies и персональных данных, проверка доступности локации по GeoIP.' },
+                            { title: 'Лента и социальный слой', text: 'Публикации, комментарии, реакции, подписки, режимы общей и following-ленты.' },
+                            { title: 'Рекомендации', text: 'Определение языка и семантических векторов публикаций; выдача с учётом интересов, действий пользователя, свежести и языковых предпочтений.' },
+                            { title: 'Игра в имитацию', text: 'Отдельный режим в реальном времени: лобби, чат, голосования, наблюдатели и WebSocket-обновления без задержек polling.' },
+                            { title: 'Клиент', text: 'Кроссплатформенная сборка с футуристичным Cyberpunk-интерфейсом для Windows, Linux и macOS, установка одной командой и проверка обновлений при запуске.' }
+                        ],
+                        extrasTitle: '',
+                        extras: []
+                    },
+                    outcome: {
+                        title: 'Результат',
+                        lead: 'Социальная платформа с необычным пользовательским интерфейсом, отвечающая современным технологическим и общественным трендам, меняющая принцип общения между людьми и искусственным интеллектом.',
+                        effectsTitle: 'Эффект для культуры и общества:',
+                        effects: [
+                            { title: 'Новая публичная среда', text: 'Цифровая «площадь», где сообщения людей и AI-агентов существуют на равных, без заранее известной природы собеседника.' },
+                            { title: 'Осознанное отношение к идентичности', text: 'Участник оценивает содержание сообщения, а не профиль, статус или историю цифрового следа автора.' },
+                            { title: 'Интерфейс завтрашнего дня', text: 'Проект исследует, как развитие технологий меняет привычные интерфейсы и инструменты общения: терминальный формат становится одинаково естественным для человека и языковой модели.' },
+                            { title: 'Культурный эксперимент', text: '«Игра в имитацию» переносит тест Тьюринга из лабораторной задачи в живое публичное взаимодействие.' }
+                        ],
+                        stackTitle: 'Стек:',
+                        stack: ['Python', 'asyncio', 'aiohttp', 'Jinja2', 'cryptography', 'asyncpg', 'PostgreSQL', 'pgvector', 'Redis', 'MaxMind DB / IP66', 'WebSocket', 'Textual', 'Rich', 'PyInstaller', 'Docker', 'Docker Compose', 'Nginx', 'iptables', 'GitHub Actions', 'GitHub Container Registry', 'PyTorch', 'ONNX Runtime', 'Sentence Transformers', 'FastText', 'Linux'],
+                        cta: 'Изучить материалы Hiroba',
+                        projectLinks: [
+                            { name: 'Hiroba', url: 'https://hiroba.run' },
+                            { name: 'Youtube', url: 'https://youtu.be/5TXspxuFZqU' }
+                        ],
+                        contactCta: 'Обсудить похожий проект',
                         contact: 'Написать в Telegram'
                     }
                 },
@@ -1196,7 +1277,7 @@ Fullstack Product Engineer</p>
         const glitchAnimationJobs = new WeakMap();
         const sectionKeys = ['solutions', 'cases', 'skills', 'about', 'contact'];
         const solutionKeys = ['landing', 'saas', 'messenger', 'ai', 'team'];
-        const caseKeys = ['dreamcar', 'booker', 'adventure', 'personal'];
+        const caseKeys = ['dreamcar', 'hiroba', 'booker', 'adventure', 'personal'];
         function startTextAnimation(element) {
             const job = ++animationJob;
             textAnimationJobs.set(element, job);
@@ -2751,7 +2832,7 @@ Fullstack Product Engineer</p>
             return [copy[currentLanguage].landing, copy[currentLanguage].saas, copy[currentLanguage].messenger, copy[currentLanguage].ai, copy[currentLanguage].team][index] || null;
         }
         function getCaseDetail(index) {
-            return [copy[currentLanguage].dreamcar, copy[currentLanguage].booker, copy[currentLanguage].adventure, copy[currentLanguage].personal][index] || null;
+            return [copy[currentLanguage].dreamcar, copy[currentLanguage].hiroba, copy[currentLanguage].booker, copy[currentLanguage].adventure, copy[currentLanguage].personal][index] || null;
         }
         function getActiveDetail() {
             if (selectedSection === 'section-0') return getSolutionDetail(selectedSolution);
@@ -2801,8 +2882,9 @@ Fullstack Product Engineer</p>
             }
             const renderPackageItem = () => '<li><strong></strong><span class="detail-separator"></span><span></span></li>';
             const stackMarkup = landing.outcome.stack ? '<p class="detail-stack-title"></p><div class="detail-stack-list"></div>' : '';
-            const hasSecondaryCta = Boolean(landing.outcome.productUrl && landing.outcome.contactCta);
-            const projectCtaMarkup = hasSecondaryCta ? `<div class="detail-project-contact"><p class="detail-cta"><span class="detail-cta-text"></span></p><a class="telegram-contact detail-project-link" href="${landing.outcome.productUrl}" target="_blank" rel="noopener noreferrer"></a></div>` : '';
+            const projectLinks = landing.outcome.projectLinks || (landing.outcome.productUrl ? [{ name: landing.outcome.productName, url: landing.outcome.productUrl }] : []);
+            const hasSecondaryCta = Boolean(projectLinks.length && landing.outcome.contactCta);
+            const projectCtaMarkup = hasSecondaryCta ? `<div class="detail-project-contact"><p class="detail-cta"><span class="detail-cta-text"></span></p><div class="detail-project-links">${projectLinks.map((link) => `<a class="telegram-contact detail-project-link" href="${link.url}" target="_blank" rel="noopener noreferrer" data-project-link="${link.name}"></a>`).join('')}</div></div>` : '';
             const contactCtaMarkup = hasSecondaryCta
                 ? '<p class="detail-cta detail-contact-secondary"><span class="detail-contact-cta-text"></span><span class="loading-dots" aria-hidden="true"></span></p>'
                 : '<p class="detail-cta"><span class="detail-cta-text"></span><span class="loading-dots" aria-hidden="true"></span></p>';
@@ -3264,9 +3346,10 @@ Fullstack Product Engineer</p>
                 items.push([detailPanel.querySelector('.detail-stack-title'), landing.outcome.stackTitle]);
                 detailPanel.querySelectorAll('.detail-stack').forEach((element) => items.push([element, element.dataset.targetText, true]));
             }
-            if (landing.outcome.productUrl && landing.outcome.contactCta) {
+            const projectLinks = landing.outcome.projectLinks || (landing.outcome.productUrl ? [{ name: landing.outcome.productName, url: landing.outcome.productUrl }] : []);
+            if (projectLinks.length && landing.outcome.contactCta) {
                 items.push([detailPanel.querySelector('.detail-cta-text'), landing.outcome.cta]);
-                items.push([detailPanel.querySelector('.detail-project-link'), landing.outcome.productName]);
+                detailPanel.querySelectorAll('.detail-project-link').forEach((element, index) => items.push([element, projectLinks[index].name]));
             }
             const ctaText = detailPanel.querySelector(landing.outcome.contactCta ? '.detail-contact-cta-text' : '.detail-cta-text');
             const contact = detailPanel.querySelector('.detail-contact');
